@@ -43,9 +43,9 @@ dependencies {
     androidTestImplementation libs.espresso.core
 
     implementation libs.android.sdk
-    implementation(libs.play.services.maps)
-    implementation(libs.play.services.location.v2000)
-    implementation(libs.places) // Kiểm tra phiên bản mới nhất trên trang chính thức// Thêm Google Maps nếu chưa có
 
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("com.google.android.libraries.places:places:2.6.0")
 
 }

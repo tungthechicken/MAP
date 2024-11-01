@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SearchView;
@@ -76,7 +77,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 float x = event.values[0];
                 float y = event.values[1];
                 float z = event.values[2];
-                if (Math.sqrt(x * x + y * y + z * z) > 15) {
+                if (Math.sqrt(x * x + y * y + z * z) > 12) {
                     if (!isShaking) {
                         isShaking = true;
                         getLocationForShake();
@@ -117,17 +118,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    private void showLocationInfoAndMark(LatLng location) {
+    private void showLocationInfo(LatLng location) {
         runOnUiThread(() -> {
             String locationInfo = "Vị trí của bạn: Latitude: " + location.latitude +
                     ", Longitude: " + location.longitude;
             Toast.makeText(this, locationInfo, Toast.LENGTH_LONG).show();
-
-            // Thêm marker vào bản đồ với tiêu đề "Vị trí của bạn"
-            if (googleMap != null) {
-                googleMap.addMarker(new MarkerOptions().position(location).title("Vị trí của bạn"));
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
-            }
         });
     }
 
@@ -142,12 +137,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .addOnSuccessListener(this, location -> {
                     if (location != null) {
                         LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        showLocationInfoAndMark(currentLocation);
+
+                        // Đánh dấu vị trí hiện tại trên bản đồ
+                        if (googleMap != null) {
+                            googleMap.clear(); // Xóa các marker trước đó nếu muốn chỉ hiện một marker
+                            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Vị trí hiện tại"));
+
+                            // Zoom đến vị trí hiện tại
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                        }
+
+                        // Hiển thị thông tin vị trí dưới dạng thông báo
+                        showLocationInfo(currentLocation);
                     } else {
                         Toast.makeText(this, "Không thể lấy vị trí!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
