@@ -12,30 +12,21 @@ import androidx.appcompat.app.AppCompatActivity; // Thư viện cho hoạt độ
 import androidx.core.app.ActivityCompat; // Thư viện cho hỗ trợ hoạt động
 import com.google.android.gms.location.FusedLocationProviderClient; // Thư viện cho dịch vụ vị trí
 import com.google.android.gms.location.LocationServices; // Thư viện cho dịch vụ vị trí
-import com.google.android.gms.maps.CameraUpdateFactory; // Thư viện cho cập nhật camera
-import com.google.android.gms.maps.GoogleMap; // Thư viện cho GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback; // Thư viện cho callback khi bản đồ sẵn sàng
-import com.google.android.gms.maps.SupportMapFragment; // Thư viện cho SupportMapFragment
-import com.google.android.gms.maps.model.LatLng; // Thư viện cho tọa độ
-import com.google.android.gms.maps.model.MarkerOptions; // Thư viện cho marker trên bản đồ
-import android.hardware.Sensor; // Thư viện cho cảm biến
-import android.hardware.SensorEvent; // Thư viện cho sự kiện cảm biến
-import android.hardware.SensorEventListener; // Thư viện cho người nghe sự kiện cảm biến
-import android.hardware.SensorManager; // Thư viện cho quản lý cảm biến
-import android.os.Handler; // Thư viện cho xử lý tác vụ
+import com.google.android.gms.tasks.OnSuccessListener; // Thư viện cho listener khi hoàn thành tác vụ
+import com.mapbox.mapboxsdk.Mapbox; // Thư viện cho Mapbox
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory; // Thư viện cho cập nhật camera
+import com.mapbox.mapboxsdk.maps.MapView; // Thư viện cho MapView
+import com.mapbox.mapboxsdk.maps.MapboxMap; // Thư viện cho bản đồ
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback; // Thư viện cho callback khi bản đồ sẵn sàng
+import com.mapbox.mapboxsdk.maps.Style; // Thư viện cho style bản đồ
+import com.mapbox.mapboxsdk.geometry.LatLng; // Thư viện cho tọa độ
+import com.mapbox.mapboxsdk.annotations.MarkerOptions; // Thư viện cho marker trên bản đồ
 
-
-
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity {
     // Khai báo các biến
     private MapView mapView; // Đối tượng MapView
     private FusedLocationProviderClient fusedLocationClient; // Đối tượng để lấy vị trí
     private MapboxMap mapboxMap; // Đối tượng MapboxMap
-
-    private SensorManager sensorManager;
-    private Sensor accelerometer;
-    private SensorEventListener sensorEventListener;
-    private boolean isShaking = false; // Để theo dõi trạng thái lắc
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,71 +58,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Lấy nút từ layout
         Button btnShowLocation = findViewById(R.id.btn_show_location);
         // Thiết lập sự kiện nhấn nút
-        btnShowLocation.setOnClickListener(v -> getLocation());
-
-        Button btnAddMarker = findViewById(R.id.btn_add_marker); //nut mark
-        btnAddMarker.setOnClickListener(v -> markLocation());
-
-        // Khởi tạo SensorManager
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        sensorEventListener = new SensorEventListener() {
+        btnShowLocation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSensorChanged(SensorEvent event) {
-                float x = event.values[0];
-                float y = event.values[1];
-                float z = event.values[2];
-                // Kiểm tra nếu có chuyển động lắc
-                if (Math.sqrt(x * x + y * y + z * z) > 15) {
-                    if (!isShaking) {
-                        isShaking = true;
-                        showAlert(); // Hiển thị thông báo
-                    }
-                } else {
-                    isShaking = false; // Đặt lại trạng thái
-                }
+            public void onClick(View v) {
+                // Gọi phương thức để lấy vị trí
+                getLocation();
             }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                // Không cần xử lý ở đây
-            }
-        };
-
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        sensorManager.unregisterListener(sensorEventListener);
-    }
-
-    private void showAlert() {
-        runOnUiThread(() -> {
-            Toast toast = Toast.makeText(this, "có ổ gà", Toast.LENGTH_SHORT);
-            toast.show();
-
-            // Để ẩn thông báo sau 3 giây
-            new Handler().postDelayed(toast::cancel, 3000);
-        });
-    }
-
-    // Phương thức được gọi khi bản đồ đã sẵn sàng
-    @Override
-    public void onMapReady(GoogleMap map) {
-        googleMap = map;
-
-        // Thiết lập sự kiện nhấp chuột lên bản đồ
-        googleMap.setOnMapClickListener(latLng -> {
-            selectedLocation = latLng; // Lưu vị trí đã chọn
-            googleMap.clear(); // Xóa tất cả marker cũ
-            googleMap.addMarker(new MarkerOptions().position(selectedLocation).title("Vị trí đã chọn")); // Thêm marker tại vị trí đã chọn
         });
     }
 
