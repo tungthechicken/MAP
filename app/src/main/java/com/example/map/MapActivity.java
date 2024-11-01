@@ -4,6 +4,7 @@ package com.example.map;
 import android.Manifest; // Thư viện cho quyền truy cập
 import android.content.pm.PackageManager; // Thư viện cho quản lý gói
 import android.os.Bundle; // Thư viện cho Bundle (dùng để truyền dữ liệu)
+import android.util.Log;
 import android.widget.Button; // Thư viện cho Button
 import android.widget.EditText; // Thư viện cho EditText
 import android.widget.Toast; // Thư viện cho Toast
@@ -116,6 +117,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
+        Log.d("MapActivity", "onMapReady");
 
         // Thiết lập sự kiện nhấp chuột lên bản đồ
         googleMap.setOnMapClickListener(latLng -> {
