@@ -14,7 +14,7 @@
             android:label="@string/app_name"
             android:roundIcon="@drawable/crater"
             android:supportsRtl="true"
-            android:theme="@style/Theme.MAP.Light"
+            android:theme="@style/Theme.MAP"
             tools:targetApi="31">
             <activity
                 android:name=".LoginActivity"
