@@ -4,6 +4,9 @@ package com.example.map;
 import android.Manifest; // Thư viện cho quyền truy cập
 import android.content.pm.PackageManager; // Thư viện cho quản lý gói
 import android.os.Bundle; // Thư viện cho Bundle (dùng để truyền dữ liệu)
+
+import android.util.Log;
+
 import android.widget.Button; // Thư viện cho Button
 import android.widget.EditText; // Thư viện cho EditText
 import android.widget.Toast; // Thư viện cho Toast
@@ -28,6 +31,11 @@ public class MapActivity extends AppCompatActivity {
     public GoogleMap googleMap; // Đối tượng GoogleMap
     public FusedLocationProviderClient fusedLocationClient; // Đối tượng để lấy vị trí
     private LatLng selectedLocation; // Biến để lưu vị trí đã chọn
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private SensorEventListener sensorEventListener;
+    private boolean isShaking = false; // Để theo dõi trạng thái lắc
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +62,42 @@ public class MapActivity extends AppCompatActivity {
                 // Gọi phương thức để lấy vị trí
                 getLocation();
             }
+        };
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(sensorEventListener);
+    }
+
+    private void showAlert() {
+        runOnUiThread(() -> {
+            Toast toast = Toast.makeText(this, "có ổ gà", Toast.LENGTH_SHORT);
+            toast.show();
+
+            // Để ẩn thông báo sau 3 giây
+            new Handler().postDelayed(toast::cancel, 3000);
+        });
+    }
+
+    // Phương thức được gọi khi bản đồ đã sẵn sàng
+    @Override
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
+        Log.d("MapActivity", "onMapReady");
+
+        // Thiết lập sự kiện nhấp chuột lên bản đồ
+        googleMap.setOnMapClickListener(latLng -> {
+            selectedLocation = latLng; // Lưu vị trí đã chọn
+            googleMap.clear(); // Xóa tất cả marker cũ
+            googleMap.addMarker(new MarkerOptions().position(selectedLocation).title("Vị trí đã chọn")); // Thêm marker tại vị trí đã chọn
         });
     }
 

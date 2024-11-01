@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "148865329906",
+    "project_id": "pothole--auth",
+    "storage_bucket": "pothole--auth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148865329906:android:d07a7ae31b0013fee13e6b",
+        "android_client_info": {
+          "package_name": "com.example.map"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHExnjKxBzUclqMETxQ0mb2sPt5gL6H_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
