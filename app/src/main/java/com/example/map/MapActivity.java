@@ -19,6 +19,12 @@ import com.google.android.gms.maps.OnMapReadyCallback; // Thư viện cho callba
 import com.google.android.gms.maps.SupportMapFragment; // Thư viện cho SupportMapFragment
 import com.google.android.gms.maps.model.LatLng; // Thư viện cho tọa độ
 import com.google.android.gms.maps.model.MarkerOptions; // Thư viện cho marker trên bản đồ
+import android.hardware.Sensor; // Thư viện cho cảm biến
+import android.hardware.SensorEvent; // Thư viện cho sự kiện cảm biến
+import android.hardware.SensorEventListener; // Thư viện cho người nghe sự kiện cảm biến
+import android.hardware.SensorManager; // Thư viện cho quản lý cảm biến
+import android.os.Handler; // Thư viện cho xử lý tác vụ
+
 
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -26,6 +32,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public GoogleMap googleMap; // Đối tượng GoogleMap
     public FusedLocationProviderClient fusedLocationClient; // Đối tượng để lấy vị trí
     private LatLng selectedLocation; // Biến để lưu vị trí đã chọn
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private SensorEventListener sensorEventListener;
+    private boolean isShaking = false; // Để theo dõi trạng thái lắc
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +61,55 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Button btnAddMarker = findViewById(R.id.btn_add_marker); //nut mark
         btnAddMarker.setOnClickListener(v -> markLocation());
+
+        // Khởi tạo SensorManager
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        sensorEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                float x = event.values[0];
+                float y = event.values[1];
+                float z = event.values[2];
+                // Kiểm tra nếu có chuyển động lắc
+                if (Math.sqrt(x * x + y * y + z * z) > 15) {
+                    if (!isShaking) {
+                        isShaking = true;
+                        showAlert(); // Hiển thị thông báo
+                    }
+                } else {
+                    isShaking = false; // Đặt lại trạng thái
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                // Không cần xử lý ở đây
+            }
+        };
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(sensorEventListener);
+    }
+
+    private void showAlert() {
+        runOnUiThread(() -> {
+            Toast toast = Toast.makeText(this, "có ổ gà", Toast.LENGTH_SHORT);
+            toast.show();
+
+            // Để ẩn thông báo sau 3 giây
+            new Handler().postDelayed(toast::cancel, 3000);
+        });
     }
 
     // Phương thức được gọi khi bản đồ đã sẵn sàng
