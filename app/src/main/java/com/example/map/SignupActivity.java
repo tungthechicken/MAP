@@ -5,6 +5,7 @@ import android.text.InputType;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText signupUsername;
     EditText signupPassword;
     Button signupButton;
+    TextView loginPrompt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,7 @@ public class SignupActivity extends AppCompatActivity {
         signupUsername = findViewById(R.id.signupUsername);
         signupPassword = findViewById(R.id.signupPassword);
         signupButton = findViewById(R.id.signupButton);
+        loginPrompt = findViewById(R.id.loginPrompt);
 
         signupUsername.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         signupUsername.setRawInputType(InputType.TYPE_CLASS_TEXT);
@@ -45,6 +48,10 @@ public class SignupActivity extends AppCompatActivity {
 
         signupButton.setOnClickListener(view -> {
             Toast.makeText(this, "Signup button clicked", Toast.LENGTH_SHORT).show();
+        });
+
+        loginPrompt.setOnClickListener(view -> {
+            finish();
         });
     }
 }
