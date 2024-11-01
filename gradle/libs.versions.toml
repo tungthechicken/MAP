@@ -13,8 +13,6 @@ activity = "1.9.3"
 constraintlayout = "2.2.0"
 playServicesLocation = "21.3.0"
 playServicesLocationVersion = "19.0.1"
-googleGmsGoogleServices = "4.4.2"
-firebaseAuth = "23.1.0"
 
 [libraries]
 android-sdk = { module = "org.maplibre.gl:android-sdk", version.ref = "androidSdk" }
@@ -30,9 +28,7 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-location-v1901 = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocationVersion" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
