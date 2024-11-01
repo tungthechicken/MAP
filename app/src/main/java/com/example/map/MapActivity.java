@@ -3,11 +3,12 @@ package com.example.map;
 // Các thư viện cần thiết
 import android.Manifest; // Thư viện cho quyền truy cập
 import android.content.pm.PackageManager; // Thư viện cho quản lý gói
-import android.location.Location; // Thư viện cho đối tượng Location
 import android.os.Bundle; // Thư viện cho Bundle (dùng để truyền dữ liệu)
-import android.view.View; // Thư viện cho View
 import android.widget.Button; // Thư viện cho Button
+import android.widget.EditText; // Thư viện cho EditText
+import android.widget.Toast; // Thư viện cho Toast
 import androidx.annotation.NonNull; // Thư viện cho annotation không null
+import androidx.appcompat.app.AlertDialog; // Thư viện cho hộp thoại AlertDialog
 import androidx.appcompat.app.AppCompatActivity; // Thư viện cho hoạt động AppCompat
 import androidx.core.app.ActivityCompat; // Thư viện cho hỗ trợ hoạt động
 import com.google.android.gms.location.FusedLocationProviderClient; // Thư viện cho dịch vụ vị trí
@@ -24,36 +25,25 @@ import com.mapbox.mapboxsdk.annotations.MarkerOptions; // Thư viện cho marker
 
 public class MapActivity extends AppCompatActivity {
     // Khai báo các biến
-    private MapView mapView; // Đối tượng MapView
-    private FusedLocationProviderClient fusedLocationClient; // Đối tượng để lấy vị trí
-    private MapboxMap mapboxMap; // Đối tượng MapboxMap
+    public GoogleMap googleMap; // Đối tượng GoogleMap
+    public FusedLocationProviderClient fusedLocationClient; // Đối tượng để lấy vị trí
+    private LatLng selectedLocation; // Biến để lưu vị trí đã chọn
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Khởi tạo Mapbox với context của Activity
-        Mapbox.getInstance(this);
         // Thiết lập layout cho Activity
         setContentView(R.layout.activity_map);
-
-        // Lấy MapView từ layout
-        mapView = findViewById(R.id.mapView);
-        // Khởi động MapView với trạng thái trước đó
-        mapView.onCreate(savedInstanceState);
 
         // Khởi tạo FusedLocationProviderClient để lấy vị trí
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // Khi bản đồ đã sẵn sàng
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(MapboxMap map) {
-                // Gán đối tượng MapboxMap cho biến mapboxMap
-                mapboxMap = map;
-                // Thiết lập style cho bản đồ bằng API key của MapTiler
-                mapboxMap.setStyle(new Style.Builder().fromUri("https://api.maptiler.com/maps/basic-v2/style.json?key=VGI3lrtwrAjXKYT8kDHE"));
-            }
-        });
+        // Lấy SupportMapFragment và yêu cầu bản đồ sẵn sàng
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.id_map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
 
         // Lấy nút từ layout
         Button btnShowLocation = findViewById(R.id.btn_show_location);
@@ -70,7 +60,8 @@ public class MapActivity extends AppCompatActivity {
     // Phương thức để lấy vị trí hiện tại
     private void getLocation() {
         // Kiểm tra quyền truy cập vị trí
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Nếu chưa có quyền, yêu cầu quyền truy cập
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             return; // Kết thúc phương thức nếu chưa có quyền
@@ -78,63 +69,51 @@ public class MapActivity extends AppCompatActivity {
 
         // Lấy vị trí cuối cùng
         fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Kiểm tra nếu vị trí không null và bản đồ đã được khởi tạo
-                        if (location != null && mapboxMap != null) {
-                            // Tạo đối tượng LatLng từ vị trí
-                            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                            // Thêm marker tại vị trí của người dùng
-                            mapboxMap.addMarker(new MarkerOptions().position(userLocation).title("Bạn đang ở đây"));
-                            // Di chuyển camera đến vị trí của người dùng và phóng to
-                            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
-                        }
+                .addOnSuccessListener(this, location -> {
+                    // Kiểm tra nếu vị trí không null và bản đồ đã được khởi tạo
+                    if (location != null && googleMap != null) {
+                        // Tạo đối tượng LatLng từ vị trí
+                        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        // Thêm marker tại vị trí của người dùng
+                        googleMap.addMarker(new MarkerOptions().position(userLocation).title("Bạn đang ở đây"));
+                        // Di chuyển camera đến vị trí của người dùng và phóng to
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
                     }
                 });
     }
 
-    // Các phương thức vòng đời của MapView
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Gọi phương thức onStart của MapView
-        mapView.onStart();
+    //Phuong thuc danh dau ban do
+    private void markLocation() {
+        if (selectedLocation != null) {
+            showMarkerDialog(selectedLocation); // Hiển thị hộp thoại với vị trí đã chọn
+        } else {
+            Toast.makeText(this, "Vui lòng chọn vị trí trên bản đồ!", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Gọi phương thức onResume của MapView
-        mapView.onResume();
-    }
+    // Phương thức hiển thị hộp thoại để nhập nội dung cho marker !!!!!ERROR
+    private void showMarkerDialog(LatLng location) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Nhập nội dung cho đánh dấu");
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        // Gọi phương thức onPause của MapView
-        mapView.onPause();
-    }
+        // Tạo EditText để nhập nội dung
+        final EditText input = new EditText(this);
+        builder.setView(input);
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        // Gọi phương thức onStop của MapView
-        mapView.onStop();
-    }
+        builder.setPositiveButton("Lưu", (dialog, which) -> {
+            String markerText = input.getText().toString();
+            if (location != null && !markerText.isEmpty()) {
+                // Thêm marker vào vị trí đã chọn
+                googleMap.addMarker(new MarkerOptions().position(location).title(markerText));
+                Toast.makeText(this, "Đã đánh dấu!", Toast.LENGTH_SHORT).show();
+                selectedLocation = null; // Đặt lại selectedLocation để thoát khỏi chế độ đánh dấu
+            } else {
+                Toast.makeText(this, "Vui lòng nhập nội dung!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
 
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        // Gọi phương thức onLowMemory của MapView
-        mapView.onLowMemory();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Gọi phương thức onDestroy của MapView
-        mapView.onDestroy();
+        builder.show();
     }
 
     // Xử lý kết quả của yêu cầu quyền
