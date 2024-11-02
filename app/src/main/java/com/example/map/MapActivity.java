@@ -1,18 +1,35 @@
 package com.example.map;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.widget.Button;
-import android.widget.EditText;
+import android.Manifest; // Thư viện cho quyền truy cập
+import android.content.pm.PackageManager; // Thư viện cho quản lý gói
+import android.os.Bundle; // Thư viện cho Bundle (dùng để truyền dữ liệu)
+import android.util.Log;
+import android.widget.Button; // Thư viện cho Button
+import android.widget.EditText; // Thư viện cho EditText
+import android.widget.Toast; // Thư viện cho Toast
+import androidx.annotation.NonNull; // Thư viện cho annotation không null
+import androidx.appcompat.app.AlertDialog; // Thư viện cho hộp thoại AlertDialog
+import androidx.appcompat.app.AppCompatActivity; // Thư viện cho hoạt động AppCompat
+import androidx.core.app.ActivityCompat; // Thư viện cho hỗ trợ hoạt động
+import com.google.android.gms.location.FusedLocationProviderClient; // Thư viện cho dịch vụ vị trí
+import com.google.android.gms.location.LocationServices; // Thư viện cho dịch vụ vị trí
+import com.google.android.gms.maps.CameraUpdateFactory; // Thư viện cho cập nhật camera
+import com.google.android.gms.maps.GoogleMap; // Thư viện cho GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback; // Thư viện cho callback khi bản đồ sẵn sàng
+import com.google.android.gms.maps.SupportMapFragment; // Thư viện cho SupportMapFragment
+import com.google.android.gms.maps.model.LatLng; // Thư viện cho tọa độ
+import com.google.android.gms.maps.model.MarkerOptions; // Thư viện cho marker trên bản đồ
+import android.hardware.Sensor; // Thư viện cho cảm biến
+import android.hardware.SensorEvent; // Thư viện cho sự kiện cảm biến
+import android.hardware.SensorEventListener; // Thư viện cho người nghe sự kiện cảm biến
+import android.hardware.SensorManager; // Thư viện cho quản lý cảm biến
+import android.os.Handler; // Thư viện cho xử lý tác vụ
 import android.widget.SearchView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import android.os.Bundle;
+import android.os.Handler;
+import android.Manifest;
+import android.content.Intent;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;

@@ -16,6 +16,8 @@ places = "4.0.0"
 playServicesLocation = "21.3.0"
 playServicesLocationVersion = "19.0.1"
 playServicesMaps = "19.0.0"
+googleGmsGoogleServices = "4.4.2"
+firebaseAuth = "23.1.0"
 
 [libraries]
 android-sdk = { module = "org.maplibre.gl:android-sdk", version.ref = "androidSdk" }
@@ -34,7 +36,9 @@ play-services-location = { module = "com.google.android.gms:play-services-locati
 play-services-location-v1901 = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocationVersion" }
 play-services-location-v2000 = { module = "com.google.android.gms:play-services-location", version.ref = "googlePlayServicesLocation" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 

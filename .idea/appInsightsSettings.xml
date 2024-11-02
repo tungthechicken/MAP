@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.map" />
+                  <option name="mobileSdkAppId" value="1:148865329906:android:d07a7ae31b0013fee13e6b" />
+                  <option name="projectId" value="pothole--auth" />
+                  <option name="projectNumber" value="148865329906" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
