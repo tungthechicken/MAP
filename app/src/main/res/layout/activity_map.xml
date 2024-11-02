@@ -20,20 +20,25 @@
         android:background="@drawable/searchview_background" />
 
     <!-- Nút để đánh dấu trên bản đồ -->
+
     <Button
         android:id="@+id/btn_add_marker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Đánh dấu"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginStart="139dp"
+        android:layout_marginBottom="103dp"
+        android:text="Đánh dấu" />
 
     <Button
         android:id="@+id/btn_show_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hiển thị vị trí"
         android:layout_above="@id/btn_add_marker"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="126dp"
+        android:layout_marginBottom="55dp"
+        android:text="Hiển thị vị trí" />
 
 </RelativeLayout>
