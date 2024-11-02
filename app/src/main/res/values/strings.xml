@@ -46,4 +46,9 @@
     </string>
     <string name="back">Return</string>
     <string name="chi_tiet">Detail</string>
+    <string-array name="date_options">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+    </string-array>
 </resources>
