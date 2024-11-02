@@ -61,7 +61,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:gravity="vertical_center"
+        android:gravity="center_vertical"
         android:text="Profile"
         android:textSize="18sp" />
 
@@ -94,7 +94,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:gravity="vertical_center"
+                android:gravity="center_vertical"
                 android:text="Notification"
                 android:textSize="18sp" />
             <ImageButton
@@ -125,7 +125,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="vertical_center"
+            android:gravity="center_vertical"
             android:text="Display"
             android:textSize="18sp" />
         <ImageButton
@@ -157,14 +157,14 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:gravity="vertical_center"
+                android:gravity="center_vertical"
                 android:text="Update"
                 android:textSize="18sp" />
             <ImageButton
                 android:id="@+id/chitiet4"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:scaleType="fitCenter"
                 android:background="?attr/selectableItemBackground"
                 app:srcCompat="@drawable/chi_tiet"
@@ -188,7 +188,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:gravity="vertical_center"
+                android:gravity="center_vertical"
                 android:text="Privacy"
                 android:textSize="18sp" />
             <ImageButton
@@ -220,7 +220,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:gravity="vertical_center"
+                android:gravity="center_vertical"
                 android:text="Question and Answer"
                 android:textSize="18sp" />
             <ImageButton
@@ -251,7 +251,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:gravity="vertical_center"
+                android:gravity="center_vertical"
                 android:text="Report"
                 android:textSize="18sp" />
             <ImageButton
@@ -283,7 +283,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:gravity="vertical_center"
+                android:gravity="center_vertical"
                 android:text="About"
                 android:textSize="18sp" />
             <ImageButton
@@ -317,7 +317,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="vertical_center"
+                android:gravity="center_vertical"
                 android:text="Log Out"
                 android:textSize="18sp" />
 

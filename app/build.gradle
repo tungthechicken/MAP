@@ -29,6 +29,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildToolsVersion '35.0.0'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 
@@ -40,6 +43,8 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.play.services.location
     implementation libs.firebase.auth
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
