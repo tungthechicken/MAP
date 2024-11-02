@@ -1,271 +1,150 @@
 package com.example.map;
 
+// Các thư viện cần thiết
 import android.Manifest; // Thư viện cho quyền truy cập
 import android.content.pm.PackageManager; // Thư viện cho quản lý gói
+import android.location.Location; // Thư viện cho đối tượng Location
 import android.os.Bundle; // Thư viện cho Bundle (dùng để truyền dữ liệu)
-import android.util.Log;
+import android.view.View; // Thư viện cho View
 import android.widget.Button; // Thư viện cho Button
-import android.widget.EditText; // Thư viện cho EditText
-import android.widget.Toast; // Thư viện cho Toast
 import androidx.annotation.NonNull; // Thư viện cho annotation không null
-import androidx.appcompat.app.AlertDialog; // Thư viện cho hộp thoại AlertDialog
 import androidx.appcompat.app.AppCompatActivity; // Thư viện cho hoạt động AppCompat
 import androidx.core.app.ActivityCompat; // Thư viện cho hỗ trợ hoạt động
 import com.google.android.gms.location.FusedLocationProviderClient; // Thư viện cho dịch vụ vị trí
 import com.google.android.gms.location.LocationServices; // Thư viện cho dịch vụ vị trí
-import com.google.android.gms.maps.CameraUpdateFactory; // Thư viện cho cập nhật camera
-import com.google.android.gms.maps.GoogleMap; // Thư viện cho GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback; // Thư viện cho callback khi bản đồ sẵn sàng
-import com.google.android.gms.maps.SupportMapFragment; // Thư viện cho SupportMapFragment
-import com.google.android.gms.maps.model.LatLng; // Thư viện cho tọa độ
-import com.google.android.gms.maps.model.MarkerOptions; // Thư viện cho marker trên bản đồ
-import android.hardware.Sensor; // Thư viện cho cảm biến
-import android.hardware.SensorEvent; // Thư viện cho sự kiện cảm biến
-import android.hardware.SensorEventListener; // Thư viện cho người nghe sự kiện cảm biến
-import android.hardware.SensorManager; // Thư viện cho quản lý cảm biến
-import android.os.Handler; // Thư viện cho xử lý tác vụ
-import android.widget.SearchView;
-import android.widget.Toast;
-import android.os.Bundle;
-import android.os.Handler;
-import android.Manifest;
-import android.content.Intent;
+import com.google.android.gms.tasks.OnSuccessListener; // Thư viện cho listener khi hoàn thành tác vụ
+import com.mapbox.mapboxsdk.Mapbox; // Thư viện cho Mapbox
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory; // Thư viện cho cập nhật camera
+import com.mapbox.mapboxsdk.maps.MapView; // Thư viện cho MapView
+import com.mapbox.mapboxsdk.maps.MapboxMap; // Thư viện cho bản đồ
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback; // Thư viện cho callback khi bản đồ sẵn sàng
+import com.mapbox.mapboxsdk.maps.Style; // Thư viện cho style bản đồ
+import com.mapbox.mapboxsdk.geometry.LatLng; // Thư viện cho tọa độ
+import com.mapbox.mapboxsdk.annotations.MarkerOptions; // Thư viện cho marker trên bản đồ
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-
-import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-
-import java.util.Arrays;
-import java.util.List;
-
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
-    private GoogleMap googleMap;
-    private FusedLocationProviderClient fusedLocationClient;
-    private LatLng selectedLocation;
-
-    private SensorManager sensorManager;
-    private Sensor accelerometer;
-    private SensorEventListener sensorEventListener;
-    private boolean isShaking = false;
-    private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
+public class MapActivity extends AppCompatActivity {
+    // Khai báo các biến
+    private MapView mapView; // Đối tượng MapView
+    private FusedLocationProviderClient fusedLocationClient; // Đối tượng để lấy vị trí
+    private MapboxMap mapboxMap; // Đối tượng MapboxMap
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Khởi tạo Mapbox với context của Activity
+        Mapbox.getInstance(this);
+        // Thiết lập layout cho Activity
         setContentView(R.layout.activity_map);
 
+        // Lấy MapView từ layout
+        mapView = findViewById(R.id.mapView);
+        // Khởi động MapView với trạng thái trước đó
+        mapView.onCreate(savedInstanceState);
+
+        // Khởi tạo FusedLocationProviderClient để lấy vị trí
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.id_map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
-        }
+        // Khi bản đồ đã sẵn sàng
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap map) {
+                // Gán đối tượng MapboxMap cho biến mapboxMap
+                mapboxMap = map;
+                // Thiết lập style cho bản đồ bằng API key của MapTiler
+                mapboxMap.setStyle(new Style.Builder().fromUri("https://api.maptiler.com/maps/basic-v2/style.json?key=VGI3lrtwrAjXKYT8kDHE"));
+            }
+        });
 
+        // Lấy nút từ layout
         Button btnShowLocation = findViewById(R.id.btn_show_location);
-        btnShowLocation.setOnClickListener(v -> getLocation());
-
-        Button btnAddMarker = findViewById(R.id.btn_add_marker);
-        btnAddMarker.setOnClickListener(v -> markLocation());
-
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        sensorEventListener = new SensorEventListener() {
+        // Thiết lập sự kiện nhấn nút
+        btnShowLocation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSensorChanged(SensorEvent event) {
-                float x = event.values[0];
-                float y = event.values[1];
-                float z = event.values[2];
-                if (Math.sqrt(x * x + y * y + z * z) > 12) {
-                    if (!isShaking) {
-                        isShaking = true;
-                        getLocationForShake();
-                    }
-                } else {
-                    isShaking = false;
-                }
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                // Không cần xử lý ở đây
-            }
-        };
-
-        if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
-        }
-
-        SearchView searchView = findViewById(R.id.search_location);
-        setupSearchView(searchView);
-    }
-
-    private void setupSearchView(SearchView searchView) {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).build(MapActivity.this);
-                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
+            public void onClick(View v) {
+                // Gọi phương thức để lấy vị trí
+                getLocation();
             }
         });
     }
 
-    private void showLocationInfo(LatLng location) {
-        runOnUiThread(() -> {
-            String locationInfo = "Vị trí của bạn: Latitude: " + location.latitude +
-                    ", Longitude: " + location.longitude;
-            Toast.makeText(this, locationInfo, Toast.LENGTH_LONG).show();
-        });
-    }
-
-    private void getLocationForShake() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
-        }
-
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    if (location != null) {
-                        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-                        // Đánh dấu vị trí hiện tại trên bản đồ
-                        if (googleMap != null) {
-                            googleMap.clear(); // Xóa các marker trước đó nếu muốn chỉ hiện một marker
-                            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Vị trí hiện tại"));
-
-                            // Zoom đến vị trí hiện tại
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-                        }
-
-                        // Hiển thị thông tin vị trí dưới dạng thông báo
-                        showLocationInfo(currentLocation);
-                    } else {
-                        Toast.makeText(this, "Không thể lấy vị trí!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                LatLng latLng = place.getLatLng();
-                if (latLng != null) {
-                    googleMap.addMarker(new MarkerOptions().position(latLng).title(place.getName()));
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                }
-            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                Status status = Autocomplete.getStatusFromIntent(data);
-                Toast.makeText(this, "Lỗi: " + status.getStatusMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        sensorManager.unregisterListener(sensorEventListener);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap map) {
-        googleMap = map;
-        googleMap.setOnMapClickListener(latLng -> {
-            selectedLocation = latLng;
-            googleMap.clear();
-            googleMap.addMarker(new MarkerOptions().position(selectedLocation).title("Vị trí đã chọn"));
-        });
-    }
-
+    // Phương thức để lấy vị trí hiện tại
     private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        // Kiểm tra quyền truy cập vị trí
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Nếu chưa có quyền, yêu cầu quyền truy cập
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
+            return; // Kết thúc phương thức nếu chưa có quyền
         }
 
+        // Lấy vị trí cuối cùng
         fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    if (location != null && googleMap != null) {
-                        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        googleMap.addMarker(new MarkerOptions().position(userLocation).title("Bạn đang ở đây"));
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Kiểm tra nếu vị trí không null và bản đồ đã được khởi tạo
+                        if (location != null && mapboxMap != null) {
+                            // Tạo đối tượng LatLng từ vị trí
+                            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            // Thêm marker tại vị trí của người dùng
+                            mapboxMap.addMarker(new MarkerOptions().position(userLocation).title("Bạn đang ở đây"));
+                            // Di chuyển camera đến vị trí của người dùng và phóng to
+                            mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+                        }
                     }
                 });
     }
 
-    private void markLocation() {
-        if (selectedLocation != null) {
-            showMarkerDialog(selectedLocation);
-        } else {
-            Toast.makeText(this, "Vui lòng chọn vị trí trên bản đồ!", Toast.LENGTH_SHORT).show();
-        }
+    // Các phương thức vòng đời của MapView
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Gọi phương thức onStart của MapView
+        mapView.onStart();
     }
 
-    private void showMarkerDialog(LatLng location) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Nhập nội dung cho đánh dấu");
-
-        final EditText input = new EditText(this);
-        builder.setView(input);
-
-        builder.setPositiveButton("Lưu", (dialog, which) -> {
-            String markerText = input.getText().toString().trim();
-            if (location != null && !markerText.isEmpty()) {
-                googleMap.addMarker(new MarkerOptions().position(location).title(markerText));
-                Toast.makeText(this, "Đã đánh dấu!", Toast.LENGTH_SHORT).show();
-                selectedLocation = null;
-            } else {
-                Toast.makeText(this, "Vui lòng nhập nội dung!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
-
-        builder.show();
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Gọi phương thức onResume của MapView
+        mapView.onResume();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Gọi phương thức onPause của MapView
+        mapView.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Gọi phương thức onStop của MapView
+        mapView.onStop();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        // Gọi phương thức onLowMemory của MapView
+        mapView.onLowMemory();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Gọi phương thức onDestroy của MapView
+        mapView.onDestroy();
+    }
+
+    // Xử lý kết quả của yêu cầu quyền
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
+            // Nếu quyền đã được cấp
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Gọi lại phương thức lấy vị trí
                 getLocation();
             }
         }
