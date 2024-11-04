@@ -6,7 +6,7 @@
     android:id="@+id/login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_bg"
+    android:background="@drawable/gradient_background"
     tools:context=".LoginActivity">
 
     <androidx.cardview.widget.CardView
@@ -102,10 +102,10 @@
         android:text="or sign in with"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/socialIcons"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/socialIcons"
@@ -120,7 +120,7 @@
             android:id="@+id/google_btn"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:src="@drawable/google"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
