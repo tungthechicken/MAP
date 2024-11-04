@@ -1,11 +1,13 @@
 package com.example.map;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -63,6 +65,24 @@ public class DashboardActivity extends AppCompatActivity {
         setupPieChart();
         setupLineChart();
         setupStackBarChart();
+
+
+        // Set up the settings button
+        ImageView settingButton = findViewById(R.id.settingButton);
+        settingButton.setOnClickListener(view -> {
+            // Handle settings button click
+            Intent intent = new Intent(DashboardActivity.this, SettingActivity.class);
+            startActivity(intent);
+        });
+
+        // Set up the map button
+        ImageView mapButton = findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(view -> {
+            // Handle map button click
+            Intent intent = new Intent(DashboardActivity.this, MapActivity.class);
+            startActivity(intent);
+        });
+
 
         labelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
