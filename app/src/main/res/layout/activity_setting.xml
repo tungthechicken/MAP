@@ -15,7 +15,7 @@
         android:gravity="center_vertical">
 
         <ImageButton
-            android:id="@+id/back_button"
+            android:id="@+id/backToDashboard"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="8dp"
@@ -352,7 +352,7 @@
                 android:textSize="18sp" />
 
             <ImageButton
-                android:id="@+id/chitiet9"
+                android:id="@+id/logoutButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
