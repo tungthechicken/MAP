@@ -19,14 +19,14 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
         profileLayout = findViewById(R.id.Profile);
         detailButton = findViewById(R.id.chitiet1);
+
         profileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Chuyển đến editProfileActivity
-                Intent intent = new Intent(SettingActivity.this, editProfileActivity.class);
-                startActivity(intent);
+                openEditProfile();
             }
         });
         detailButton.setOnClickListener(new View.OnClickListener() {
