@@ -6,7 +6,7 @@
     android:id="@+id/signup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_bg"
+    android:background="@drawable/gradient_background"
     tools:context=".SignupActivity">
 
     <androidx.cardview.widget.CardView
@@ -16,7 +16,6 @@
         android:layout_margin="30dp"
         app:cardCornerRadius="30dp"
         app:cardElevation="10dp"
-        android:background="@drawable/custom_edittext"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,15 +27,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
+            android:background="#f3f6f4"
             android:padding="24dp">
 
             <TextView
                 android:id="@+id/signupText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign Up"
+                android:text="SIGN UP"
                 android:textAlignment="center"
-                android:textColor="@color/purple"
+                android:textColor="@color/dark_blue"
                 android:textSize="36sp"
                 android:textStyle="bold" />
 
@@ -103,8 +103,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="30dp"
-                android:backgroundTint="@color/purple"
-                android:text="Sign Up"
+                android:background="@drawable/gradient_button_background"
+                android:text="SIGN UP"
                 android:textSize="18sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -129,7 +129,7 @@
         android:text="or sign in with"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/socialIcons"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -147,7 +147,7 @@
             android:id="@+id/google_btn1"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:src="@drawable/google"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
