@@ -2,10 +2,12 @@ package com.example.map;
 
 import android.Manifest; // Thư viện cho quyền truy cập
 import android.content.pm.PackageManager; // Thư viện cho quản lý gói
+import android.media.Image;
 import android.os.Bundle; // Thư viện cho Bundle (dùng để truyền dữ liệu)
 import android.util.Log;
 import android.widget.Button; // Thư viện cho Button
 import android.widget.EditText; // Thư viện cho EditText
+import android.widget.ImageButton;
 import android.widget.Toast; // Thư viện cho Toast
 import androidx.annotation.NonNull; // Thư viện cho annotation không null
 import androidx.appcompat.app.AlertDialog; // Thư viện cho hộp thoại AlertDialog
@@ -79,10 +81,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mapFragment.getMapAsync(this);
         }
 
-        Button btnShowLocation = findViewById(R.id.btn_show_location);
+        ImageButton btnShowLocation = findViewById(R.id.btn_show_location);
         btnShowLocation.setOnClickListener(v -> getLocation());
 
-        Button btnAddMarker = findViewById(R.id.btn_add_marker);
+        ImageButton btnAddMarker = findViewById(R.id.btn_add_marker);
         btnAddMarker.setOnClickListener(v -> markLocation());
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
