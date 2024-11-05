@@ -92,8 +92,7 @@ public class SignupActivity extends AppCompatActivity {
 
         signupButton.setOnClickListener(view -> {
             // Add your signup logic here
-            Intent intent = new Intent(SignupActivity.this, SettingActivity.class);
-            startActivity(intent);
+            Toast.makeText(getApplicationContext(), "Signup button clicked", Toast.LENGTH_SHORT).show();
         });
 
         loginPrompt.setOnClickListener(view -> {
@@ -131,7 +130,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     void navigateToSecondActivity(){
-        Intent intent = new Intent(SignupActivity.this, MapActivity.class);
+        Intent intent = new Intent(SignupActivity.this, CentralActivity.class);
         startActivity(intent);
     }
 }
