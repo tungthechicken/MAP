@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         loginButton.setOnClickListener(view -> {
-            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+            Intent intent = new Intent(LoginActivity.this, CentralActivity.class);
             startActivity(intent);
         });
 
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void navigateToSecondActivity(){
-        Intent intent = new Intent(LoginActivity.this, MapActivity.class);
+        Intent intent = new Intent(LoginActivity.this, CentralActivity.class);
         startActivity(intent);
     }
 }
