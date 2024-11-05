@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/editNoti"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/back"
+            android:padding="7dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/back" />
+
+        <TextView
+            android:id="@+id/settingtitle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Notification"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_boder_purple"
+        android:layout_marginTop="85dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/System"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="System"
+            android:textStyle="bold"
+            android:textColor="@color/light_gray"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/UpdateApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/labelUpdateApp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Version Updates"
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:id="@+id/radio_group_version_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_On"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="On" />
+
+                <RadioButton
+                    android:id="@+id/radio_Off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Off" />
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/UpdatePotholes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/labelUpdatePotholes"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Pothole Updates"
+                android:textSize="18sp" />
+            <RadioGroup
+                android:id="@+id/radio_group_potholes_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_OnPotholes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="On" />
+
+                <RadioButton
+                    android:id="@+id/radio_OffPotholes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Off" />
+            </RadioGroup>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Mode"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/labelMode"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Mode"
+                android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/gender_radio_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Normal" />
+
+            <RadioButton
+                android:id="@+id/radio_vibration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vibration" />
+            <RadioButton
+                android:id="@+id/radio_silent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Silent" />
+        </RadioGroup>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/Application"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Application"
+                android:textStyle="bold"
+                android:textColor="@color/light_gray"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/Action_base"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/labelAction_base"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="Action-base Notifications"
+                    android:textSize="18sp" />
+                <RadioGroup
+                    android:id="@+id/radio_group_action_base"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_OnAction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="On" />
+
+                    <RadioButton
+                        android:id="@+id/radio_OffAction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Off" />
+                </RadioGroup>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ModeApp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/labelModeApp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="Mode"
+                    android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group_app"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_normalMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Normal" />
+
+                    <RadioButton
+                        android:id="@+id/radio_vibrationMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Vibration" />
+                    <RadioButton
+                        android:id="@+id/radio_silentMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Silent" />
+                </RadioGroup>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

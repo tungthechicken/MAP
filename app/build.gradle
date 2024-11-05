@@ -1,4 +1,4 @@
-plugins {
+ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
 }
@@ -29,6 +29,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildToolsVersion '35.0.0'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 
@@ -40,6 +43,8 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.play.services.location
     implementation libs.firebase.auth
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
@@ -52,5 +57,5 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("com.google.android.material:material:1.9.0") // Phiên bản mới nhất
-
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

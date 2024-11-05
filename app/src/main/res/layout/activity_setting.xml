@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/setting"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/settingtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:paddingTop="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_boder_purple"
+        android:layout_marginTop="85dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/Profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imageProfile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/baseline_person_24" />
+
+            <TextView
+                android:id="@+id/editProfile"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Profile"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/chitiet1"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="fitCenter"
+                android:padding="10dp"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/chi_tiet"
+                android:contentDescription="@string/chi_tiet" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Noti"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imageNoti"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/noti" />
+
+            <TextView
+                android:id="@+id/editNoti"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Notification"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/chitiet2"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/chi_tiet"
+                android:contentDescription="@string/chi_tiet" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/display"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imageDisplay"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/display_setting" />
+
+            <TextView
+                android:id="@+id/editDisplay"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Display"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/chitiet3"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/chi_tiet"
+                android:contentDescription="@string/chi_tiet" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imageUpdate"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/update" />
+
+            <TextView
+                android:id="@+id/editUpdate"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Update"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/chitiet4"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/chi_tiet"
+                android:contentDescription="@string/chi_tiet" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/privacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imagePrivacy"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/security" />
+
+            <TextView
+                android:id="@+id/editPrivacy"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Privacy"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/chitiet5"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/chi_tiet"
+                android:contentDescription="@string/chi_tiet" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/QaA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imageQaA"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/question_answer" />
+
+            <TextView
+                android:id="@+id/textQaA"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Question and Answer"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/chitiet6"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/chi_tiet"
+                android:contentDescription="@string/chi_tiet" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imageReport"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/warning" />
+
+            <TextView
+                android:id="@+id/textWarning"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Report"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/chitiet7"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/chi_tiet"
+                android:contentDescription="@string/chi_tiet" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/About"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imageAbout"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/info" />
+
+            <TextView
+                android:id="@+id/textAbout"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="About"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/chitiet8"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/chi_tiet"
+                android:contentDescription="@string/chi_tiet" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/logOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageLogOut"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                app:srcCompat="@drawable/log_out" />
+
+            <TextView
+                android:id="@+id/textLogOut"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Log Out"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/logoutButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/chi_tiet"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/chi_tiet" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_nav_menu" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

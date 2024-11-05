@@ -92,7 +92,8 @@ public class SignupActivity extends AppCompatActivity {
 
         signupButton.setOnClickListener(view -> {
             // Add your signup logic here
-            Toast.makeText(this, "Signup button clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(SignupActivity.this, SettingActivity.class);
+            startActivity(intent);
         });
 
         loginPrompt.setOnClickListener(view -> {
