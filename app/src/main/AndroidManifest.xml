@@ -19,6 +19,18 @@
         android:theme="@style/Base.Theme.MAP"
         tools:targetApi="31">
         <activity
+            android:name=".QuestionAndAnswerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PrivacyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DisplayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UpdateActivity"
+            android:exported="false" />
+        <activity
             android:name=".SettingActivity"
             android:exported="false" />
         <activity

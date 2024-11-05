@@ -90,6 +90,24 @@ public class DashboardActivity extends AppCompatActivity {
         setupLineChart();
         setupStackBarChart();
 
+
+        // Set up the settings button
+        ImageView settingButton = findViewById(R.id.settingButton);
+        settingButton.setOnClickListener(view -> {
+            // Handle settings button click
+            Intent intent = new Intent(DashboardActivity.this, SettingActivity.class);
+            startActivity(intent);
+        });
+
+        // Set up the map button
+        ImageView mapButton = findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(view -> {
+            // Handle map button click
+            Intent intent = new Intent(DashboardActivity.this, MapActivity.class);
+            startActivity(intent);
+        });
+
+
         labelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
