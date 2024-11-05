@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,8 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 
@@ -43,6 +46,27 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        // Setup navigation bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_home) {
+                return true;
+            }
+            if (item.getItemId() == R.id.nav_map) {
+                startActivity(new Intent(getApplicationContext(), MapActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            if (item.getItemId() == R.id.nav_settings) {
+                startActivity(new Intent(getApplicationContext(), SettingActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            return false;
+        });
 
         km = findViewById(R.id.km);
         potholes = findViewById(R.id.potholes);
@@ -65,24 +89,6 @@ public class DashboardActivity extends AppCompatActivity {
         setupPieChart();
         setupLineChart();
         setupStackBarChart();
-
-
-        // Set up the settings button
-        ImageView settingButton = findViewById(R.id.settingButton);
-        settingButton.setOnClickListener(view -> {
-            // Handle settings button click
-            Intent intent = new Intent(DashboardActivity.this, SettingActivity.class);
-            startActivity(intent);
-        });
-
-        // Set up the map button
-        ImageView mapButton = findViewById(R.id.mapButton);
-        mapButton.setOnClickListener(view -> {
-            // Handle map button click
-            Intent intent = new Intent(DashboardActivity.this, MapActivity.class);
-            startActivity(intent);
-        });
-
 
         labelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

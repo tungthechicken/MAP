@@ -8,6 +8,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class SettingActivity extends AppCompatActivity {
     private LinearLayout profileEdit;
     private ImageButton chitietProfile;
@@ -25,11 +27,25 @@ public class SettingActivity extends AppCompatActivity {
         notiEdit = findViewById(R.id.Noti);
         chitietNoti = findViewById(R.id.chitiet2);
 
-        // Go back to DashboardActivity
-        ImageView backToDashboard = findViewById(R.id.backToDashboard);
-        backToDashboard.setOnClickListener(view -> {
-            // Handle settings button click
-            finish();
+        // Setup navigation bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_settings);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_home) {
+                startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            if (item.getItemId() == R.id.nav_map) {
+                startActivity(new Intent(getApplicationContext(), MapActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            if (item.getItemId() == R.id.nav_settings) {
+                return true;
+            }
+            return false;
         });
 
         // Setup logout button and destroy everything

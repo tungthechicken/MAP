@@ -1,242 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dashboard"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
-    android:orientation="vertical"
-    android:paddingBottom="16dp">
+    android:background="@drawable/gradient_background">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="16dp">
-
-        <ImageView
-            android:id="@+id/mapButton"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/baseline_map_24"
-            android:contentDescription="Map"
-            android:layout_marginEnd="8dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Dashboard"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="30dp"
-            android:gravity="center" />
-
-        <ImageView
-            android:id="@+id/settingButton"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/baseline_settings_24"
-            android:contentDescription="Settings"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="20dp">
-
-        <ImageView
-            android:id="@+id/avatarImageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/baseline_person_24"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/vien_avt"
-            android:scaleType="centerCrop"
-            android:clipToOutline="true" />
-
-        <TextView
-            android:id="@+id/usernameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:textSize="26sp"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_white_boder_purple"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp"
+        android:layout_marginBottom="56dp"> <!-- Adjust margin to avoid overlap with BottomNavigationView -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="10dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/custom_edittext">
-
-                    <TextView
-                        android:id="@+id/label1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Kilometers"
-                        android:padding="15dp"
-                        android:textSize="16sp"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <TextView
-                        android:id="@+id/km"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_horizontal"/>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/custom_edittext">
-
-                    <TextView
-                        android:id="@+id/label2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Potholes"
-                        android:padding="15dp"
-                        android:textSize="16sp"
-                        android:layout_gravity="center_horizontal"/>
-
-                    <TextView
-                        android:id="@+id/potholes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_horizontal"/>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/custom_edittext">
-
-                    <Spinner
-                        android:id="@+id/labelSpinner"
-                        android:padding="15dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/unitOfTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_horizontal"/>
-                </LinearLayout>
-
-            </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/pieChartTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Classification"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"/>
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pieChart"
-                android:layout_width="match_parent"
-                android:layout_height="200dp" />
-        </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/lineChartTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Overview"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"/>
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/lineChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"/>
-
-            </LinearLayout>
-        </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/barChartTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Dashboard"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="30dp"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:id="@+id/avatarImageView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/baseline_person_24"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/vien_avt"
+                    android:scaleType="centerCrop"
+                    android:clipToOutline="true" />
+
+                <TextView
+                    android:id="@+id/usernameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pothole Report"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"/>
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/stackBarChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp" />
-
+                    android:text="Username"
+                    android:textSize="26sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
             </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_white_boder_purple"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="10dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/custom_edittext">
+
+                        <TextView
+                            android:id="@+id/label1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kilometers"
+                            android:padding="15dp"
+                            android:textSize="16sp"
+                            android:layout_gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/km"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_horizontal"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/custom_edittext">
+
+                        <TextView
+                            android:id="@+id/label2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Potholes"
+                            android:padding="15dp"
+                            android:textSize="16sp"
+                            android:layout_gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/potholes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_horizontal"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/custom_edittext">
+
+                        <Spinner
+                            android:id="@+id/labelSpinner"
+                            android:padding="15dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/unitOfTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_horizontal"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/pieChartTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Classification"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="10dp"/>
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/pieChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/lineChartTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Overview"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="10dp"/>
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/lineChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/barChartTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pothole Report"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"/>
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/stackBarChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_nav_menu" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
