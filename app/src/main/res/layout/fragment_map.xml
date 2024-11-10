@@ -30,7 +30,9 @@
         android:layout_marginEnd="64dp"
         android:background="@drawable/background_white_boder_purple"
         android:iconifiedByDefault="false"
-        android:queryHint="Nhập địa điểm cần tìm" />
+        android:queryHint="Nhập địa điểm cần tìm"
+
+        />
 
     <ImageButton
         android:id="@+id/btn_show_location"
