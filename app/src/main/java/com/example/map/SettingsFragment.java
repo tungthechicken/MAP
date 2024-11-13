@@ -12,8 +12,9 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.Fragment;
 
 public class SettingsFragment extends Fragment {
     private LinearLayout profileEdit;
@@ -34,11 +35,14 @@ public class SettingsFragment extends Fragment {
     private LinearLayout qaaEdit;
     private ImageButton chitietQaa;
 
+    private ImageButton backButton; // Khai báo ImageButton cho back_button
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        // Tìm các view
         profileEdit = view.findViewById(R.id.Profile);
         chitietProfile = view.findViewById(R.id.chitiet1);
 
@@ -48,7 +52,6 @@ public class SettingsFragment extends Fragment {
         // Setup logout button and destroy everything
         ImageView logoutButton = view.findViewById(R.id.logoutButton);
         logoutButton.setOnClickListener(v -> {
-            // Handle logout button click
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -67,37 +70,31 @@ public class SettingsFragment extends Fragment {
         qaaEdit = view.findViewById(R.id.QaA);
         chitietQaa = view.findViewById(R.id.chitiet6);
 
-        // Setup logout button and destroy everything
-        LinearLayout logOut = view.findViewById(R.id.logOut);
-        logOut.setOnClickListener(v -> {
-            // Handle logout button click
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            getActivity().finish();
+        // Tìm nút back
+        backButton = view.findViewById(R.id.back_button);  // Lấy ImageButton từ layout
+
+        // Set sự kiện cho nút back để quay lại ProfileFragment
+        backButton.setOnClickListener(v -> {
+            // Quay lại trang ProfileFragment
+            getParentFragmentManager().popBackStack(); // Quay lại fragment trước đó trong back stack
         });
 
-        // Chuyển đến EditProfileActivity
+        // Set up các sự kiện cho các phần khác (Edit Profile, Notifications, etc.)
         profileEdit.setOnClickListener(v -> openEditProfile());
         chitietProfile.setOnClickListener(v -> openEditProfile());
 
-        // Chuyển đến EditNotiActivity
         notiEdit.setOnClickListener(v -> openNoti());
         chitietNoti.setOnClickListener(v -> openNoti());
 
-        // Chuyển đến DisplayActivity
         displayEdit.setOnClickListener(v -> openDisplay());
         chitietDisplay.setOnClickListener(v -> openDisplay());
 
-        // Chuyển đến UpdateActivity
         updateEdit.setOnClickListener(v -> openUpdate());
         chitietUpdate.setOnClickListener(v -> openUpdate());
 
-        // Chuyển đến PrivacyActivity
         privacyEdit.setOnClickListener(v -> openPrivacy());
         chitietPrivacy.setOnClickListener(v -> openPrivacy());
 
-        // Chuyển đến QAAActivity
         qaaEdit.setOnClickListener(v -> openQAA());
         chitietQaa.setOnClickListener(v -> openQAA());
 
@@ -105,37 +102,40 @@ public class SettingsFragment extends Fragment {
     }
 
     private void openEditProfile() {
-        // Chuyển đến editProfileActivity
-        Intent intent = new Intent(getActivity(), editProfileActivity.class);
-        startActivity(intent);
+        // Bắt đầu một giao dịch Fragment
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+        // Thay thế fragment hiện tại với EditProfileFragment
+        transaction.replace(R.id.fragment_container, new EditProfileFragment()); // R.id.fragment_container là ID container nơi bạn chứa các Fragment
+
+        // Thêm transaction vào back stack để người dùng có thể quay lại sau
+        transaction.addToBackStack(null);
+
+        // Thực hiện giao dịch
+        transaction.commit();
     }
 
     private void openNoti() {
-        // Chuyển đến editNotiActivity
         Intent intent = new Intent(getActivity(), editNotiActivity.class);
         startActivity(intent);
     }
 
     private void openUpdate() {
-        // Chuyển đến UpdateActivity
         Intent intent = new Intent(getActivity(), UpdateActivity.class);
         startActivity(intent);
     }
 
     private void openDisplay() {
-        // Chuyển đến DisplayActivity
         Intent intent = new Intent(getActivity(), DisplayActivity.class);
         startActivity(intent);
     }
 
     private void openPrivacy() {
-        // Chuyển đến PrivacyActivity
         Intent intent = new Intent(getActivity(), PrivacyActivity.class);
         startActivity(intent);
     }
 
     private void openQAA() {
-        // Chuyển đến QAAActivity
         Intent intent = new Intent(getActivity(), QuestionAndAnswerActivity.class);
         startActivity(intent);
     }

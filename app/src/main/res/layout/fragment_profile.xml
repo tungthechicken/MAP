@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,8 +11,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/settingtitle"
@@ -22,21 +22,21 @@
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageSetting"
-            app:layout_constraintHorizontal_bias="0.588"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/imageSetting"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/baseline_settings_24"
-            android:contentDescription="@string/setting"
             android:background="@android:color/transparent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:contentDescription="@string/setting"
+            android:src="@drawable/baseline_settings_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.972"
+            app:layout_constraintStart_toEndOf="@+id/settingtitle"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -44,7 +44,7 @@
 <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="70dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:background="@drawable/background_white_boder_purple"
