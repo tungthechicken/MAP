@@ -10,7 +10,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface PotholeApiService {
-    // Khai báo phương thức trong PotholeApiService interface
+    // Khai báo phương thức trong PotholeApiService Interface
 
     @GET("/pothole")
     Call<List<Pothole>> getPotholes();
