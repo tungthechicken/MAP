@@ -97,7 +97,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://3af1-113-185-79-135.ngrok-free.app") // Thay bằng URL của server bạn
+                .baseUrl("https://5538-113-185-79-135.ngrok-free.app") // Thay bằng URL của server bạn
                 //.baseUrl("http://10.0.2.2:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
