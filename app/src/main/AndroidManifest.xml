@@ -22,7 +22,7 @@
             android:name=".CentralActivity"
             android:exported="false" />
         <activity
-            android:name=".QuestionAndAnswerFragment"
+            android:name=".QAAFragment"
             android:exported="false" />
         <activity
             android:name=".AboutFragment"
@@ -46,7 +46,7 @@
             android:name=".SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".editProfileActivity"
+            android:name=".EditProfileFragment"
             android:exported="false" />
         <activity
             android:name=".EditNotiFragment"
