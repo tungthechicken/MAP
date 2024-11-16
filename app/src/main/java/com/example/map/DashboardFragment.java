@@ -35,8 +35,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import java.util.ArrayList;
 
 public class DashboardFragment extends Fragment {
-    private TextView km, potholes, unitOfTime;
-    private Spinner labelSpinner;
     private PieChart pieChart;
     private LineChart lineChart;
     private BarChart stackBarChart;
@@ -45,44 +43,13 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-
-        km = view.findViewById(R.id.km);
-        potholes = view.findViewById(R.id.potholes);
-        unitOfTime = view.findViewById(R.id.unitOfTime);
-        labelSpinner = view.findViewById(R.id.labelSpinner);
         pieChart = view.findViewById(R.id.pieChart);
         lineChart = view.findViewById(R.id.lineChart);
         stackBarChart = view.findViewById(R.id.stackBarChart);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.date_options, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        labelSpinner.setAdapter(adapter);
-        labelSpinner.setSelection(adapter.getPosition("Day"));
-
-        updateValues("Day");
-
-        km.setText(String.valueOf(getInitialKilometers()));
-        potholes.setText(String.valueOf(getInitialPotholes()));
-
         setupPieChart();
         setupLineChart();
         setupStackBarChart();
-
-        labelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedOption = parent.getItemAtPosition(position).toString();
-                updateValues(selectedOption);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
-
-        unitOfTime.setText(String.valueOf(getInitialTimeUnits()));
-
         return view;
     }
 
@@ -99,7 +66,7 @@ public class DashboardFragment extends Fragment {
         data.setValueFormatter(new ValueFormatter() {
             @Override
             public String getPieLabel(float value, PieEntry entry) {
-                return ""; // Do not display value
+                return "";
             }
         });
 
@@ -193,54 +160,18 @@ public class DashboardFragment extends Fragment {
         lineChart.getAxisRight().setEnabled(false);
         lineChart.getDescription().setEnabled(false);
     }
-
-    private void updateValues(String option) {
-        switch (option) {
-            case "Day":
-                unitOfTime.setText(String.valueOf(getQuantityForDays()));
-                break;
-            case "Week":
-                unitOfTime.setText(String.valueOf(getQuantityForWeeks()));
-                break;
-            case "Month":
-                unitOfTime.setText(String.valueOf(getQuantityForMonths()));
-                break;
-        }
-    }
-
-    private int getInitialKilometers() {
-        return 0;
-    }
-
-    private int getInitialPotholes() {
-        return 50;
-    }
-
-    private int getInitialTimeUnits() {
-        return 0;
-    }
-
-    private int getQuantityForDays() {
-        return 14;
-    }
-
-    private int getQuantityForWeeks() {
-        return 5;
-    }
-
-    private int getQuantityForMonths() {
-        return 2;
-    }
-
+    // Các phương thức random để tạo dữ liệu ngẫu nhiên cho các loại dữ liệu trong biểu đồ cột.
     private float randomD() {
-        return (float) (Math.random() * 100);
+        return (float) (Math.random() * 10); // Trả về giá trị ngẫu nhiên từ 0 đến 10 cho "Dangerous"
     }
 
     private float randomW() {
-        return (float) (Math.random() * 100);
+        return (float) (Math.random() * 20); // Trả về giá trị ngẫu nhiên từ 0 đến 20 cho "Warning"
     }
 
     private float randomR() {
-        return (float) (Math.random() * 100);
+        return (float) (Math.random() * 30); // Trả về giá trị ngẫu nhiên từ 0 đến 30 cho "Risky"
     }
+
+
 }

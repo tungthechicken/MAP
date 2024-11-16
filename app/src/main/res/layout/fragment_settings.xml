@@ -41,15 +41,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/background_white_boder_purple">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/background_white_boder_purple"
         android:orientation="vertical">
-
         <LinearLayout
             android:id="@+id/Profile"
             android:layout_width="match_parent"
@@ -75,27 +76,29 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Profile"
+                android:layout_marginStart="5dp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="12sp"
                 android:autoSizeMaxTextSize="30sp"
                 android:autoSizeStepGranularity="2sp"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/chitiet1"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
-                android:contentDescription="@string/chi_tiet"
-                android:padding="10dp"
+                android:padding="15dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/chi_tiet" />
         </LinearLayout>
         <View
             android:id="@+id/view1"
             android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
-            android:background="@color/black"/>
+            android:background="@color/gray"/>
 
         <LinearLayout
             android:id="@+id/Noti"
@@ -104,8 +107,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="15dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/Profile">
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imageNoti"
@@ -119,19 +121,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginStart="5dp"
                 android:gravity="center_vertical"
                 android:text="Notification" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/chitiet2"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
-                android:contentDescription="@string/chi_tiet"
-                android:padding="10dp"
+                android:padding="15dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/chi_tiet" />
         </LinearLayout>
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/gray"/>
 
         <LinearLayout
             android:id="@+id/display"
@@ -140,8 +150,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="15dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/Noti">
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imageDisplay"
@@ -156,18 +165,26 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
+                android:layout_marginStart="5dp"
                 android:text="Display" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/chitiet3"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
-                android:contentDescription="@string/chi_tiet"
-                android:padding="10dp"
+                android:padding="15dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/chi_tiet" />
         </LinearLayout>
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/gray"/>
 
         <LinearLayout
             android:id="@+id/update"
@@ -176,8 +193,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/display">
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imageUpdate"
@@ -192,54 +208,26 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
+                android:layout_marginStart="5dp"
                 android:text="Update"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/chitiet4"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
-                android:contentDescription="@string/chi_tiet"
-                android:padding="10dp"
+                android:padding="15dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/chi_tiet" />
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/privacy"
+        <View
+            android:id="@+id/view4"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:layout_marginStart="10dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/update">
-
-            <ImageView
-                android:id="@+id/imagePrivacy"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="?attr/selectableItemBackground"
-                app:srcCompat="@drawable/privacy" />
-
-            <TextView
-                android:id="@+id/editPrivacy"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="Privacy"/>
-
-            <ImageButton
-                android:id="@+id/chitiet5"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackground"
-                android:contentDescription="@string/chi_tiet"
-                android:padding="10dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/chi_tiet" />
-        </LinearLayout>
+            android:layout_marginEnd="10dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/gray"/>
 
         <LinearLayout
             android:id="@+id/QaA"
@@ -248,8 +236,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/privacy">
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imageQaA"
@@ -264,22 +251,29 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
+                android:layout_marginStart="5dp"
                 android:text="Question and Answer" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/chitiet6"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
-                android:contentDescription="@string/chi_tiet"
-                android:padding="10dp"
+                android:padding="15dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/chi_tiet" />
         </LinearLayout>
 
-
+        <View
+            android:id="@+id/view6"
+            android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/gray"/>
         <LinearLayout
-            android:id="@+id/About"
+            android:id="@+id/about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -300,19 +294,26 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
+                android:layout_marginStart="5dp"
                 android:text="About"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/chitiet8"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
-                android:contentDescription="@string/chi_tiet"
-                android:padding="10dp"
+                android:padding="15dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/chi_tiet" />
         </LinearLayout>
-
+        <View
+            android:id="@+id/view7"
+            android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/gray"/>
         <LinearLayout
             android:id="@+id/logOut"
             android:layout_width="match_parent"
@@ -337,18 +338,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
+                android:layout_marginStart="5dp"
                 android:text="Log Out" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/logoutButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
-                android:contentDescription="@string/chi_tiet"
-                android:padding="10dp"
+                android:padding="15dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/chi_tiet" />
         </LinearLayout>
     </LinearLayout>
-
+    </ScrollView>
 </LinearLayout>
