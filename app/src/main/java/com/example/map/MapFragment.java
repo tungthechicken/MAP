@@ -97,8 +97,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://5538-113-185-79-135.ngrok-free.app") // Thay bằng URL của server bạn
-                //.baseUrl("http://10.0.2.2:3000")
+                //.baseUrl("https://5538-113-185-79-135.ngrok-free.app") // Thay bằng URL của server bạn
+                .baseUrl("http://10.0.2.2:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         apiService = retrofit.create(PotholeApiService.class);
@@ -333,7 +333,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
             return;
         }
 
@@ -342,19 +342,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     if (location != null && googleMap != null) {
                         LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-                        // Di chuyển camera đến vị trí người dùng và zoom vào
+                        // Move camera to user location and zoom in
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 17));
 
-                        // Thêm marker tại vị trí người dùng
+                        // Add marker at user location
                         googleMap.addMarker(new MarkerOptions()
                                 .position(userLocation)
                                 .title("Your Location"));
 
-                        // Hiển thị thông tin vị trí
+                        // Show location info
                         showLocationInfo(userLocation);
                     } else {
                         Toast.makeText(requireContext(), "Unable to get location!", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "Failed to get location: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
