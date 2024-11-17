@@ -9,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +27,15 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -41,6 +45,30 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap googleMap;
@@ -52,6 +80,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private SensorEventListener sensorEventListener;
     private boolean isShaking = false;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private Sensor magnetometer;
+    private Sensor gyroscope;
+
+    private PotholeApiService apiService;
+    private long lastShakeTime = 0; // Thời gian lắc cuối cùng
+    private static final long SHAKE_INTERVAL = 1000; // Khoảng thời gian (1 giây) giữa các lần lắc
+
+    private Circle userLocationCircle;
 
     @Nullable
     @Override
@@ -59,6 +95,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://5538-113-185-79-135.ngrok-free.app") // Thay bằng URL của server bạn
+                //.baseUrl("http://10.0.2.2:3000")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiService = retrofit.create(PotholeApiService.class);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.id_map);
@@ -81,10 +124,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 float x = event.values[0];
                 float y = event.values[1];
                 float z = event.values[2];
-                if (Math.sqrt(x * x + y * y + z * z) > 12) {
-                    if (!isShaking) {
+                float shakeThreshold = 18; // Ngưỡng lắc (bạn có thể điều chỉnh)
+
+                long currentTime = System.currentTimeMillis(); // Lấy thời gian hiện tại
+
+                if (Math.sqrt(x * x + y * y + z * z) > shakeThreshold) {
+                    // Kiểm tra nếu lắc đủ mạnh và đã qua thời gian chờ giữa các lần lắc
+                    if (!isShaking && (currentTime - lastShakeTime) > SHAKE_INTERVAL) {
                         isShaking = true;
-                        getLocationForShake();
+                        lastShakeTime = currentTime; // Cập nhật thời gian lắc cuối cùng
+                        getLocationForShake(); // Gọi hàm xử lý lắc
                     }
                 } else {
                     isShaking = false;
@@ -105,6 +154,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         setupSearchView(searchView);
 
         return view;
+
+
     }
 
     private void setupSearchView(SearchView searchView) {
@@ -151,12 +202,64 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         }
 
                         showLocationInfo(currentLocation);
+
+                        // Hiển thị hộp thoại xác nhận
+                        showConfirmationDialog(currentLocation);
                     } else {
                         Toast.makeText(requireContext(), "Unable to get location!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+    private void showConfirmationDialog(LatLng location) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Confirm Pothole");
+        builder.setMessage("Is this a pothole?");
 
+        builder.setPositiveButton("Pothole", (dialog, which) -> {
+            // Khi người dùng chọn Pothole, lưu lại vị trí và thông tin
+            savePothole(location);
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            // Người dùng chọn Cancel, không làm gì cả
+            dialog.dismiss();
+        });
+
+        builder.show();
+    }
+
+    private void savePothole(LatLng location) {
+        // Tạo dữ liệu ổ gà
+        Pothole pothole = new Pothole(
+                "username", // điền tên người dùng ở đây
+                1.0, // kích thước giả định
+                0.5, // độ sâu giả định
+                0.5, // đường kính giả định
+                "Pothole", // nhãn ổ gà
+                new Pothole.LocationData(
+                        String.valueOf(location.longitude),
+                        String.valueOf(location.latitude),
+                        "address" // điền địa chỉ nếu có
+                )
+        );
+
+        // Gọi API để lưu ổ gà
+        apiService.savePothole(pothole).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(requireContext(), "Pothole saved on server!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), "Failed to save pothole!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -178,7 +281,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onResume() {
         super.onResume();
-        sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(sensorEventListener, gyroscope, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(sensorEventListener, magnetometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -197,6 +302,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
+    private void startRadarEffect() {
+        if (userLocationCircle != null) {
+            final int maxRadius = 200;  // Bán kính tối đa của radar
+            final int minRadius = 50;   // Bán kính tối thiểu của radar
+            final int duration = 2000;  // Thời gian thay đổi bán kính trong ms
+
+            final Handler handler = new Handler();
+            final Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (userLocationCircle != null) {
+                        double radius = userLocationCircle.getRadius();
+
+                        if (radius >= maxRadius) {
+                            userLocationCircle.setRadius(minRadius);  // Đặt lại bán kính nếu vượt quá tối đa
+                        } else {
+                            userLocationCircle.setRadius(radius + 10);  // Tăng bán kính để tạo hiệu ứng radar
+                        }
+
+                        handler.postDelayed(this, 200);  // Cập nhật mỗi 200ms để tạo hiệu ứng
+                    }
+                }
+            };
+
+            handler.post(runnable);  // Bắt đầu chạy hiệu ứng radar
+        }
+    }
+
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -208,8 +341,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .addOnSuccessListener(requireActivity(), location -> {
                     if (location != null && googleMap != null) {
                         LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        googleMap.addMarker(new MarkerOptions().position(userLocation).title("You are here"));
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+
+                        // Di chuyển camera đến vị trí người dùng và zoom vào
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 17));
+
+                        // Thêm marker tại vị trí người dùng
+                        googleMap.addMarker(new MarkerOptions()
+                                .position(userLocation)
+                                .title("Your Location"));
+
+                        // Hiển thị thông tin vị trí
+                        showLocationInfo(userLocation);
+                    } else {
+                        Toast.makeText(requireContext(), "Unable to get location!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -232,8 +376,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         builder.setPositiveButton("Save", (dialog, which) -> {
             String markerText = input.getText().toString().trim();
             if (location != null && !markerText.isEmpty()) {
+                // Thêm marker trên bản đồ
                 googleMap.addMarker(new MarkerOptions().position(location).title(markerText));
-                Toast.makeText(requireContext(), "Marker added!", Toast.LENGTH_SHORT).show();
+
+                // Tạo dữ liệu ổ gà
+                Pothole pothole = new Pothole(
+                        "username", // điền tên người dùng ở đây
+                        1.0, // kích thước giả định
+                        0.5, // độ sâu giả định
+                        0.5, // đường kính giả định
+                        markerText, // nhãn ổ gà
+                        new Pothole.LocationData(
+                                String.valueOf(location.longitude),
+                                String.valueOf(location.latitude),
+                                "address" // điền địa chỉ nếu có
+                        )
+                );
+
+                // Gọi API để lưu ổ gà
+                apiService.savePothole(pothole).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(requireContext(), "Marker saved on server!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(requireContext(), "Failed to save marker!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
                 selectedLocation = null;
             } else {
                 Toast.makeText(requireContext(), "Please enter content!", Toast.LENGTH_SHORT).show();
