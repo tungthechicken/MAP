@@ -22,16 +22,16 @@
             android:name=".CentralActivity"
             android:exported="false" />
         <activity
-            android:name=".QuestionAndAnswerActivity"
+            android:name=".QAAFragment"
             android:exported="false" />
         <activity
-            android:name=".PrivacyActivity"
+            android:name=".AboutFragment"
             android:exported="false" />
         <activity
-            android:name=".DisplayActivity"
+            android:name=".DisplayFragment"
             android:exported="false" />
         <activity
-            android:name=".UpdateActivity"
+            android:name=".UpdateFragment"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
@@ -46,10 +46,10 @@
             android:name=".SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".editProfileActivity"
+            android:name=".EditProfileFragment"
             android:exported="false" />
         <activity
-            android:name=".editNotiActivity"
+            android:name=".EditNotiFragment"
             android:exported="false" />
 
         <meta-data

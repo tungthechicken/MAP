@@ -4,7 +4,7 @@
     android:id="@+id/display"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_bg"
+    android:background="@drawable/gradient_background"
     android:orientation="vertical">
 
     <LinearLayout
@@ -48,8 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginStart="5dp"
-            android:text="Theme Mode"
-            android:textSize="20sp" />
+            android:text="Theme Mode" />
             <RadioGroup
                 android:id="@+id/radio_group_display"
                 android:layout_width="match_parent"

@@ -6,137 +6,130 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.FragmentTransaction;
 
 public class SettingsFragment extends Fragment {
     private LinearLayout profileEdit;
-    private ImageButton chitietProfile;
 
     private LinearLayout notiEdit;
-    private ImageButton chitietNoti;
 
     private LinearLayout updateEdit;
-    private ImageButton chitietUpdate;
 
     private LinearLayout displayEdit;
-    private ImageButton chitietDisplay;
 
-    private LinearLayout privacyEdit;
-    private ImageButton chitietPrivacy;
+    private LinearLayout aboutEdit;
 
     private LinearLayout qaaEdit;
-    private ImageButton chitietQaa;
+
+    private ImageButton backButton; // Khai báo ImageButton cho back_button
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        // Tìm các view
         profileEdit = view.findViewById(R.id.Profile);
-        chitietProfile = view.findViewById(R.id.chitiet1);
 
         notiEdit = view.findViewById(R.id.Noti);
-        chitietNoti = view.findViewById(R.id.chitiet2);
 
-        // Setup logout button and destroy everything
-        ImageView logoutButton = view.findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(v -> {
-            // Handle logout button click
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            getActivity().finish();
+        LinearLayout logOutLayout = view.findViewById(R.id.logOut);
+
+
+// Cài đặt sự kiện nhấn cho LinearLayout
+        logOutLayout.setOnClickListener(v -> {
+            openlogOut();
         });
+
 
         displayEdit = view.findViewById(R.id.display);
-        chitietDisplay = view.findViewById(R.id.chitiet3);
 
         updateEdit = view.findViewById(R.id.update);
-        chitietUpdate = view.findViewById(R.id.chitiet4);
 
-        privacyEdit = view.findViewById(R.id.privacy);
-        chitietPrivacy = view.findViewById(R.id.chitiet5);
+        aboutEdit = view.findViewById(R.id.about);
 
         qaaEdit = view.findViewById(R.id.QaA);
-        chitietQaa = view.findViewById(R.id.chitiet6);
 
-        // Setup logout button and destroy everything
-        LinearLayout logOut = view.findViewById(R.id.logOut);
-        logOut.setOnClickListener(v -> {
-            // Handle logout button click
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            getActivity().finish();
+        backButton = view.findViewById(R.id.back_button);  // Lấy ImageButton từ layout
+
+        // Set sự kiện cho nút back để quay lại ProfileFragment
+        backButton.setOnClickListener(v -> {
+            // Quay lại trang ProfileFragment
+            getParentFragmentManager().popBackStack();
         });
 
-        // Chuyển đến EditProfileActivity
         profileEdit.setOnClickListener(v -> openEditProfile());
-        chitietProfile.setOnClickListener(v -> openEditProfile());
 
-        // Chuyển đến EditNotiActivity
         notiEdit.setOnClickListener(v -> openNoti());
-        chitietNoti.setOnClickListener(v -> openNoti());
 
-        // Chuyển đến DisplayActivity
         displayEdit.setOnClickListener(v -> openDisplay());
-        chitietDisplay.setOnClickListener(v -> openDisplay());
 
-        // Chuyển đến UpdateActivity
         updateEdit.setOnClickListener(v -> openUpdate());
-        chitietUpdate.setOnClickListener(v -> openUpdate());
 
-        // Chuyển đến PrivacyActivity
-        privacyEdit.setOnClickListener(v -> openPrivacy());
-        chitietPrivacy.setOnClickListener(v -> openPrivacy());
+        aboutEdit.setOnClickListener(v -> openAbout());
 
-        // Chuyển đến QAAActivity
         qaaEdit.setOnClickListener(v -> openQAA());
-        chitietQaa.setOnClickListener(v -> openQAA());
 
         return view;
     }
+    // Hàm xử lý việc đăng xuất
+    private void openlogOut() {
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        getActivity().finish();
+    }
 
     private void openEditProfile() {
-        // Chuyển đến editProfileActivity
-        Intent intent = new Intent(getActivity(), editProfileActivity.class);
-        startActivity(intent);
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new EditProfileFragment());
+        // Thêm transaction vào back stack để người dùng có thể quay lại sau
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void openNoti() {
-        // Chuyển đến editNotiActivity
-        Intent intent = new Intent(getActivity(), editNotiActivity.class);
-        startActivity(intent);
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new EditNotiFragment());
+        // Thêm transaction vào back stack để người dùng có thể quay lại sau
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void openUpdate() {
-        // Chuyển đến UpdateActivity
-        Intent intent = new Intent(getActivity(), UpdateActivity.class);
-        startActivity(intent);
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new UpdateFragment());
+        // Thêm transaction vào back stack để người dùng có thể quay lại sau
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void openDisplay() {
-        // Chuyển đến DisplayActivity
-        Intent intent = new Intent(getActivity(), DisplayActivity.class);
-        startActivity(intent);
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new DisplayFragment());
+        // Thêm transaction vào back stack để người dùng có thể quay lại sau
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
-    private void openPrivacy() {
-        // Chuyển đến PrivacyActivity
-        Intent intent = new Intent(getActivity(), PrivacyActivity.class);
-        startActivity(intent);
+    private void openAbout() {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new AboutFragment());
+        // Thêm transaction vào back stack để người dùng có thể quay lại sau
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void openQAA() {
-        // Chuyển đến QAAActivity
-        Intent intent = new Intent(getActivity(), QuestionAndAnswerActivity.class);
-        startActivity(intent);
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new QAAFragment());
+        // Thêm transaction vào back stack để người dùng có thể quay lại sau
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

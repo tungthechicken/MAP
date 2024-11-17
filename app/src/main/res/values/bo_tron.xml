@@ -6,7 +6,7 @@
 
     <style name="RoundedCorners" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item> <!-- Điều chỉnh giá trị này để thay đổi độ bo tròn -->
+        <item name="cornerSize">16dp</item>
     </style>
 
 </resources>

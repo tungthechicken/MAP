@@ -51,7 +51,7 @@
         <item>Week</item>
         <item>Month</item>
     </string-array>
-    <string name="edit_photo">Edit Photo</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="setting">Setting</string>
+    <string name="edit_photo">edit photo</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

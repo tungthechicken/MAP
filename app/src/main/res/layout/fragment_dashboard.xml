@@ -79,24 +79,25 @@
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/custom_edittext">
-
-                        <TextView
-                            android:id="@+id/label1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Kilometers"
-                            android:padding="15dp"
-                            android:textSize="16sp"
-                            android:layout_gravity="center_horizontal"/>
-
                         <TextView
                             android:id="@+id/km"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="24sp"
+                            android:textSize="30sp"
                             android:textStyle="bold"
+                            android:textColor="@color/black"
                             android:layout_gravity="center_horizontal"/>
+                        <TextView
+                            android:id="@+id/label1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kilometers"
+                            android:padding="5dp"
+                            android:layout_gravity="center_horizontal"
+                            android:textColor="@color/gray"/>
+
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -106,24 +107,26 @@
                         android:orientation="vertical"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/custom_edittext">
-
-                        <TextView
-                            android:id="@+id/label2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Potholes"
-                            android:padding="15dp"
-                            android:textSize="16sp"
-                            android:layout_gravity="center_horizontal"/>
 
                         <TextView
                             android:id="@+id/potholes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="24sp"
+                            android:textSize="30sp"
                             android:textStyle="bold"
+                            android:textColor="@color/black"
                             android:layout_gravity="center_horizontal"/>
+                        <TextView
+                            android:id="@+id/label2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Potholes"
+                            android:padding="5dp"
+                            android:layout_gravity="center_horizontal"
+                            android:textColor="@color/gray"/>
+
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -133,21 +136,25 @@
                         android:orientation="vertical"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/custom_edittext">
-
-                        <Spinner
-                            android:id="@+id/labelSpinner"
-                            android:padding="15dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
                         <TextView
                             android:id="@+id/unitOfTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="24sp"
+                            android:textSize="30sp"
                             android:textStyle="bold"
+                            android:textColor="@color/black"
                             android:layout_gravity="center_horizontal"/>
+                        <TextView
+                            android:id="@+id/label3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Day"
+                            android:padding="5dp"
+                            android:layout_gravity="center_horizontal"
+                            android:textColor="@color/gray"/>
+
+
                     </LinearLayout>
                 </LinearLayout>
 
