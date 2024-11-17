@@ -15,8 +15,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="-24dp"
-        android:layout_marginBottom="-30dp" />
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="-28dp" />
 
     <SearchView
         android:id="@+id/search_location"
@@ -47,7 +47,6 @@
         android:scaleType="fitCenter"
         android:src="@drawable/map_target"
         app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
-    <!-- Nút để đánh dấu trên bản đồ -->
     <ImageButton
         android:id="@+id/btn_add_marker"
         android:layout_width="47dp"
@@ -60,6 +59,34 @@
         android:elevation="1dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/add_hole" />
+
+
+    <ImageButton
+        android:id="@+id/btn_get_direction"
+        android:layout_width="45dp"
+        android:layout_height="42dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="536dp"
+        android:layout_marginEnd="11dp"
+        android:background="@null"
+        android:elevation="1dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/direction" />
+
+
+    <ImageButton
+        android:id="@+id/btn_cancel_route"
+        android:layout_width="45dp"
+        android:layout_height="42dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="481dp"
+        android:layout_marginEnd="11dp"
+        android:background="@null"
+        android:elevation="1dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/cancel" />
 
 
 </RelativeLayout>

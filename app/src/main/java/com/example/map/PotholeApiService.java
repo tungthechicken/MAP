@@ -26,5 +26,6 @@ public interface PotholeApiService {
 
     @POST("/pothole")
     Call<Void> savePothole(@Body Pothole pothole);
+
 }
 

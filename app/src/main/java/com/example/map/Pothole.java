@@ -26,6 +26,27 @@ public class Pothole {
             this.latitude = latitude;
             this.address = address;
         }
+
+        public String getLatitude() {
+            return latitude;
+        }
+
+        public String getLongitude() {
+            return longitude;
+        }
+    }
+    public String getStatement() {
+        return statement;
+    }
+    public void setStatement(String statement) {
+        this.statement = statement;
+    }
+    public LocationData getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationData location) {
+        this.location = location;
     }
 }
 
