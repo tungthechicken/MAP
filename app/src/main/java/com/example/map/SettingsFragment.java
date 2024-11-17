@@ -26,7 +26,6 @@ public class SettingsFragment extends Fragment {
 
     private LinearLayout qaaEdit;
 
-    private ImageButton backButton; // Khai báo ImageButton cho back_button
 
     @Nullable
     @Override
@@ -54,14 +53,6 @@ public class SettingsFragment extends Fragment {
         aboutEdit = view.findViewById(R.id.about);
 
         qaaEdit = view.findViewById(R.id.QaA);
-
-        backButton = view.findViewById(R.id.back_button);  // Lấy ImageButton từ layout
-
-        // Set sự kiện cho nút back để quay lại ProfileFragment
-        backButton.setOnClickListener(v -> {
-            // Quay lại trang ProfileFragment
-            getParentFragmentManager().popBackStack();
-        });
 
         profileEdit.setOnClickListener(v -> openEditProfile());
 

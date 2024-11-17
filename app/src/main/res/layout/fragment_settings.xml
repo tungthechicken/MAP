@@ -12,22 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/back_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="8dp"
-            android:layout_marginTop="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:contentDescription="@string/back"
-            android:padding="7dp"
-            android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/settingtitle"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/back" />
-
         <TextView
             android:id="@+id/settingtitle"
             android:layout_width="wrap_content"
