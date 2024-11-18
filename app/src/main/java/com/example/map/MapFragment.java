@@ -91,10 +91,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private boolean canDirection = false;
     private SearchView searchView;
 
-    private ListView suggestionListView; // Để hiển thị danh sách gợi ý
-    private ArrayAdapter<String> suggestionAdapter;
-    private List<String> suggestionList = new ArrayList<>();
-    private NominatimService nominatimService;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
