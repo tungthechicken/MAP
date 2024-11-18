@@ -382,12 +382,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 selectedLocation = latLng;
                 googleMap.clear(); // Xóa các marker cũ
                 googleMap.addMarker(new MarkerOptions().position(selectedLocation).title("Selected Location"));
+                if (userLocation != null) {
+                    // Gọi API để lấy chỉ đường từ vị trí người dùng đến điểm đã chọn
+                    getRoute(userLocation, selectedLocation);
+                }
             });
 
-            if (userLocation != null) {
-                // Gọi API để lấy chỉ đường từ vị trí người dùng đến điểm đã chọn
-                getRoute(userLocation, selectedLocation);
-            }
+
         }
 
 
