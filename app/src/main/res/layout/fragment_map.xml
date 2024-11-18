@@ -33,6 +33,12 @@
         android:queryHint="Nhập địa điểm cần tìm"
 
         />
+    <ListView
+        android:id="@+id/suggestion_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />  <!-- Ẩn đi nếu không có gợi ý -->
+
 
     <ImageButton
         android:id="@+id/btn_show_location"

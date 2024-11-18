@@ -11,18 +11,19 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
-
+import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -33,6 +34,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,10 +50,8 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,8 +61,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-
-
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap googleMap;
@@ -90,6 +89,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private List<Marker> potholeMarkers = new ArrayList<>();
     private boolean canSelectLocation = false; // Biến này kiểm tra xem có thể chọn vị trí hay không
     private boolean canDirection = false;
+    private SearchView searchView;
+
+    private ListView suggestionListView; // Để hiển thị danh sách gợi ý
+    private ArrayAdapter<String> suggestionAdapter;
+    private List<String> suggestionList = new ArrayList<>();
+    private NominatimService nominatimService;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,6 +103,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         apiService = RetrofitClient.getInstance().create(PotholeApiService.class);
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.id_map);
@@ -111,12 +117,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         ImageButton btnAddMarker = view.findViewById(R.id.btn_add_marker);
         btnAddMarker.setOnClickListener(v -> enableLocationSelection());
 
-        ImageButton btnGetRoute = view.findViewById(R.id.btn_get_direction); //checkkkkkkkkkkkkkkkkkkkkkkk
+        ImageButton btnGetRoute = view.findViewById(R.id.btn_get_direction);
         btnGetRoute.setOnClickListener(v -> enableDirection());
 
         ImageButton btnCancelRoute = view.findViewById(R.id.btn_cancel_route);
         btnCancelRoute.setOnClickListener(v -> cancelRoute());
 
+        // Khởi tạo SearchView
+        searchView = view.findViewById(R.id.search_location);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!query.isEmpty()) {
+                    searchLocation(query);  // Gọi hàm tìm kiếm khi người dùng nhấn Enter
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -152,26 +174,41 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Places.initialize(requireContext(), getString(R.string.google_maps_key));
         }
 
-        SearchView searchView = view.findViewById(R.id.search_location);
-        setupSearchView(searchView);
-
         return view;
-
     }
+    private void searchLocation(String query) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://nominatim.openstreetmap.org/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-    private void setupSearchView(SearchView searchView) {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        NominatimService service = retrofit.create(NominatimService.class);
+        Call<List<NominatimResult>> call = service.searchLocation(query, "json");
+
+        call.enqueue(new Callback<List<NominatimResult>>() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).build(requireActivity());
-                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-                return true;
+            public void onResponse(Call<List<NominatimResult>> call, Response<List<NominatimResult>> response) {
+                if (response.isSuccessful()) {
+                    List<NominatimResult> results = response.body();
+                    if (results != null && !results.isEmpty()) {
+                        NominatimResult result = results.get(0);
+                        double lat = Double.parseDouble(result.getLat());
+                        double lon = Double.parseDouble(result.getLon());
+                        LatLng location = new LatLng(lat, lon);
+
+                        // Di chuyển bản đồ đến vị trí mới và thêm marker
+                        googleMap.clear();
+                        googleMap.addMarker(new MarkerOptions().position(location).title(result.getDisplay_name()));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+                    } else {
+                        Toast.makeText(requireContext(), "Không tìm thấy địa điểm", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
+            public void onFailure(Call<List<NominatimResult>> call, Throwable t) {
+                Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -368,9 +405,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             potholeMarkers.add(potholeMarker);
         }
     }
-
-    private void enableDirection()
-    {
+// chuc nang dan duong
+    private void enableDirection() {
         canDirection = true;
         getDirection();
     }
@@ -394,28 +430,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
     private void getRoute(LatLng startLatLng, LatLng endLatLng) {
+        if (endLatLng == null) return;
 
-        if(endLatLng == null) return;
-
-
-        // Chuyển đổi LatLng thành định dạng chuỗi "longitude,latitude"
         String start = startLatLng.longitude + "," + startLatLng.latitude;
         String end = endLatLng.longitude + "," + endLatLng.latitude;
-        String apiKey = "5b3ce3597851110001cf624891cefefa39a74c41a58e409f95fe4da9"; // OpenRouteService API key
+        String apiKey = "5b3ce3597851110001cf624891cefefa39a74c41a58e409f95fe4da9";
 
-        // Tạo Retrofit client với base URL của OpenRouteService
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.openrouteservice.org/")
-                .addConverterFactory(GsonConverterFactory.create())  // Chuyển đổi dữ liệu JSON sang đối tượng Java
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        // Tạo interface API
         OpenRouteServiceAPI api = retrofit.create(OpenRouteServiceAPI.class);
-
-        // Gọi phương thức getRoute và truyền các tham số
         Call<RouteResponse> call = api.getRoute(apiKey, start, end);
 
-        // Gửi yêu cầu bất đồng bộ
         call.enqueue(new Callback<RouteResponse>() {
             @Override
             public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
@@ -427,11 +455,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             route.add(new LatLng(coord[1], coord[0]));
                         }
 
-                        // Vẽ Polyline lên bản đồ và lưu vào currentRoute
-                        if (googleMap != null) {
-                            PolylineOptions polylineOptions = new PolylineOptions().addAll(route).color(Color.BLUE).width(8);
-                            currentRoute = googleMap.addPolyline(polylineOptions);  // Lưu đối tượng Polyline vào biến
-                        }
+                        // Hiển thị hộp thoại xác nhận
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Start Navigation?")
+                                .setMessage("Do you want to navigate to this location?")
+                                .setPositiveButton("Confirm", (dialog, which) -> {
+                                    // Vẽ Polyline lên bản đồ
+                                    if (googleMap != null) {
+                                        PolylineOptions polylineOptions = new PolylineOptions()
+                                                .addAll(route)
+                                                .color(Color.BLUE)
+                                                .width(8);
+                                        currentRoute = googleMap.addPolyline(polylineOptions);
+                                    }
+
+                                    // Bắt đầu theo dõi vị trí
+                                    startNavigation(endLatLng);
+                                })
+                                .setNegativeButton("Cancel", (dialog, which) -> {
+                                    cancelRoute();
+                                })
+                                .show();
                     }
                 } else {
                     Toast.makeText(getContext(), "Failed to get route", Toast.LENGTH_SHORT).show();
@@ -443,6 +487,50 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void startNavigation(LatLng destination) {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        }
+
+        fusedLocationClient.requestLocationUpdates(
+                LocationRequest.create().setInterval(1000).setFastestInterval(500).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY),
+                new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        if (locationResult == null || googleMap == null) return;
+
+                        Location userLocation = locationResult.getLastLocation();
+                        LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+
+                        // Di chuyển camera theo dõi người dùng
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 19));
+                        googleMap.setOnMapClickListener(null);
+                        // Kiểm tra nếu người dùng đến đích
+                        if (isUserAtDestination(userLatLng, destination)) {
+                            fusedLocationClient.removeLocationUpdates(this); // Dừng theo dõi vị trí
+                            Toast.makeText(requireContext(), "You have arrived at your destination!", Toast.LENGTH_SHORT).show();
+                        }
+                        if(canDirection==false)
+                        {
+                            fusedLocationClient.removeLocationUpdates(this);
+                            Toast.makeText(requireContext(), "Canceled", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                },
+                Looper.getMainLooper()
+        );
+    }
+    private boolean isUserAtDestination(LatLng userLocation, LatLng destination) {
+        float[] results = new float[1];
+        Location.distanceBetween(
+                userLocation.latitude, userLocation.longitude,
+                destination.latitude, destination.longitude,
+                results
+        );
+        return results[0] < 20; // Người dùng được xem như đã đến đích nếu cách điểm đến < 20m
     }
     private void cancelRoute() {
         if (currentRoute != null) {
@@ -456,7 +544,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Toast.makeText(requireContext(), "No route to cancel", Toast.LENGTH_SHORT).show();
         }
     }
-
+// chuc nang dan duong
 
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&

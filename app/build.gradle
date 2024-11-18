@@ -54,7 +54,6 @@ dependencies {
     //KIEN
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.gms:play-services-location:21.3.0")
-    implementation("com.google.android.libraries.places:places:2.6.0")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("com.google.android.material:material:1.9.0") // Phiên bản mới nhất
 
@@ -67,6 +66,12 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+
+    implementation libs.places.v310
+
+    implementation libs.osmdroid.android
+    implementation libs.google.material.v190
+    implementation libs.osmbonuspack
 
 
 
