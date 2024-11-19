@@ -418,10 +418,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     getRoute(userLocation, selectedLocation);
                 }
             });
-
-
         }
-
 
     }
     private void getRoute(LatLng startLatLng, LatLng endLatLng) {
@@ -511,6 +508,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         {
                             fusedLocationClient.removeLocationUpdates(this);
                             Toast.makeText(requireContext(), "Canceled", Toast.LENGTH_SHORT).show();
+
                         }
 
                     }
