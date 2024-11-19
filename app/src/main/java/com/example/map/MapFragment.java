@@ -79,8 +79,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private long lastShakeTime = 0; // Thời gian lắc cuối cùng
     private static final long SHAKE_INTERVAL = 1000; // Khoảng thời gian (1 giây) giữa các lần lắc
 
-    private Circle userLocationCircle;
-
     private OpenRouteServiceAPI openRouteServiceAPI;
 
     private LatLng destinationLatLng; // Vị trí đích được chọn
@@ -404,6 +402,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 // chuc nang dan duong
     private void enableDirection() {
         canDirection = true;
+        Toast.makeText(requireContext(), "Please, select location!", Toast.LENGTH_SHORT).show();
         getDirection();
     }
     private void getDirection() {
@@ -419,10 +418,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     getRoute(userLocation, selectedLocation);
                 }
             });
-
-
         }
-
 
     }
     private void getRoute(LatLng startLatLng, LatLng endLatLng) {
@@ -501,7 +497,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
 
                         // Di chuyển camera theo dõi người dùng
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 19));
+                        //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 17));
                         googleMap.setOnMapClickListener(null);
                         // Kiểm tra nếu người dùng đến đích
                         if (isUserAtDestination(userLatLng, destination)) {
@@ -512,6 +508,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         {
                             fusedLocationClient.removeLocationUpdates(this);
                             Toast.makeText(requireContext(), "Canceled", Toast.LENGTH_SHORT).show();
+
                         }
 
                     }
@@ -669,7 +666,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         builder.show();
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
