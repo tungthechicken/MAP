@@ -87,6 +87,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private List<Marker> potholeMarkers = new ArrayList<>();
     private boolean canSelectLocation = false; // Biến này kiểm tra xem có thể chọn vị trí hay không
     private boolean canDirection = false;
+    private boolean canDetectPothole=false;
     private SearchView searchView;
 
     @Nullable
@@ -117,6 +118,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         ImageButton btnCancelRoute = view.findViewById(R.id.btn_cancel_route);
         btnCancelRoute.setOnClickListener(v -> cancelRoute());
 
+        ImageButton btnEnablePothole = view.findViewById(R.id.btn_enable_detectpothole);
+        btnEnablePothole.setOnClickListener(v -> enableDetectPothole());
+
         // Khởi tạo SearchView
         searchView = view.findViewById(R.id.search_location);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -133,36 +137,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 return false;
             }
         });
+
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        sensorEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-                float x = event.values[0];
-                float y = event.values[1];
-                float z = event.values[2];
-                float shakeThreshold = 18; // Ngưỡng lắc (bạn có thể điều chỉnh)
-
-                long currentTime = System.currentTimeMillis(); // Lấy thời gian hiện tại
-
-                if (Math.sqrt(x * x + y * y + z * z) > shakeThreshold) {
-                    // Kiểm tra nếu lắc đủ mạnh và đã qua thời gian chờ giữa các lần lắc
-                    if (!isShaking && (currentTime - lastShakeTime) > SHAKE_INTERVAL) {
-                        isShaking = true;
-                        lastShakeTime = currentTime; // Cập nhật thời gian lắc cuối cùng
-                        getLocationForShake(); // Gọi hàm xử lý lắc
+            sensorEventListener = new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent event) {
+                    if (!canDetectPothole)
+                    {
+                        return;
                     }
-                } else {
-                    isShaking = false;
-                }
-            }
 
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                // No need to handle this
-            }
-        };
+                    float x = event.values[0];
+                    float y = event.values[1];
+                    float z = event.values[2];
+                    float shakeThreshold = 18; // Ngưỡng lắc (bạn có thể điều chỉnh)
+
+                    long currentTime = System.currentTimeMillis(); // Lấy thời gian hiện tại
+
+                    if (Math.sqrt(x * x + y * y + z * z) > shakeThreshold) {
+                        // Kiểm tra nếu lắc đủ mạnh và đã qua thời gian chờ giữa các lần lắc
+                        if (!isShaking && (currentTime - lastShakeTime) > SHAKE_INTERVAL) {
+                            isShaking = true;
+                            lastShakeTime = currentTime; // Cập nhật thời gian lắc cuối cùng
+                            getLocationForShake(); // Gọi hàm xử lý lắc
+                        }
+                    }
+                    else {
+                        isShaking = false;
+                    }
+                }
+
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                    // No need to handle this
+                }
+            };
 
         if (!Places.isInitialized()) {
             Places.initialize(requireContext(), getString(R.string.google_maps_key));
@@ -367,6 +378,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setOnMyLocationChangeListener(location -> {
             userLocation = new LatLng(location.getLatitude(), location.getLongitude());
         });
+    }
+    private void enableDetectPothole()
+    {
+        canDetectPothole = !canDetectPothole;
+        if(canDetectPothole)
+            Toast.makeText(requireContext(), "enable POTHOLE detect", Toast.LENGTH_SHORT).show();
+
+        else
+            Toast.makeText(requireContext(), "disable POTHOLE detect", Toast.LENGTH_SHORT).show();
     }
     private void showPotholesOnMap(List<Pothole> potholes) {
         for (Pothole pothole : potholes) {
@@ -676,7 +696,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     }
-
-
 }
 
