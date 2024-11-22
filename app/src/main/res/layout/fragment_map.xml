@@ -30,8 +30,7 @@
         android:layout_marginEnd="64dp"
         android:background="@drawable/background_white_boder_purple"
         android:iconifiedByDefault="false"
-        android:queryHint="Nhập địa điểm cần tìm"
-
+        android:queryHint="Find location"
         />
 
     <ListView
@@ -57,39 +56,13 @@
 
 
     <ImageButton
-        android:id="@+id/btn_add_marker"
-        android:layout_width="47dp"
-        android:layout_height="49dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="612dp"
-        android:layout_marginEnd="246dp"
-        android:background="@null"
-        android:elevation="1dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/warning" />
-
-    <ImageButton
-        android:id="@+id/btn_get_direction"
-        android:layout_width="45dp"
-        android:layout_height="42dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="619dp"
-        android:layout_marginEnd="104dp"
-        android:background="@null"
-        android:elevation="1dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/direct" />
-
-    <ImageButton
         android:id="@+id/btn_cancel_route"
         android:layout_width="45dp"
         android:layout_height="42dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="615dp"
-        android:layout_marginEnd="176dp"
+        android:layout_marginTop="560dp"
+        android:layout_marginEnd="11dp"
         android:background="@null"
         android:elevation="1dp"
         android:scaleType="fitCenter"

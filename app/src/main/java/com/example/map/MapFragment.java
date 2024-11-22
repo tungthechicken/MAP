@@ -1,6 +1,7 @@
 package com.example.map;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,12 +15,15 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -61,6 +65,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap googleMap;
@@ -82,11 +87,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private OpenRouteServiceAPI openRouteServiceAPI;
 
     private LatLng destinationLatLng; // Vị trí đích được chọn
-    private LatLng userLocation;  // Biến lưu trữ vị trí người dùng
+    public LatLng userLocation;  // Biến lưu trữ vị trí người dùng
     private Polyline currentRoute;  // Biến để lưu đối tượng đường dẫn
     private List<Marker> potholeMarkers = new ArrayList<>();
     private boolean canSelectLocation = false; // Biến này kiểm tra xem có thể chọn vị trí hay không
-    private boolean canDirection = false;
+    public boolean canDirection = false;
     private boolean canDetectPothole=false;
     private SearchView searchView;
 
@@ -108,13 +113,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         ImageButton btnShowLocation = view.findViewById(R.id.btn_show_location);
         btnShowLocation.setOnClickListener(v -> getLocation());
-
-        ImageButton btnAddMarker = view.findViewById(R.id.btn_add_marker);
-        btnAddMarker.setOnClickListener(v -> enableLocationSelection());
-
-        ImageButton btnGetRoute = view.findViewById(R.id.btn_get_direction);
-        btnGetRoute.setOnClickListener(v -> enableDirection());
-
+//
+//        ImageButton btnAddMarker = view.findViewById(R.id.btn_add_marker);
+//        btnAddMarker.setOnClickListener(v -> enableLocationSelection());
+//
+//        ImageButton btnGetRoute = view.findViewById(R.id.btn_get_direction);
+//        btnGetRoute.setOnClickListener(v -> enableDirection(btnGetRoute));
+//
         ImageButton btnCancelRoute = view.findViewById(R.id.btn_cancel_route);
         btnCancelRoute.setOnClickListener(v -> cancelRoute());
 
@@ -178,7 +183,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (!Places.isInitialized()) {
             Places.initialize(requireContext(), getString(R.string.google_maps_key));
         }
-
         return view;
     }
     private void searchLocation(String query) {
@@ -338,17 +342,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         // Khởi tạo Retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:3000/")  // URL của server
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         // Tạo đối tượng apiService
         PotholeApiService apiService = retrofit.create(PotholeApiService.class);
         Call<List<Pothole>> call = apiService.getPotholes();
-
         // Gọi API để lấy danh sách ổ gà
         call.enqueue(new Callback<List<Pothole>>() {
             @Override
@@ -359,7 +363,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     showPotholesOnMap(potholes);
                 }
             }
-
             @Override
             public void onFailure(Call<List<Pothole>> call, Throwable t) {
                 // Xử lý lỗi nếu có
@@ -374,13 +377,91 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //            googleMap.addMarker(new MarkerOptions().position(selectedLocation).title("Selected Location"));
 //        });
 
+
+        //nhan giu de tao marker
+        googleMap.getUiSettings().setZoomControlsEnabled(false);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        googleMap.getUiSettings().setCompassEnabled(true);
+
+        // Sự kiện nhấn giữ trên bản đồ
+        googleMap.setOnMapLongClickListener(latLng -> {
+            // Tạo marker mới tại vị trí người dùng nhấn giữ
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title("Vị trí đã chọn") // Tiêu đề marker
+                    .snippet("Lat: " + latLng.latitude + ", Lng: " + latLng.longitude); // Mô tả
+
+            googleMap.clear();
+            // Thêm marker vào bản đồ
+            googleMap.addMarker(markerOptions);
+
+            // Lưu vị trí đã chọn (nếu cần sử dụng sau này)
+            selectedLocation = latLng;
+            
+            // Thông báo cho người dùng
+            //Toast.makeText(requireContext(), "Đã đánh dấu vị trí: " + latLng, Toast.LENGTH_SHORT).show();
+            showChooseDialog();
+        });
+        //nhan giu de tao marker
+
         // Lấy vị trí của người dùng
         googleMap.setOnMyLocationChangeListener(location -> {
             userLocation = new LatLng(location.getLatitude(), location.getLongitude());
         });
     }
-    private void enableDetectPothole()
-    {
+//nhan giu de hien lua chon
+    private void showChooseDialog() {
+
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.bottom_sheet_dialog);
+
+        LinearLayout btn_direct = dialog.findViewById(R.id.button_direct);
+        LinearLayout btn_cancel_direct = dialog.findViewById(R.id.button_cancel_direct);
+        LinearLayout btn_add_hole = dialog.findViewById(R.id.button_add_pothole);
+
+        btn_direct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                //Toast.makeText(MapFragment.this,"Edit is Clicked",Toast.LENGTH_SHORT).show();
+                //getRoute(userLocation, selectedLocation);
+                getDirection();
+            }
+        });
+
+        btn_cancel_direct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                //Toast.makeText(MainActivity.this,"Share is Clicked",Toast.LENGTH_SHORT).show();
+                cancelRoute();
+
+            }
+        });
+
+        btn_add_hole.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                //Toast.makeText(MainActivity.this,"Upload is Clicked",Toast.LENGTH_SHORT).show();
+                addPotHole();
+
+            }
+        });
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        //dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+
+    }
+//nhan giu de hien lua chon
+
+    private void enableDetectPothole() {
         canDetectPothole = !canDetectPothole;
         if(canDetectPothole)
             Toast.makeText(requireContext(), "enable POTHOLE detect", Toast.LENGTH_SHORT).show();
@@ -388,6 +469,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         else
             Toast.makeText(requireContext(), "disable POTHOLE detect", Toast.LENGTH_SHORT).show();
     }
+
     private void showPotholesOnMap(List<Pothole> potholes) {
         for (Pothole pothole : potholes) {
             LatLng location = new LatLng(
@@ -421,25 +503,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 // chuc nang dan duong
     private void enableDirection() {
-        canDirection = true;
-        Toast.makeText(requireContext(), "Please, select location!", Toast.LENGTH_SHORT).show();
-        getDirection();
+        canDirection = !canDirection;
+        if(canDirection)
+        {
+            Toast.makeText(requireContext(), "Please, select location!", Toast.LENGTH_SHORT).show();
+            getDirection();
+        }
+        if(!canDirection)
+        {
+            cancelRoute();
+        }
     }
     private void getDirection() {
 
-        if (canDirection)
-        {
-            googleMap.setOnMapClickListener(latLng -> {
-                selectedLocation = latLng;
-                googleMap.clear(); // Xóa các marker cũ
-                googleMap.addMarker(new MarkerOptions().position(selectedLocation).title("Selected Location"));
+                //googleMap.addMarker(new MarkerOptions().position(selectedLocation).title("Selected Location"));
                 if (userLocation != null) {
                     // Gọi API để lấy chỉ đường từ vị trí người dùng đến điểm đã chọn
                     getRoute(userLocation, selectedLocation);
                 }
-            });
-        }
-
     }
     private void getRoute(LatLng startLatLng, LatLng endLatLng) {
         if (endLatLng == null) return;
@@ -467,27 +548,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             route.add(new LatLng(coord[1], coord[0]));
                         }
 
-                        // Hiển thị hộp thoại xác nhận
-                        new AlertDialog.Builder(requireContext())
-                                .setTitle("Start Navigation?")
-                                .setMessage("Do you want to navigate to this location?")
-                                .setPositiveButton("Confirm", (dialog, which) -> {
-                                    // Vẽ Polyline lên bản đồ
-                                    if (googleMap != null) {
-                                        PolylineOptions polylineOptions = new PolylineOptions()
-                                                .addAll(route)
-                                                .color(Color.BLUE)
-                                                .width(8);
-                                        currentRoute = googleMap.addPolyline(polylineOptions);
-                                    }
+                        // Tự động bắt đầu dẫn đường
+                        if (googleMap != null) {
+                            // Vẽ Polyline lên bản đồ
+                            PolylineOptions polylineOptions = new PolylineOptions()
+                                    .addAll(route)
+                                    .color(Color.BLUE)
+                                    .width(8);
+                            currentRoute = googleMap.addPolyline(polylineOptions);
+                        }
 
-                                    // Bắt đầu theo dõi vị trí
-                                    startNavigation(endLatLng);
-                                })
-                                .setNegativeButton("Cancel", (dialog, which) -> {
-                                    cancelRoute();
-                                })
-                                .show();
+                        // Bắt đầu theo dõi vị trí
+                        startNavigation(endLatLng);
                     }
                 } else {
                     Toast.makeText(getContext(), "Failed to get route", Toast.LENGTH_SHORT).show();
@@ -518,18 +590,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                         // Di chuyển camera theo dõi người dùng
                         //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 17));
-                        googleMap.setOnMapClickListener(null);
+                        //googleMap.setOnMapClickListener(null);
                         // Kiểm tra nếu người dùng đến đích
                         if (isUserAtDestination(userLatLng, destination)) {
                             fusedLocationClient.removeLocationUpdates(this); // Dừng theo dõi vị trí
                             Toast.makeText(requireContext(), "You have arrived at your destination!", Toast.LENGTH_SHORT).show();
                         }
-                        if(canDirection==false)
-                        {
-                            fusedLocationClient.removeLocationUpdates(this);
-                            Toast.makeText(requireContext(), "Canceled", Toast.LENGTH_SHORT).show();
-
-                        }
+//                        if(canDirection==false)
+//                        {
+//                            fusedLocationClient.removeLocationUpdates(this);
+//                            Toast.makeText(requireContext(), "Canceled", Toast.LENGTH_SHORT).show();
+//
+//                        }
 
                     }
                 },
@@ -549,9 +621,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (currentRoute != null) {
             currentRoute.remove();  // Xóa đường dẫn trên bản đồ
             currentRoute = null;  // Đặt lại biến currentRoute
-            canDirection =false;
             googleMap.clear();
-            googleMap.setOnMapClickListener(null);
+            //googleMap.setOnMapClickListener(null);
             Toast.makeText(requireContext(), "Route canceled", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(requireContext(), "No route to cancel", Toast.LENGTH_SHORT).show();
@@ -594,38 +665,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void enableLocationSelection() {
-        canSelectLocation = true;
-        Toast.makeText(requireContext(), "You can now select a location on the map!", Toast.LENGTH_SHORT).show();
-        markLocation();
-    }
-    private void markLocation() {
-        // Nếu không được phép chọn địa điểm thì không làm gì
-        if (!canSelectLocation) {
-            return;
-        }
-
-        googleMap.setOnMapClickListener(latLng -> {
-            if (!canSelectLocation) {
-                return; // Không cho phép chọn nếu không được phép
-            }
-            else {
-                selectedLocation = latLng;
-                showMarkerDialog(selectedLocation);
-            }
+//them pot hole bang tay
+    private void addPotHole() {
+                showPotHoleDialog(selectedLocation);
             //googleMap.clear(); // Xóa tất cả các marker hiện tại
             // Đảm bảo không xóa các marker pothole đã được lưu
-            for (Marker potholeMarker : potholeMarkers) {
-                potholeMarker.setVisible(true); // Làm cho các marker pothole hiển thị lại
-            }
-
-        });
-
+//            for (Marker potholeMarker : potholeMarkers) {
+//                potholeMarker.setVisible(true); // Làm cho các marker pothole hiển thị lại
+//            }
     }
-    private void showMarkerDialog(LatLng location) {
+    private void showPotHoleDialog(LatLng location) {
         // Vô hiệu hóa khả năng chọn địa điểm trên bản đồ
-        canSelectLocation = false;
-
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Enter marker content");
 
@@ -675,18 +725,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
 
             // Sau khi bấm Save hoặc Cancel, cho phép chọn lại vị trí
-            canSelectLocation = false;
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> {
             // Sau khi bấm Cancel, cho phép chọn lại vị trí
-            canSelectLocation = false;
             dialog.cancel();
         });
 
         builder.show();
     }
-
+//them pot hole bang tay
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
