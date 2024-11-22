@@ -13,6 +13,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.Gravity;
@@ -20,14 +21,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
-import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -46,7 +45,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -65,7 +63,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap googleMap;
@@ -94,7 +91,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public boolean canDirection = false;
     private boolean canDetectPothole=false;
     private SearchView searchView;
-
+    private boolean arePotholesVisible = true;
+    private List<Pothole> potholes;
+    private boolean canShowPothole = false;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -125,6 +124,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         ImageButton btnEnablePothole = view.findViewById(R.id.btn_enable_detectpothole);
         btnEnablePothole.setOnClickListener(v -> enableDetectPothole());
+
+        ImageButton btnEnableShowPothole = view.findViewById(R.id.btn_enable_show);
+        btnEnableShowPothole.setOnClickListener(v -> EnableShowPothole(btnEnableShowPothole));
 
         // Khởi tạo SearchView
         searchView = view.findViewById(R.id.search_location);
@@ -185,6 +187,139 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
         return view;
     }
+    @Override
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+
+        // Cấu hình các sự kiện khác cho bản đồ
+//        googleMap.setOnMapClickListener(latLng -> {
+//            selectedLocation = latLng;
+//            googleMap.clear(); // Xóa các marker cũ
+//            googleMap.addMarker(new MarkerOptions().position(selectedLocation).title("Selected Location"));
+//        });
+
+
+        //nhan giu de tao marker
+        googleMap.getUiSettings().setZoomControlsEnabled(false);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        googleMap.getUiSettings().setCompassEnabled(true);
+
+        // Sự kiện nhấn giữ trên bản đồ
+        googleMap.setOnMapLongClickListener(latLng -> {
+            // Tạo marker mới tại vị trí người dùng nhấn giữ
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title("Vị trí đã chọn") // Tiêu đề marker
+                    .snippet("Lat: " + latLng.latitude + ", Lng: " + latLng.longitude); // Mô tả
+
+            googleMap.clear();
+            // Thêm marker vào bản đồ
+            googleMap.addMarker(markerOptions);
+
+            // Lưu vị trí đã chọn (nếu cần sử dụng sau này)
+            selectedLocation = latLng;
+
+            // Thông báo cho người dùng
+            //Toast.makeText(requireContext(), "Đã đánh dấu vị trí: " + latLng, Toast.LENGTH_SHORT).show();
+            showChooseDialog();
+        });
+        //nhan giu de tao marker
+
+        // Lấy vị trí của người dùng
+        googleMap.setOnMyLocationChangeListener(location -> {
+            userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        });
+
+
+    }
+
+    // Hàm hiển thị các ổ gà trên bản đồ
+    private void EnableShowPothole(ImageButton btnEnableShowPothole) {
+        canShowPothole=!canShowPothole;
+
+        if (canShowPothole)
+        {
+            //Toast.makeText(requireContext(), "enable show pothole!", Toast.LENGTH_SHORT).show();
+            btnEnableShowPothole.setImageResource(R.drawable.pothole_marker_hide);
+            callPotholes();
+
+        }
+        else
+        {
+            //Toast.makeText(requireContext(), "disable show pothole!", Toast.LENGTH_SHORT).show();
+            btnEnableShowPothole.setImageResource(R.drawable.pothole_marker);
+            clearPotholes();
+        }
+    }
+    private void callPotholes() {
+        // Khởi tạo Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:3000/")  // URL của server
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        // Tạo đối tượng apiService
+        PotholeApiService apiService = retrofit.create(PotholeApiService.class);
+        Call<List<Pothole>> call = apiService.getPotholes();
+        // Gọi API để lấy danh sách ổ gà
+        call.enqueue(new Callback<List<Pothole>>() {
+            @Override
+            public void onResponse(Call<List<Pothole>> call, Response<List<Pothole>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Pothole> potholes = response.body();
+                    // Gọi hàm để hiển thị các pothole trên bản đồ
+                    showPotholesOnMap(potholes);
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Pothole>> call, Throwable t) {
+                // Xử lý lỗi nếu có
+                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void showPotholesOnMap(List<Pothole> potholes) {
+        for (Pothole pothole : potholes) {
+            LatLng location = new LatLng(
+                    Double.parseDouble(pothole.getLocation().getLatitude()),
+                    Double.parseDouble(pothole.getLocation().getLongitude())
+            );
+
+            // Tạo MarkerOptions để định nghĩa thông tin cho marker
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(location)
+                    .title(pothole.getStatement());
+
+            // Lấy tài nguyên biểu tượng marker và thay đổi kích thước
+            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pothole_marker);
+            int width = originalBitmap.getWidth();
+            int height = originalBitmap.getHeight();
+            int newWidth = (int) (width * 0.5);  // Giảm 50% kích thước gốc
+            int newHeight = (int) (height * 0.5);  // Giảm 50% kích thước gốc
+
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, false);
+
+            // Sử dụng Bitmap đã thay đổi kích thước làm biểu tượng cho marker
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
+
+            // Thêm marker vào bản đồ và lưu vào danh sách potholeMarkers
+            Marker potholeMarker = googleMap.addMarker(markerOptions);
+            potholeMarkers.add(potholeMarker);
+        }
+    }
+    private void clearPotholes() {
+        // Duyệt qua danh sách potholeMarkers và xóa tất cả các marker
+        for (Marker potholeMarker : potholeMarkers) {
+            if (potholeMarker != null) {
+                potholeMarker.remove();  // Xóa marker
+            }
+        }
+        potholeMarkers.clear();  // Xóa tất cả các phần tử trong danh sách potholeMarkers
+    }
+    // Hàm hiển thị các ổ gà trên bản đồ
+
     private void searchLocation(String query) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://nominatim.openstreetmap.org/")
@@ -339,77 +474,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         sensorManager.unregisterListener(sensorEventListener);
     }
 
-    @Override
-    public void onMapReady(GoogleMap map) {
-        googleMap = map;
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        // Khởi tạo Retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:3000/")  // URL của server
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        // Tạo đối tượng apiService
-        PotholeApiService apiService = retrofit.create(PotholeApiService.class);
-        Call<List<Pothole>> call = apiService.getPotholes();
-        // Gọi API để lấy danh sách ổ gà
-        call.enqueue(new Callback<List<Pothole>>() {
-            @Override
-            public void onResponse(Call<List<Pothole>> call, Response<List<Pothole>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Pothole> potholes = response.body();
-                    // Gọi hàm để hiển thị các pothole trên bản đồ
-                    showPotholesOnMap(potholes);
-                }
-            }
-            @Override
-            public void onFailure(Call<List<Pothole>> call, Throwable t) {
-                // Xử lý lỗi nếu có
-                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Cấu hình các sự kiện khác cho bản đồ
-//        googleMap.setOnMapClickListener(latLng -> {
-//            selectedLocation = latLng;
-//            googleMap.clear(); // Xóa các marker cũ
-//            googleMap.addMarker(new MarkerOptions().position(selectedLocation).title("Selected Location"));
-//        });
-
-
-        //nhan giu de tao marker
-        googleMap.getUiSettings().setZoomControlsEnabled(false);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        googleMap.getUiSettings().setCompassEnabled(true);
-
-        // Sự kiện nhấn giữ trên bản đồ
-        googleMap.setOnMapLongClickListener(latLng -> {
-            // Tạo marker mới tại vị trí người dùng nhấn giữ
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(latLng)
-                    .title("Vị trí đã chọn") // Tiêu đề marker
-                    .snippet("Lat: " + latLng.latitude + ", Lng: " + latLng.longitude); // Mô tả
-
-            googleMap.clear();
-            // Thêm marker vào bản đồ
-            googleMap.addMarker(markerOptions);
-
-            // Lưu vị trí đã chọn (nếu cần sử dụng sau này)
-            selectedLocation = latLng;
-            
-            // Thông báo cho người dùng
-            //Toast.makeText(requireContext(), "Đã đánh dấu vị trí: " + latLng, Toast.LENGTH_SHORT).show();
-            showChooseDialog();
-        });
-        //nhan giu de tao marker
-
-        // Lấy vị trí của người dùng
-        googleMap.setOnMyLocationChangeListener(location -> {
-            userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        });
-    }
-//nhan giu de hien lua chon
+    //nhan giu de hien lua chon
     private void showChooseDialog() {
 
         final Dialog dialog = new Dialog(requireContext());
@@ -470,37 +536,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Toast.makeText(requireContext(), "disable POTHOLE detect", Toast.LENGTH_SHORT).show();
     }
 
-    private void showPotholesOnMap(List<Pothole> potholes) {
-        for (Pothole pothole : potholes) {
-            LatLng location = new LatLng(
-                    Double.parseDouble(pothole.getLocation().getLatitude()),
-                    Double.parseDouble(pothole.getLocation().getLongitude())
-            );
 
-            // Tạo MarkerOptions để định nghĩa thông tin cho marker
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(location)
-                    .title(pothole.getStatement());
-
-            // Lấy tài nguyên biểu tượng marker và thay đổi kích thước
-            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pothole_marker);
-
-            // Thay đổi kích thước của Bitmap
-            int width = originalBitmap.getWidth();
-            int height = originalBitmap.getHeight();
-            int newWidth = (int) (width * 0.5);  // Giảm 30% kích thước gốc
-            int newHeight = (int) (height * 0.5);  // Giảm 30% kích thước gốc
-
-            Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, false);
-
-            // Sử dụng Bitmap đã thay đổi kích thước làm biểu tượng cho marker
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
-
-            // Thêm marker vào bản đồ và lưu vào danh sách potholeMarkers
-            Marker potholeMarker = googleMap.addMarker(markerOptions);
-            potholeMarkers.add(potholeMarker);
-        }
-    }
 // chuc nang dan duong
     private void enableDirection() {
         canDirection = !canDirection;
