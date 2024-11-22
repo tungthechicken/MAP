@@ -53,7 +53,9 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -94,6 +96,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private boolean arePotholesVisible = true;
     private List<Pothole> potholes;
     private boolean canShowPothole = false;
+    private List<Marker> markersList = new ArrayList<>();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -215,9 +219,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     .title("Vị trí đã chọn") // Tiêu đề marker
                     .snippet("Lat: " + latLng.latitude + ", Lng: " + latLng.longitude); // Mô tả
 
-            googleMap.clear();
+            //xoa marker cu
+            removeMarker();
+
             // Thêm marker vào bản đồ
-            googleMap.addMarker(markerOptions);
+            Marker newMarker = googleMap.addMarker(markerOptions);
+            // Lưu marker vào danh sách
+            markersList.add(newMarker);
 
             // Lưu vị trí đã chọn (nếu cần sử dụng sau này)
             selectedLocation = latLng;
@@ -235,6 +243,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     }
+
+
+    // Hàm clear chỉ xóa marker đã chọn
+    public void clearSelectedMarker(Marker selectedMarker) {
+        // Xóa marker đã chọn khỏi bản đồ
+        if (selectedMarker != null) {
+            selectedMarker.remove(); // Xóa marker
+            markersList.remove(selectedMarker); // Xóa khỏi danh sách
+        }
+    }
+    // Ví dụ gọi hàm clear khi cần xóa marker đã chọn
+    private void removeMarker() {
+        if (!markersList.isEmpty()) {
+            // Giả sử bạn có logic để chọn một marker cụ thể để xóa
+            clearSelectedMarker(markersList.get(0));  // Xóa marker đầu tiên trong danh sách
+        }
+    }
+
 
     // Hàm hiển thị các ổ gà trên bản đồ
     private void EnableShowPothole(ImageButton btnEnableShowPothole) {
@@ -393,21 +419,45 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 });
     }
     private void showConfirmationDialog(LatLng location) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Confirm Pothole");
-        builder.setMessage("Is this a pothole?");
+//        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+//        builder.setTitle("Confirm Pothole");
+//        builder.setMessage("Is this a pothole?");
+//
+//        builder.setPositiveButton("Pothole", (dialog, which) -> {
+//            // Khi người dùng chọn Pothole, lưu lại vị trí và thông tin
+//            savePothole(location);
+//        });
+//
+//        builder.setNegativeButton("Cancel", (dialog, which) -> {
+//            // Người dùng chọn Cancel, không làm gì cả
+//            dialog.dismiss();
+//        });
+//
+//        builder.show();
 
-        builder.setPositiveButton("Pothole", (dialog, which) -> {
-            // Khi người dùng chọn Pothole, lưu lại vị trí và thông tin
+        //-------------------------------------------------------------------------------
+        final AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
+        View mView = getLayoutInflater().inflate(R.layout.confirm_pothole_dialog, null);
+        alert.setView(mView);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCancelable(false);
+
+
+        mView.findViewById(R.id.cancel_cf_pothole).setOnClickListener(v -> {
+            //nhan cancel khong lam gi ca
+            alertDialog.dismiss();
+        });
+
+        mView.findViewById(R.id.confirm_cf_pothole).setOnClickListener(v -> {
+            //save pothole
             savePothole(location);
+            alertDialog.dismiss();
         });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> {
-            // Người dùng chọn Cancel, không làm gì cả
-            dialog.dismiss();
-        });
-
-        builder.show();
+        alertDialog.getWindow().setGravity(Gravity.BOTTOM); // de hop thoai hien ben duoi
+        alertDialog.show();
+        //-------------------------------------------------------------------------------
     }
 
     private void savePothole(LatLng location) {
@@ -422,7 +472,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         String.valueOf(location.longitude),
                         String.valueOf(location.latitude),
                         "address" // điền địa chỉ nếu có
-                )
+                ),
+                getCurrentDate() // Lưu ngày tháng năm vào Pothole
         );
 
         // Gọi API để lưu ổ gà
@@ -489,7 +540,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         btn_direct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dialog.dismiss();
                 //Toast.makeText(MapFragment.this,"Edit is Clicked",Toast.LENGTH_SHORT).show();
                 //getRoute(userLocation, selectedLocation);
@@ -500,7 +550,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         btn_cancel_direct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dialog.dismiss();
                 //Toast.makeText(MainActivity.this,"Share is Clicked",Toast.LENGTH_SHORT).show();
                 cancelRoute();
@@ -657,7 +706,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (currentRoute != null) {
             currentRoute.remove();  // Xóa đường dẫn trên bản đồ
             currentRoute = null;  // Đặt lại biến currentRoute
-            googleMap.clear();
+            removeMarker();
             //googleMap.setOnMapClickListener(null);
             Toast.makeText(requireContext(), "Route canceled", Toast.LENGTH_SHORT).show();
         } else {
@@ -703,7 +752,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 //them pot hole bang tay
     private void addPotHole() {
-                showPotHoleDialog(selectedLocation);
+        showPotHoleDialog(selectedLocation);
+
             //googleMap.clear(); // Xóa tất cả các marker hiện tại
             // Đảm bảo không xóa các marker pothole đã được lưu
 //            for (Marker potholeMarker : potholeMarkers) {
@@ -721,8 +771,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         builder.setPositiveButton("Save", (dialog, which) -> {
             String markerText = input.getText().toString().trim();
             if (location != null && !markerText.isEmpty()) {
-                // Thêm marker trên bản đồ
-                googleMap.addMarker(new MarkerOptions().position(location).title(markerText));
+                // Lấy ngày tháng năm hiện tại
+                String currentDate = getCurrentDate();
 
                 // Tạo dữ liệu ổ gà
                 Pothole pothole = new Pothole(
@@ -735,7 +785,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 String.valueOf(location.longitude),
                                 String.valueOf(location.latitude),
                                 "address" // điền địa chỉ nếu có
-                        )
+                        ),
+                        getCurrentDate() // Lưu ngày tháng năm vào Pothole
                 );
 
                 // Gọi API để lưu ổ gà
@@ -767,7 +818,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             // Sau khi bấm Cancel, cho phép chọn lại vị trí
             dialog.cancel();
         });
-
         builder.show();
     }
 //them pot hole bang tay
@@ -779,6 +829,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 getLocation();
             }
         }
+    }
+    private String getCurrentDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  // Định dạng ngày tháng
+        Date date = new Date();  // Lấy thời gian hiện tại
+        return dateFormat.format(date);  // Chuyển đổi thành chuỗi
     }
 }
 
