@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="15sp"
+    android:background="@color/white"
+    android:layout_marginBottom="20dp"
+    >
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/add_hole" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="ADD A NEW POTHOLE"
+        android:textColor="@android:color/black"
+        android:textSize="30sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="username"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:id="@+id/icon_label"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="51dp"
+            android:src="@drawable/icon_pothole" />
+
+        <EditText
+            android:id="@+id/editLabel"
+            android:layout_width="246dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="30dp"
+            android:hint="Label"
+            android:gravity="center_vertical"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/icon_size"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="51dp"
+            android:src="@drawable/icon_size" />
+
+        <CheckBox
+            android:id="@+id/cbBig"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Big"
+            android:textColor="@color/red"
+            android:textSize="20sp"
+            android:gravity="center" />
+
+        <CheckBox
+            android:id="@+id/cbNormal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Nomarl"
+            android:textColor="@color/orange"
+            android:textSize="15sp" />
+
+        <CheckBox
+            android:id="@+id/cbSmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Small"
+            android:textColor="@color/quantum_lightblue"
+            android:textSize="20sp"
+            android:gravity="center" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/icon_depth"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="51dp"
+            android:src="@drawable/icon_depth" />
+
+        <EditText
+            android:id="@+id/editDepth"
+            android:layout_width="246dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="30dp"
+            android:hint="Depth       (cm)"
+            android:inputType="number"
+            android:textSize="18sp"
+            android:gravity="center_vertical"/>
+
+    </LinearLayout>
+    <LinearLayout
+    android:id="@+id/icon_pothole"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+
+    <ImageView
+        android:layout_width="54dp"
+        android:layout_height="51dp"
+        android:src="@drawable/icon_diameter" />
+
+    <EditText
+        android:id="@+id/editDiameter"
+        android:layout_width="246dp"
+        android:layout_height="56dp"
+        android:layout_marginLeft="30dp"
+        android:hint="Diameter (cm)"
+        android:inputType="number"
+        android:gravity="center_vertical"
+        android:textSize="18sp" />
+
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/cancel_cf_add_pothole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            />
+        <Button
+            android:id="@+id/confirm_cf_add_pothole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:text="Confirm"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            />
+    </LinearLayout>
+
+</LinearLayout>

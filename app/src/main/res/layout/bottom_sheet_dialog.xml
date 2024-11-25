@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_bg">
+
+    <TextView
+        android:id="@+id/choosetxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Marked a location"
+        android:textColor="@color/black"
+        android:layout_marginTop="5dp"
+        android:textSize="25dp"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:id="@+id/button_direct"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/direct"/>
+
+        <TextView
+            android:layout_width="288dp"
+            android:layout_height="59dp"
+            android:layout_marginLeft="30dp"
+            android:text="DIRECT"
+            android:textSize="40sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_add_pothole"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+
+        <ImageView
+            android:layout_width="65dp"
+            android:layout_height="61dp"
+            android:src="@drawable/add_hole" />
+
+        <TextView
+            android:layout_width="292dp"
+            android:layout_height="61dp"
+            android:layout_marginLeft="30dp"
+            android:text="ADD POTHOLE"
+            android:textSize="35sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cancel_button" />
+
+        <TextView
+            android:layout_width="288dp"
+            android:layout_height="58dp"
+            android:layout_marginLeft="30dp"
+            android:text="CANCEL DIRECT"
+            android:textSize="40sp" />
+    </LinearLayout>
+</LinearLayout>
