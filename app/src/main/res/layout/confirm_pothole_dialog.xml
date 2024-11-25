@@ -7,11 +7,6 @@
     android:background="@color/dark_blue"
     android:layout_marginBottom="20dp"
     >
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/pothole_marker" />
 
     <TextView
         android:layout_width="match_parent"
@@ -21,7 +16,144 @@
         android:text="IS THIS A POTHOLE?"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
+    <LinearLayout
+        android:id="@+id/icon_label"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp">
 
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="51dp"
+            android:src="@drawable/icon_pothole" />
+
+        <EditText
+            android:id="@+id/editLabel"
+            android:layout_width="246dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="30dp"
+            android:hint="Label"
+            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/icon_size"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp">
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="51dp"
+            android:src="@drawable/icon_size" />
+
+        <CheckBox
+            android:id="@+id/cbBig"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Big"
+            android:textColor="@color/red"
+            android:textSize="20sp"
+            android:gravity="center"
+
+            />
+
+        <CheckBox
+            android:id="@+id/cbNormal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Normal"
+            android:textColor="@color/orange"
+            android:textSize="10sp"
+
+            />
+
+        <CheckBox
+            android:id="@+id/cbSmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Small"
+            android:textColor="@color/quantum_lightblue"
+            android:textSize="14sp"
+            android:gravity="center"
+
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/icon_depth"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp">
+
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="51dp"
+            android:src="@drawable/icon_depth" />
+
+        <EditText
+            android:id="@+id/editDepth"
+            android:layout_width="198dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="30dp"
+            android:hint="Depth       (cm)"
+            android:inputType="number"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/unitDepth"
+            android:layout_width="30dp"
+            android:layout_height="56dp"
+            android:text="cm"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/icon_pothole"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp">
+
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="51dp"
+            android:src="@drawable/icon_diameter" />
+
+        <EditText
+            android:id="@+id/editDiameter"
+            android:layout_width="200dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="center_vertical"
+            android:hint="Diameter (cm)"
+            android:inputType="number"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/unitDiameter"
+            android:layout_width="30dp"
+            android:layout_height="56dp"
+            android:text="cm"
+            android:textSize="18sp" />
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

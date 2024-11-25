@@ -103,6 +103,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private List<Pothole> potholes;
     private boolean canShowPothole = false;
     private List<Marker> markersList = new ArrayList<>();
+    float shakeThresholdBig    = 21;
+    float shakeThresholdNormal = 18;
+    float shakeThresholdSmall  = 15;
 
     @Nullable
     @Override
@@ -169,16 +172,36 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     float x = event.values[0];
                     float y = event.values[1];
                     float z = event.values[2];
-                    float shakeThreshold = 18; // Ngưỡng lắc (bạn có thể điều chỉnh)
+
 
                     long currentTime = System.currentTimeMillis(); // Lấy thời gian hiện tại
 
-                    if (Math.sqrt(x * x + y * y + z * z) > shakeThreshold) {
+                    double shakeLevel = Math.sqrt(x * x + y * y + z * z);
+                    if (shakeLevel > shakeThresholdSmall && shakeLevel < shakeThresholdNormal) {
+                        //lac nhe
                         // Kiểm tra nếu lắc đủ mạnh và đã qua thời gian chờ giữa các lần lắc
                         if (!isShaking && (currentTime - lastShakeTime) > SHAKE_INTERVAL) {
                             isShaking = true;
                             lastShakeTime = currentTime; // Cập nhật thời gian lắc cuối cùng
-                            getLocationForShake(); // Gọi hàm xử lý lắc
+                            getLocationForShake(1); // Gọi hàm xử lý lắc
+                        }
+                    }
+                    else if (shakeLevel > shakeThresholdNormal && shakeLevel < shakeThresholdBig) {
+                        //lac trung binh
+                        // Kiểm tra nếu lắc đủ mạnh và đã qua thời gian chờ giữa các lần lắc
+                        if (!isShaking && (currentTime - lastShakeTime) > SHAKE_INTERVAL) {
+                            isShaking = true;
+                            lastShakeTime = currentTime; // Cập nhật thời gian lắc cuối cùng
+                            getLocationForShake(2); // Gọi hàm xử lý lắc
+                        }
+                    }
+                    else if (shakeLevel > shakeThresholdBig) {
+                        //lac trung manh
+                        // Kiểm tra nếu lắc đủ mạnh và đã qua thời gian chờ giữa các lần lắc
+                        if (!isShaking && (currentTime - lastShakeTime) > SHAKE_INTERVAL) {
+                            isShaking = true;
+                            lastShakeTime = currentTime; // Cập nhật thời gian lắc cuối cùng
+                            getLocationForShake(3); // Gọi hàm xử lý lắc
                         }
                     }
                     else {
@@ -306,30 +329,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
-    public void showPotholeDetailsDialog(List<Pothole> potholes) {
-        // Xử lý hiển thị danh sách các pothole
-        StringBuilder details = new StringBuilder();
-        for (Pothole pothole : potholes) {
-            details.append("Pothole username: ").append(pothole.getUsername()).append("\n");
-            details.append("Pothole label: ").append(pothole.getStatement()).append("\n");
-            details.append("Pothole size: ").append(pothole.getSize()).append("\n");
-            details.append("Pothole depth: ").append(pothole.getDepth()).append("\n");
-            details.append("Pothole Diameter: ").append(pothole.getDiameter()).append("\n");
-
-
-            //details.append("Location: ").append(pothole.getLocation()).append(", ").append(pothole.getLocation()).append("\n");
-            //details.append("Description: ").append(pothole.getDescription()).append("\n\n");
-        }
-
-        // Hiển thị thông tin chi tiết
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Pothole Details")
-                .setMessage(details.toString())
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                .create()
-                .show();
-    }
-
     public void showPotholeDetailsDialog2(List<Pothole> potholes) {
         // Nạp layout tùy chỉnh
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -366,6 +365,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         // Tạo và hiển thị hộp thoại
         AlertDialog dialog = builder.create();
+
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setGravity(Gravity.TOP);
         dialog.show();
 
         // Xử lý khi nhấn nút OK
@@ -381,9 +383,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             dialog.dismiss(); // Đóng hộp thoại
         });
     }
-
-
-
 
     // Hàm clear chỉ xóa marker đã chọn
     public void clearSelectedMarker(Marker selectedMarker) {
@@ -519,7 +518,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
 //them o ga lac dt
-    private void getLocationForShake() {
+    private void getLocationForShake(double size) {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -531,39 +530,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     if (location != null) {
                         LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
+                        MarkerOptions markerOptions = null;
                         if (googleMap != null) {
                             //googleMap.clear();
-                            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
+                            Marker newMarker = googleMap.addMarker(
+                                    new MarkerOptions()
+                                            .position(currentLocation) // Thiết lập vị trí marker
+                                            .title("Current Location")
+                            );
+                            markersList.add(newMarker);
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
                         }
-
-                        showLocationInfo(currentLocation);
-
+                        //showLocationInfo(currentLocation); //hien thi thong tin vi tri cua nguoi dung khi lac
                         // Hiển thị hộp thoại xác nhận
-                        showConfirmationDialog(currentLocation);
+                        showConfirmationDialog(currentLocation, size);
                     } else {
                         Toast.makeText(requireContext(), "Unable to get location!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-    private void showConfirmationDialog(LatLng location) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-//        builder.setTitle("Confirm Pothole");
-//        builder.setMessage("Is this a pothole?");
-//
-//        builder.setPositiveButton("Pothole", (dialog, which) -> {
-//            // Khi người dùng chọn Pothole, lưu lại vị trí và thông tin
-//            savePothole(location);
-//        });
-//
-//        builder.setNegativeButton("Cancel", (dialog, which) -> {
-//            // Người dùng chọn Cancel, không làm gì cả
-//            dialog.dismiss();
-//        });
-//
-//        builder.show();
-
-        //-------------------------------------------------------------------------------
+    private void showConfirmationDialog(LatLng location, double size) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
         View mView = getLayoutInflater().inflate(R.layout.confirm_pothole_dialog, null);
         alert.setView(mView);
@@ -571,30 +557,61 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         final AlertDialog alertDialog = alert.create();
         alertDialog.setCancelable(false);
 
+        // Tham chiếu tới các view trong layout
+        CheckBox cbBig = mView.findViewById(R.id.cbBig);
+        CheckBox cbNormal = mView.findViewById(R.id.cbNormal);
+        CheckBox cbSmall = mView.findViewById(R.id.cbSmall);
+        EditText editDepth = mView.findViewById(R.id.editDepth);
+        EditText editDiameter = mView.findViewById(R.id.editDiameter);
+        EditText editLabel = mView.findViewById(R.id.editLabel);
 
+        // Đánh dấu CheckBox dựa trên giá trị size
+        if (size == 3) {
+            cbBig.setChecked(true);
+        } else if (size == 2) {
+            cbNormal.setChecked(true);
+        } else if (size == 1) {
+            cbSmall.setChecked(true);
+        }
+
+        // Tự động điền giá trị "1234" vào các trường EditText
+        editDepth.setText("0");
+        editDiameter.setText("0");
+        editLabel.setText("unknow");
+
+        // Lấy giá trị từ các trường EditText
+
+        String depthStr = editDepth.getText().toString(); // Lấy giá trị độ sâu (chuỗi)
+        String diameterStr = editDiameter.getText().toString(); // Lấy giá trị đường kính (chuỗi)
+        double tempDepth = Double.parseDouble(depthStr); // Chuyển thành số thực
+        double tempDiameter = Double.parseDouble(diameterStr); // Chuyển thành số thực
+        String tempLabel = editLabel.getText().toString(); // Lấy giá trị nhãn (chuỗi)
+        // Xử lý sự kiện khi nhấn nút Cancel
         mView.findViewById(R.id.cancel_cf_pothole).setOnClickListener(v -> {
-            //nhan cancel khong lam gi ca
+            removeMarker();
             alertDialog.dismiss();
         });
 
+        // Xử lý sự kiện khi nhấn nút Confirm
         mView.findViewById(R.id.confirm_cf_pothole).setOnClickListener(v -> {
-            //save pothole
-            savePothole(location);//chuc nang lac dt chua sua xong
+            removeMarker();
+            savePothole(location, tempLabel, size, tempDepth, tempDiameter );
             alertDialog.dismiss();
         });
 
-        alertDialog.getWindow().setGravity(Gravity.BOTTOM); // de hop thoai hien ben duoi
+        // Đặt hộp thoại hiển thị ở phía dưới
+        alertDialog.getWindow().setGravity(Gravity.BOTTOM);
         alertDialog.show();
-        //-------------------------------------------------------------------------------
     }
-    private void savePothole(LatLng location) {
+
+    private void savePothole(LatLng location, String label, double size, double depth, double diameter ) {
         // Tạo dữ liệu ổ gà
         Pothole pothole = new Pothole(
                 "username", // điền tên người dùng ở đây
-                1.0, // kích thước giả định
-                0.5, // độ sâu giả định
-                0.5, // đường kính giả định
-                "Pothole", // nhãn ổ gà
+                size, // kích thước giả định
+                depth, // độ sâu giả định
+                diameter, // đường kính giả định
+                label, // nhãn ổ gà
                 new Pothole.LocationData(
                         String.valueOf(location.longitude),
                         String.valueOf(location.latitude),
@@ -917,7 +934,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         bigCheckBox.setOnCheckedChangeListener(listener);
         normalCheckBox.setOnCheckedChangeListener(listener);
         smallCheckBox.setOnCheckedChangeListener(listener);
-
         // Tạo AlertDialog
         AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setView(dialogView)
