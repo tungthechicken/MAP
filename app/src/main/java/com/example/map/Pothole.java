@@ -66,8 +66,43 @@ public class Pothole {
     public void setLocation(LocationData location) {
         this.location = location;
     }
-
     public String getDate() {
         return date;  // Trả về thông tin ngày tháng
+    }
+
+    public double getDepth() {
+        return depth;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
+    public double getDiameter() {
+        return diameter;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setDepth(double depth) {
+        this.depth = depth;
+    }
+
+    public void setDiameter(double diameter) {
+        this.diameter = diameter;
+    }
+
+    public void setSize(double size) {
+        this.size = size;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

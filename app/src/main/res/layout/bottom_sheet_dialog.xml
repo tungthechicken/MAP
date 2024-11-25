@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="Choose"
+        android:text="Marked a location"
         android:textColor="@color/black"
         android:layout_marginTop="5dp"
         android:textSize="25dp"
@@ -30,11 +30,11 @@
             android:src="@drawable/direct"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Direct"
+            android:layout_width="288dp"
+            android:layout_height="59dp"
             android:layout_marginLeft="30dp"
-            android:textSize="16sp"/>
+            android:text="DIRECT"
+            android:textSize="40sp" />
 
     </LinearLayout>
 
@@ -52,16 +52,16 @@
             android:src="@drawable/add_hole" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="add pothole"
+            android:layout_width="292dp"
+            android:layout_height="61dp"
             android:layout_marginLeft="30dp"
-            android:textSize="16sp"/>
+            android:text="ADD POTHOLE"
+            android:textSize="35sp" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/button_cancel_direct"
+        android:id="@+id/button_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -71,13 +71,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/cancel_direct" />
+            android:src="@drawable/cancel_button" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="288dp"
+            android:layout_height="58dp"
             android:layout_marginLeft="30dp"
-            android:text="cancel direct"
-            android:textSize="16sp" />
+            android:text="CANCEL DIRECT"
+            android:textSize="40sp" />
     </LinearLayout>
 </LinearLayout>
