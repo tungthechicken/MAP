@@ -70,7 +70,7 @@ public class SettingsFragment extends Fragment {
     }
     // Hàm xử lý việc đăng xuất
     private void openlogOut() {
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        Intent intent = new Intent(getActivity(), CentralLoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         getActivity().finish();

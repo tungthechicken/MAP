@@ -3,6 +3,7 @@
     <string name="google_maps_key">AIzaSyBOetZcAGse6OWgCdgNzbho2knIiCWL44s</string>
     <string name="openroute_maps_key">AIzaSyBOetZcAGse6OWgCdgNzbho2knIiCWL44s</string>
     <string name="client_id">148865329906-e0uq4mv2h8gflabngri1ddr1m89id31a.apps.googleusercontent.com</string>
+    <string name="retrofit_url">"http://10.0.2.2:3000"</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

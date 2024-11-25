@@ -17,12 +17,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CentralLoginActivity extends AppCompatActivity {
 
     private RetrofitInterface retrofitInterface;
-    private String BASE_URL = "http://10.0.2.2:3000";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_central_login);
+
+        String BASE_URL = getString(R.string.retrofit_url);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

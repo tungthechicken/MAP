@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.HashMap;
 
@@ -20,7 +21,7 @@ import retrofit2.Response;
 
 public class SignupFragment extends Fragment {
 
-    private RetrofitInterface retrofitInterface;
+    private final RetrofitInterface retrofitInterface;
 
     public SignupFragment(RetrofitInterface retrofitInterface) {
         this.retrofitInterface = retrofitInterface;
@@ -31,45 +32,58 @@ public class SignupFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.signup_fragment, container, false);
 
-        Button signupBtn = view.findViewById(R.id.signup);
-        final EditText nameEdit = view.findViewById(R.id.nameEdit);
-        final EditText emailEdit = view.findViewById(R.id.emailEdit);
-        final EditText passwordEdit = view.findViewById(R.id.passwordEdit);
+        Button signupBtn = view.findViewById(R.id.signup_button);
+        final EditText nameEdit = view.findViewById(R.id.signup_name);
+        final EditText emailEdit = view.findViewById(R.id.signup_email);
+        final EditText passwordEdit = view.findViewById(R.id.signup_password);
+        final EditText passwordConfirmEdit = view.findViewById(R.id.signup_password_confirm);
 
-        signupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = nameEdit.getText().toString();
-                String email = emailEdit.getText().toString();
-                String password = passwordEdit.getText().toString();
+        signupBtn.setOnClickListener(view1 -> {
+            String name = nameEdit.getText().toString();
+            String email = emailEdit.getText().toString();
+            String password = passwordEdit.getText().toString();
+            String password_confirm = passwordConfirmEdit.getText().toString();
 
-                if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(getActivity(), "Please fill all fields", Toast.LENGTH_SHORT).show();
-                    return;
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getActivity(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (!password.equals(password_confirm)) {
+                Toast.makeText(getActivity(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (!email.contains("@") || !email.contains(".")) {
+                Toast.makeText(getActivity(), "Invalid email", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            HashMap<String, String> map = new HashMap<>();
+            map.put("name", name);
+            map.put("email", email);
+            map.put("password", password);
+
+            Call<Void> call = retrofitInterface.executeSignup(map);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if (response.code() == 200) {
+                        Toast.makeText(getActivity(), "Sign-up successfully! Going back to login screen...", Toast.LENGTH_LONG).show();
+                        // Go back to login screen
+                        if (getActivity() != null) {
+                            ViewPager viewPager = getActivity().findViewById(R.id.viewPager);
+                            if (viewPager != null) {
+                                viewPager.setCurrentItem(0); // Switch to the LoginFragment
+                            }
+                        }
+                    } else if (response.code() == 400) {
+                        Toast.makeText(getActivity(), "Already registered", Toast.LENGTH_LONG).show();
+                    }
                 }
 
-                HashMap<String, String> map = new HashMap<>();
-                map.put("name", name);
-                map.put("email", email);
-                map.put("password", password);
-
-                Call<Void> call = retrofitInterface.executeSignup(map);
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.code() == 200) {
-                            Toast.makeText(getActivity(), "Signed up successfully", Toast.LENGTH_LONG).show();
-                        } else if (response.code() == 400) {
-                            Toast.makeText(getActivity(), "Already registered", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
         });
 
         return view;
