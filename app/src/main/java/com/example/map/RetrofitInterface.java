@@ -18,6 +18,9 @@ public interface RetrofitInterface {
     @POST("/forgot-password")
     Call<Void> forgotPassword(@Body HashMap<String, String> map);
 
-    @POST("/reset-password/{token}")
-    Call<Void> resetPassword(@Path("token") String token, @Body HashMap<String, String> map);
+    @POST("/verify-otp")
+    Call<Void> verifyOtp(@Body HashMap<String, String> map);
+
+    @POST("/reset-password")
+    Call<Void> resetPassword(@Body HashMap<String, String> map);
 }

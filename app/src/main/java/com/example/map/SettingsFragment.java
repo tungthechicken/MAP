@@ -1,6 +1,8 @@
 package com.example.map;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +72,13 @@ public class SettingsFragment extends Fragment {
     }
     // Hàm xử lý việc đăng xuất
     private void openlogOut() {
+        // Clear the SharedPreferences
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+
+        // Start the CentralLoginActivity
         Intent intent = new Intent(getActivity(), CentralLoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
