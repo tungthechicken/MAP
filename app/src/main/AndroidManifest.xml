@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".CentralLoginActivity"
             android:exported="true">
             <intent-filter>
@@ -31,6 +34,7 @@
         <activity
             android:name=".CentralActivity"
             android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBOetZcAGse6OWgCdgNzbho2knIiCWL44s" />
