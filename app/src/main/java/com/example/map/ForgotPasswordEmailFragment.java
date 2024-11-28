@@ -20,7 +20,7 @@ import retrofit2.Response;
 public class ForgotPasswordEmailFragment extends Fragment {
 
     private EditText emailEditText;
-    private Button resetPasswordButton;
+    private Button resetPasswordButton, debugEmailButton;
     private RetrofitInterface retrofitInterface;
 
     public ForgotPasswordEmailFragment(RetrofitInterface retrofitInterface) {
@@ -34,6 +34,7 @@ public class ForgotPasswordEmailFragment extends Fragment {
 
         emailEditText = view.findViewById(R.id.emailEditText);
         resetPasswordButton = view.findViewById(R.id.resetPasswordButton);
+        debugEmailButton = view.findViewById(R.id.debugEmailButton);
 
         resetPasswordButton.setOnClickListener(v -> {
             String email = emailEditText.getText().toString().trim();
@@ -43,6 +44,9 @@ public class ForgotPasswordEmailFragment extends Fragment {
                 Toast.makeText(getActivity(), "Please enter your email", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // TODO: Debugging button to skip email phase, please remove in production
+        debugEmailButton.setOnClickListener(v -> showEmailPhase());
 
         return view;
     }
@@ -68,5 +72,10 @@ public class ForgotPasswordEmailFragment extends Fragment {
                 Toast.makeText(getActivity(), "Error sending OTP", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // TODO: Please nuke this method in production!
+    private void showEmailPhase() {
+        ((ForgotPasswordActivity) getActivity()).showResetPasswordFragment(emailEditText.getText().toString().trim());
     }
 }

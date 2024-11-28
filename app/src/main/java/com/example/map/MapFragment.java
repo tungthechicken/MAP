@@ -414,8 +414,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
     private void callPotholes() {
         // Khởi tạo Retrofit
+        String BASE_URL = getString(R.string.retrofit_url);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:3000/")  // URL của server
+                .baseUrl(BASE_URL)  // URL của server
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         // Tạo đối tượng apiService
