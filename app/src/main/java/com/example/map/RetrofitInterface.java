@@ -5,7 +5,6 @@ import java.util.HashMap;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 
 public interface RetrofitInterface {
 
@@ -23,4 +22,10 @@ public interface RetrofitInterface {
 
     @POST("/reset-password")
     Call<Void> resetPassword(@Body HashMap<String, String> map);
+
+    @POST("/send-user-data")
+    Call<UserData> sendUserData(@Body HashMap<String, String> map);
+
+    @POST("/set-password")
+    Call<Void> setPassword(@Body HashMap<String, String> map);
 }

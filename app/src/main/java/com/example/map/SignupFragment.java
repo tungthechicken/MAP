@@ -60,6 +60,7 @@ public class SignupFragment extends Fragment {
             map.put("name", name);
             map.put("email", email);
             map.put("password", password);
+            map.put("isLinkedGoogle", "false");
 
             Call<Void> call = retrofitInterface.executeSignup(map);
             call.enqueue(new Callback<Void>() {
