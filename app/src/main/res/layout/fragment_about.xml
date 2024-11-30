@@ -4,54 +4,27 @@
     android:id="@+id/about"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
+
     android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/title"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <ImageButton
-            android:id="@+id/back_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:contentDescription="@string/back"
-            android:padding="7dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/back" />
-
         <TextView
-            android:id="@+id/Abouttitle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="About"
-            android:textColor="@android:color/white"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_white_boder_purple"
-        android:layout_marginTop="80dp"
-        android:orientation="vertical"
-        android:gravity="center_vertical">
-        <TextView
-            android:id="@+id/AboutApp"
+            android:id="@+id/Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="15dp"
+            android:background="@color/purple"
             android:layout_marginBottom="10dp"
+
+            android:gravity="center"
+            android:textSize="20dp"
+            android:text="Potholes Master App Overview."/>
+        <TextView
+            android:id="@+id/AboutApp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
             android:justificationMode="inter_word"
-            android:text="    Potholes Master App Overview.\n\n  Potholes Master is a mobile application designed for Android devices that allows users to manually or automatically detect and mark potholes based on the phone's vibration sensor. The app uses the phone's accelerometer to detect irregular movements caused by potholes, providing a solution for identifying and reporting road damage in real-time. Users can also manually mark potholes by tapping on the map within the app.\n\n  This application was developed by a team of students from the NT118.P11 Mobile Application Development class, focusing on enhancing road safety and improving the accuracy of road maintenance data collection. With Potholes Master, users can contribute to better infrastructure management by identifying and documenting potholes, helping local authorities prioritize repairs and improve road conditions." />
-            </LinearLayout>
+            android:text="  Potholes Master is a mobile application designed for Android devices that allows users to manually or automatically detect and mark potholes based on the phone's vibration sensor. The app uses the phone's accelerometer to detect irregular movements caused by potholes, providing a solution for identifying and reporting road damage in real-time. Users can also manually mark potholes by tapping on the map within the app.\n\n  This application was developed by a team of students from the NT118.P11 Mobile Application Development class, focusing on enhancing road safety and improving the accuracy of road maintenance data collection. With Potholes Master, users can contribute to better infrastructure management by identifying and documenting potholes, helping local authorities prioritize repairs and improve road conditions." />
+
 </LinearLayout>

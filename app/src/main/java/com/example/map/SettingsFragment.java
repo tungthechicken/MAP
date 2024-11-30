@@ -7,70 +7,63 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.FrameLayout;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 public class SettingsFragment extends Fragment {
-    private LinearLayout profileEdit;
+    private GoogleSignInClient gsc;
 
+    private LinearLayout profile;
     private LinearLayout notiEdit;
-
-    private LinearLayout updateEdit;
-
     private LinearLayout displayEdit;
-
     private LinearLayout aboutEdit;
-
     private LinearLayout qaaEdit;
-
+    private View overlay;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        // Tìm các view
-        profileEdit = view.findViewById(R.id.Profile);
+        // Initialize GoogleSignInClient
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        gsc = GoogleSignIn.getClient(getActivity(), gso);
 
+        // Find views
+        profile = view.findViewById(R.id.Profile);
         notiEdit = view.findViewById(R.id.Noti);
-
         LinearLayout logOutLayout = view.findViewById(R.id.logOut);
-
-
-// Cài đặt sự kiện nhấn cho LinearLayout
-        logOutLayout.setOnClickListener(v -> {
-            openlogOut();
-        });
-
-
         displayEdit = view.findViewById(R.id.display);
-
-        updateEdit = view.findViewById(R.id.update);
-
         aboutEdit = view.findViewById(R.id.about);
-
         qaaEdit = view.findViewById(R.id.QaA);
+        overlay = view.findViewById(R.id.overlay);
 
-        profileEdit.setOnClickListener(v -> openEditProfile());
-
+        // Set click listeners
+        logOutLayout.setOnClickListener(v -> openlogOut());
+        profile.setOnClickListener(v -> openProfile());
         notiEdit.setOnClickListener(v -> openNoti());
-
         displayEdit.setOnClickListener(v -> openDisplay());
-
-        updateEdit.setOnClickListener(v -> openUpdate());
-
         aboutEdit.setOnClickListener(v -> openAbout());
-
         qaaEdit.setOnClickListener(v -> openQAA());
 
         return view;
     }
-    // Hàm xử lý việc đăng xuất
+
+    // Method to handle logout
     private void openlogOut() {
         // Clear the SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
@@ -78,58 +71,83 @@ public class SettingsFragment extends Fragment {
         editor.clear();
         editor.apply();
 
-        // Start the CentralLoginActivity
-        Intent intent = new Intent(getActivity(), CentralLoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        getActivity().finish();
+        // Sign out of Google
+        gsc.signOut().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                // Start the CentralLoginActivity
+                Intent intent = new Intent(getActivity(), CentralLoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
 
-    private void openEditProfile() {
+    private void openProfile() {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new EditProfileFragment());
-        // Thêm transaction vào back stack để người dùng có thể quay lại sau
+        transaction.replace(R.id.fragment_container, new ProfileFragment());
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
     private void openNoti() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new EditNotiFragment());
-        // Thêm transaction vào back stack để người dùng có thể quay lại sau
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
+        // Hiển thị EditNotiFragment dưới dạng BottomSheet
+        EditNotiFragment editNotiFragment = new EditNotiFragment();  // Thay AboutFragment bằng EditNotiFragment
+        editNotiFragment.show(getChildFragmentManager(), editNotiFragment.getTag());
 
-    private void openUpdate() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new UpdateFragment());
-        // Thêm transaction vào back stack để người dùng có thể quay lại sau
-        transaction.addToBackStack(null);
-        transaction.commit();
+        // Hiển thị overlay khi BottomSheet mở
+        overlay.setVisibility(View.VISIBLE);
+
+        // Đóng BottomSheet khi nhấn vào overlay
+        overlay.setOnClickListener(v -> {
+            editNotiFragment.dismiss();  // Đóng BottomSheet
+            overlay.setVisibility(View.GONE);  // Ẩn overlay
+        });
     }
 
     private void openDisplay() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new DisplayFragment());
-        // Thêm transaction vào back stack để người dùng có thể quay lại sau
-        transaction.addToBackStack(null);
-        transaction.commit();
+        // Hiển thị DisplayFragment dưới dạng BottomSheet
+        DisplayFragment displayFragment = new DisplayFragment();
+        displayFragment.show(getChildFragmentManager(), displayFragment.getTag());
+
+        // Hiển thị overlay khi BottomSheet mở
+        overlay.setVisibility(View.VISIBLE);
+
+        // Đóng BottomSheet khi nhấn vào overlay
+        overlay.setOnClickListener(v -> {
+            displayFragment.dismiss();  // Đóng BottomSheet
+            overlay.setVisibility(View.GONE);  // Ẩn overlay
+        });
     }
 
     private void openAbout() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new AboutFragment());
-        // Thêm transaction vào back stack để người dùng có thể quay lại sau
-        transaction.addToBackStack(null);
-        transaction.commit();
+        // Hiển thị AboutFragment dưới dạng BottomSheet
+        AboutFragment aboutFragment = new AboutFragment();  // Thay DisplayFragment bằng AboutFragment
+        aboutFragment.show(getChildFragmentManager(), aboutFragment.getTag());
+
+        // Hiển thị overlay khi BottomSheet mở
+        overlay.setVisibility(View.VISIBLE);
+
+        // Đóng BottomSheet khi nhấn vào overlay
+        overlay.setOnClickListener(v -> {
+            aboutFragment.dismiss();  // Đóng BottomSheet
+            overlay.setVisibility(View.GONE);  // Ẩn overlay
+        });
     }
 
     private void openQAA() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new QAAFragment());
-        // Thêm transaction vào back stack để người dùng có thể quay lại sau
-        transaction.addToBackStack(null);
-        transaction.commit();
+        // Hiển thị QAAFragment dưới dạng BottomSheet
+        QAAFragment qaaFragment = new QAAFragment();  // Thay AboutFragment bằng QAAFragment
+        qaaFragment.show(getChildFragmentManager(), qaaFragment.getTag());
+
+// Hiển thị overlay khi BottomSheet mở
+        overlay.setVisibility(View.VISIBLE);
+
+// Đóng BottomSheet khi nhấn vào overlay
+        overlay.setOnClickListener(v -> {
+            qaaFragment.dismiss();  // Đóng BottomSheet
+            overlay.setVisibility(View.GONE);  // Ẩn overlay
+        });
     }
 }
