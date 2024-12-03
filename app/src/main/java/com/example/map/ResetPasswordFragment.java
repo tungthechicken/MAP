@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.CountDownTimer;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -26,10 +27,11 @@ public class ResetPasswordFragment extends Fragment {
 
     private EditText otpEditText1, otpEditText2, otpEditText3, otpEditText4, otpEditText5, otpEditText6;
     private EditText newPasswordEditText;
-    private TextView otpDialog, newPasswordDialog;
-    private Button verifyOtpButton, resetPasswordButton, debugOtpButton, debugNewPasswordButton;
+    private TextView otpDialog, newPasswordDialog, resendOtpTextView;
+    private Button verifyOtpButton, resetPasswordButton;
     private RetrofitInterface retrofitInterface;
     private String userEmail;
+    private CountDownTimer countDownTimer;
 
     public ResetPasswordFragment(RetrofitInterface retrofitInterface, String email) {
         this.retrofitInterface = retrofitInterface;
@@ -52,8 +54,7 @@ public class ResetPasswordFragment extends Fragment {
         newPasswordEditText = view.findViewById(R.id.newPasswordEditText);
         verifyOtpButton = view.findViewById(R.id.verifyOtpButton);
         resetPasswordButton = view.findViewById(R.id.resetPasswordButton);
-        debugOtpButton = view.findViewById(R.id.debugOtpButton);
-        debugNewPasswordButton = view.findViewById(R.id.debugNewPasswordButton);
+        resendOtpTextView = view.findViewById(R.id.resendOtpTextView);
 
         setupOtpInputs();
 
@@ -71,6 +72,15 @@ public class ResetPasswordFragment extends Fragment {
             }
         });
 
+        resendOtpTextView.setOnClickListener(v -> {
+            resendOtpTextView.setEnabled(false);
+            startResendOtpCooldown();
+            sendResetPasswordOTPRequest(userEmail);
+        });
+
+        resendOtpTextView.setEnabled(false); // Disable initially
+        startResendOtpCooldown(); // Start cooldown on fragment creation
+
         resetPasswordButton.setOnClickListener(v -> {
             String newPassword = newPasswordEditText.getText().toString().trim();
             if (!newPassword.isEmpty()) {
@@ -80,15 +90,43 @@ public class ResetPasswordFragment extends Fragment {
             }
         });
 
-        debugOtpButton.setOnClickListener(v -> showOtpPhase());
-        debugNewPasswordButton.setOnClickListener(v -> showResetPasswordPrompt());
-
         return view;
     }
 
-    /**
-     * Sets up the OTP input fields with text watchers to handle text changes and key events.
-     */
+    private void startResendOtpCooldown() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        countDownTimer = new CountDownTimer(30000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                resendOtpTextView.setText("Resend OTP in " + millisUntilFinished / 1000 + "s");
+            }
+
+            public void onFinish() {
+                resendOtpTextView.setText("Resend OTP");
+                resendOtpTextView.setEnabled(true);
+            }
+        }.start();
+    }
+
+    private void sendResetPasswordOTPRequest(String email) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("email", email);
+
+        Call<Void> call = retrofitInterface.forgotPassword(map);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(getActivity(), "OTP sent to your email", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getActivity(), "Error contacting server!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void setupOtpInputs() {
         otpEditText1.addTextChangedListener(new GenericTextWatcher(otpEditText1, otpEditText2, null));
         otpEditText2.addTextChangedListener(new GenericTextWatcher(otpEditText2, otpEditText3, otpEditText1));
@@ -98,11 +136,6 @@ public class ResetPasswordFragment extends Fragment {
         otpEditText6.addTextChangedListener(new GenericTextWatcher(otpEditText6, null, otpEditText5));
     }
 
-    /**
-     * Verifies the OTP by making a network call to the server.
-     * @param email The user's email address.
-     * @param otp The OTP entered by the user.
-     */
     private void verifyOtp(String email, String otp) {
         HashMap<String, String> map = new HashMap<>();
         map.put("email", email);
@@ -126,27 +159,6 @@ public class ResetPasswordFragment extends Fragment {
         });
     }
 
-    /**
-     * Shows the OTP input phase by making the OTP input fields visible. For debugging purposes only.
-     * Remember to remove this method in production!
-     */
-    private void showOtpPhase() {
-        otpEditText1.setVisibility(View.VISIBLE);
-        otpEditText2.setVisibility(View.VISIBLE);
-        otpEditText3.setVisibility(View.VISIBLE);
-        otpEditText4.setVisibility(View.VISIBLE);
-        otpEditText5.setVisibility(View.VISIBLE);
-        otpEditText6.setVisibility(View.VISIBLE);
-        newPasswordEditText.setVisibility(View.GONE);
-        verifyOtpButton.setVisibility(View.VISIBLE);
-        otpDialog.setVisibility(View.VISIBLE);
-        newPasswordDialog.setVisibility(View.GONE);
-        resetPasswordButton.setVisibility(View.GONE);
-    }
-
-    /**
-     * Shows the reset password prompt by making the new password input field visible.
-     */
     private void showResetPasswordPrompt() {
         otpEditText1.setVisibility(View.GONE);
         otpEditText2.setVisibility(View.GONE);
@@ -157,15 +169,11 @@ public class ResetPasswordFragment extends Fragment {
         newPasswordEditText.setVisibility(View.VISIBLE);
         verifyOtpButton.setVisibility(View.GONE);
         otpDialog.setVisibility(View.GONE);
+        resendOtpTextView.setVisibility(View.GONE);
         newPasswordDialog.setVisibility(View.VISIBLE);
         resetPasswordButton.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Resets the user's password by making a network call to the server.
-     * @param email The user's email address.
-     * @param newPassword The new password entered by the user.
-     */
     private void resetPassword(String email, String newPassword) {
         HashMap<String, String> map = new HashMap<>();
         map.put("email", email);
@@ -177,11 +185,10 @@ public class ResetPasswordFragment extends Fragment {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getActivity(), "Password has been reset. Going back to login screen...", Toast.LENGTH_SHORT).show();
-                    // Go back to login screen
                     if (getActivity() != null) {
                         ViewPager viewPager = getActivity().findViewById(R.id.viewPager);
                         if (viewPager != null) {
-                            viewPager.setCurrentItem(0); // Switch to the LoginFragment
+                            viewPager.setCurrentItem(0);
                         }
                     }
                     requireActivity().finish();
@@ -197,9 +204,6 @@ public class ResetPasswordFragment extends Fragment {
         });
     }
 
-    /**
-     * A generic text watcher to handle text changes and key events for OTP input fields.
-     */
     public static class GenericTextWatcher implements TextWatcher, View.OnKeyListener {
 
         private final EditText currentView;

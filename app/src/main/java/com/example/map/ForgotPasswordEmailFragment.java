@@ -1,6 +1,7 @@
 package com.example.map;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,9 @@ import retrofit2.Response;
 public class ForgotPasswordEmailFragment extends Fragment {
 
     private EditText emailEditText;
-    private Button resetPasswordButton, debugEmailButton;
+    private Button resetPasswordButton;
     private RetrofitInterface retrofitInterface;
+    private Handler handler = new Handler();
 
     public ForgotPasswordEmailFragment(RetrofitInterface retrofitInterface) {
         this.retrofitInterface = retrofitInterface;
@@ -34,7 +36,6 @@ public class ForgotPasswordEmailFragment extends Fragment {
 
         emailEditText = view.findViewById(R.id.emailEditText);
         resetPasswordButton = view.findViewById(R.id.resetPasswordButton);
-        debugEmailButton = view.findViewById(R.id.debugEmailButton);
 
         resetPasswordButton.setOnClickListener(v -> {
             String email = emailEditText.getText().toString().trim();
@@ -44,9 +45,6 @@ public class ForgotPasswordEmailFragment extends Fragment {
                 Toast.makeText(getActivity(), "Please enter your email", Toast.LENGTH_SHORT).show();
             }
         });
-
-        // TODO: Debugging button to skip email phase, please remove in production
-        debugEmailButton.setOnClickListener(v -> showEmailPhase());
 
         return view;
     }
@@ -63,19 +61,18 @@ public class ForgotPasswordEmailFragment extends Fragment {
                     Toast.makeText(getActivity(), "OTP sent to your email", Toast.LENGTH_SHORT).show();
                     ((ForgotPasswordActivity) getActivity()).showResetPasswordFragment(email);
                 } else {
-                    Toast.makeText(getActivity(), "Error sending OTP", Toast.LENGTH_SHORT).show();
+                    // Simulate delay for wrong email
+                    handler.postDelayed(() -> {
+                        Toast.makeText(getActivity(), "OTP sent to your email", Toast.LENGTH_SHORT).show();
+                        ((ForgotPasswordActivity) getActivity()).showResetPasswordFragment(email);
+                    }, 3000); // 3 seconds delay
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getActivity(), "Error sending OTP", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Error contacting server!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    // TODO: Please nuke this method in production!
-    private void showEmailPhase() {
-        ((ForgotPasswordActivity) getActivity()).showResetPasswordFragment(emailEditText.getText().toString().trim());
     }
 }
