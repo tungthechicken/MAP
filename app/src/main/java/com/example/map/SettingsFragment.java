@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.FrameLayout;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,12 +25,12 @@ import com.google.android.gms.tasks.Task;
 public class SettingsFragment extends Fragment {
     private GoogleSignInClient gsc;
 
-    private LinearLayout profileEdit;
+    private LinearLayout profile;
     private LinearLayout notiEdit;
-    private LinearLayout updateEdit;
     private LinearLayout displayEdit;
     private LinearLayout aboutEdit;
     private LinearLayout qaaEdit;
+    private View overlay;
 
     @Nullable
     @Override
@@ -42,20 +44,19 @@ public class SettingsFragment extends Fragment {
         gsc = GoogleSignIn.getClient(getActivity(), gso);
 
         // Find views
-        profileEdit = view.findViewById(R.id.Profile);
+        profile = view.findViewById(R.id.Profile);
         notiEdit = view.findViewById(R.id.Noti);
         LinearLayout logOutLayout = view.findViewById(R.id.logOut);
         displayEdit = view.findViewById(R.id.display);
-        updateEdit = view.findViewById(R.id.update);
         aboutEdit = view.findViewById(R.id.about);
         qaaEdit = view.findViewById(R.id.QaA);
+        overlay = view.findViewById(R.id.overlay);
 
         // Set click listeners
         logOutLayout.setOnClickListener(v -> openlogOut());
-        profileEdit.setOnClickListener(v -> openEditProfile());
+        profile.setOnClickListener(v -> openProfile());
         notiEdit.setOnClickListener(v -> openNoti());
         displayEdit.setOnClickListener(v -> openDisplay());
-        updateEdit.setOnClickListener(v -> openUpdate());
         aboutEdit.setOnClickListener(v -> openAbout());
         qaaEdit.setOnClickListener(v -> openQAA());
 
@@ -83,45 +84,71 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    private void openEditProfile() {
+    private void openProfile() {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new EditProfileFragment());
+        transaction.replace(R.id.fragment_container, new ProfileFragment());
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
     private void openNoti() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new EditNotiFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
+        // Hiển thị EditNotiFragment dưới dạng BottomSheet
+        EditNotiFragment editNotiFragment = new EditNotiFragment();  // Thay AboutFragment bằng EditNotiFragment
+        editNotiFragment.show(getChildFragmentManager(), editNotiFragment.getTag());
 
-    private void openUpdate() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new UpdateFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
+        // Hiển thị overlay khi BottomSheet mở
+        overlay.setVisibility(View.VISIBLE);
+
+        // Đóng BottomSheet khi nhấn vào overlay
+        overlay.setOnClickListener(v -> {
+            editNotiFragment.dismiss();  // Đóng BottomSheet
+            overlay.setVisibility(View.GONE);  // Ẩn overlay
+        });
     }
 
     private void openDisplay() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new DisplayFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
+        // Hiển thị DisplayFragment dưới dạng BottomSheet
+        DisplayFragment displayFragment = new DisplayFragment();
+        displayFragment.show(getChildFragmentManager(), displayFragment.getTag());
+
+        // Hiển thị overlay khi BottomSheet mở
+        overlay.setVisibility(View.VISIBLE);
+
+        // Đóng BottomSheet khi nhấn vào overlay
+        overlay.setOnClickListener(v -> {
+            displayFragment.dismiss();  // Đóng BottomSheet
+            overlay.setVisibility(View.GONE);  // Ẩn overlay
+        });
     }
 
     private void openAbout() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new AboutFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
+        // Hiển thị AboutFragment dưới dạng BottomSheet
+        AboutFragment aboutFragment = new AboutFragment();  // Thay DisplayFragment bằng AboutFragment
+        aboutFragment.show(getChildFragmentManager(), aboutFragment.getTag());
+
+        // Hiển thị overlay khi BottomSheet mở
+        overlay.setVisibility(View.VISIBLE);
+
+        // Đóng BottomSheet khi nhấn vào overlay
+        overlay.setOnClickListener(v -> {
+            aboutFragment.dismiss();  // Đóng BottomSheet
+            overlay.setVisibility(View.GONE);  // Ẩn overlay
+        });
     }
 
     private void openQAA() {
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new QAAFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
+        // Hiển thị QAAFragment dưới dạng BottomSheet
+        QAAFragment qaaFragment = new QAAFragment();  // Thay AboutFragment bằng QAAFragment
+        qaaFragment.show(getChildFragmentManager(), qaaFragment.getTag());
+
+// Hiển thị overlay khi BottomSheet mở
+        overlay.setVisibility(View.VISIBLE);
+
+// Đóng BottomSheet khi nhấn vào overlay
+        overlay.setOnClickListener(v -> {
+            qaaFragment.dismiss();  // Đóng BottomSheet
+            overlay.setVisibility(View.GONE);  // Ẩn overlay
+        });
+
     }
 }
