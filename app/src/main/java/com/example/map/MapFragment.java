@@ -114,7 +114,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-        apiService = RetrofitClient.getInstance().create(PotholeApiService.class);
+        String BASE_URL = getString(R.string.retrofit_url);
+        apiService = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(PotholeApiService.class);
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
@@ -285,7 +290,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void getPotholeDetailsFromApi(double latitude, double longitude) {
         // Tạo Retrofit instance
-        apiService = RetrofitClient.getInstance().create(PotholeApiService.class);
+        String BASE_URL = getString(R.string.retrofit_url);
+        apiService = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(PotholeApiService.class);
 
         // Gọi API để lấy thông tin pothole dựa trên tọa độ
         Call<List<Pothole>> call = apiService.getPotholeByLocation(latitude, longitude);

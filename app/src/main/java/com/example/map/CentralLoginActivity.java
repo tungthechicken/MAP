@@ -147,7 +147,7 @@ public class CentralLoginActivity extends AppCompatActivity {
                     if (user != null && user.getPassword() == null) {
                         navigateToSetPasswordActivity(email);
                     } else {
-                        navigateToCentralActivity();
+                        navigateToCentralActivity(email, name);
                     }
                 } else {
                     Toast.makeText(CentralLoginActivity.this, "Failed to send data to server", Toast.LENGTH_SHORT).show();
@@ -168,8 +168,10 @@ public class CentralLoginActivity extends AppCompatActivity {
         finish();
     }
 
-    void navigateToCentralActivity() {
+    void navigateToCentralActivity(String email, String name) {
         Intent intent = new Intent(this, CentralActivity.class);
+        intent.putExtra("email", email);
+        intent.putExtra("name", name);
         startActivity(intent);
         finish();
     }

@@ -125,6 +125,9 @@ public class LoginFragment extends Fragment {
                     Toast.makeText(getActivity(), "Welcome " + result.getName(), Toast.LENGTH_LONG).show();
                     savePreferences(email, password);
                     Intent intent = new Intent(getActivity(), CentralActivity.class);
+                    // Pass the user's email and name to the CentralActivity
+                    intent.putExtra("email", email);
+                    intent.putExtra("name", result.getName());
                     startActivity(intent);
                     requireActivity().finish(); // Kill the login activity so the user can't go back unless they log out
                 } else if (response.code() == 404) {

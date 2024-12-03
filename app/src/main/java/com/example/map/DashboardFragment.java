@@ -47,6 +47,18 @@ public class DashboardFragment extends Fragment {
         lineChart = view.findViewById(R.id.lineChart);
         stackBarChart = view.findViewById(R.id.stackBarChart);
 
+        // Retrieve the user's name from the Bundle
+        Bundle bundle = getArguments();
+        String name = null;
+        if (bundle != null) {
+            name = bundle.getString("name");
+        }
+        if (name == null) {
+            name = "User"; // Default value if name is null
+        }
+        TextView usernameTextView = view.findViewById(R.id.usernameTextView);
+        usernameTextView.setText("Welcome, " + name);
+
         setupPieChart();
         setupLineChart();
         setupStackBarChart();

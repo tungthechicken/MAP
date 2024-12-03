@@ -7,8 +7,8 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Use environment variable or default to 3000
-//const url = "mongodb+srv://pothole:pothole123@pothole-login.okpwh.mongodb.net/?retryWrites=true&w=majority&appName=Pothole-Login";
-const url = "mongodb://localhost:27017";
+const url = "mongodb+srv://pothole:pothole123@pothole-login.okpwh.mongodb.net/?retryWrites=true&w=majority&appName=Pothole-Login";
+//const url = "mongodb://localhost:27017";
 const dbName = "myDb";
 
 // Middleware
@@ -225,6 +225,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Endpoint to send user data
 app.post('/send-user-data', async (req, res) => {
   const collection = app.locals.userCollection;
 
@@ -258,6 +259,30 @@ app.post('/send-user-data', async (req, res) => {
   } catch (err) {
     console.error("Error in send-user-data:", err);
     res.status(500).send("Database error");
+  }
+});
+
+// Endpoint to GET user data by email
+app.get('/get-user-data', async (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+  }
+
+  const collection = app.locals.userCollection;
+
+  try {
+      const user = await collection.findOne({ email });
+
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json({ name: user.name, email: user.email });
+  } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Database error" });
   }
 });
 
