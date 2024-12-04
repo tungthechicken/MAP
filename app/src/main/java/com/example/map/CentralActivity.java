@@ -67,6 +67,9 @@ public class CentralActivity extends AppCompatActivity {
                 selectedFragment.setArguments(bundle);
             } else if (itemId == R.id.nav_map) {
                 selectedFragment = new MapFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("name", name);
+                selectedFragment.setArguments(bundle);
             } else if (itemId == R.id.nav_settings) {
                 selectedFragment = new SettingsFragment();
             }

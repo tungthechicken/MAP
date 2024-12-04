@@ -7,9 +7,10 @@
     android:background="@color/white"
     android:layout_marginBottom="20dp"
     >
+
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="76dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/pothole_marker" />
 
@@ -84,9 +85,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Nomarl"
+            android:text="Normal"
             android:textColor="@color/orange"
-            android:textSize="15sp"
+            android:textSize="10sp"
             android:enabled="false"
             />
 
@@ -95,10 +96,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Small"
             android:textColor="@color/quantum_lightblue"
-            android:textSize="20sp"
-            android:gravity="center"
+            android:textSize="14sp"
             android:enabled="false"
             />
 

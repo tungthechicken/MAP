@@ -73,7 +73,7 @@
             android:text="Big"
             android:textColor="@color/red"
             android:textSize="20sp"
-            android:gravity="center" />
+            android:gravity="center"/>
 
         <CheckBox
             android:id="@+id/cbNormal"
@@ -90,10 +90,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Small"
             android:textColor="@color/quantum_lightblue"
-            android:textSize="20sp"
-            android:gravity="center" />
+            android:textSize="14sp" />
 
     </LinearLayout>
     <LinearLayout

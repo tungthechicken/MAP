@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="15sp"
-    android:background="@color/dark_blue"
+    android:background="@color/white"
     android:layout_marginBottom="20dp"
     >
 
@@ -14,7 +14,7 @@
         android:gravity="center"
         android:padding="5dp"
         android:text="IS THIS A POTHOLE?"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="20sp" />
     <LinearLayout
         android:id="@+id/icon_label"
@@ -35,7 +35,7 @@
             android:layout_height="56dp"
             android:layout_marginLeft="30dp"
             android:hint="Label"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:gravity="center_vertical"
             android:textSize="20sp" />
 
@@ -81,10 +81,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Small"
             android:textColor="@color/quantum_lightblue"
             android:textSize="14sp"
-            android:gravity="center"
 
             />
 
@@ -111,7 +111,7 @@
             android:inputType="number"
             android:textSize="20sp"
             android:gravity="center_vertical"
-            android:textColor="@color/white"/>
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/unitDepth"
@@ -143,7 +143,7 @@
             android:hint="Diameter (cm)"
             android:inputType="number"
             android:textSize="20sp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             />
 
         <TextView

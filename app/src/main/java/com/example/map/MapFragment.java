@@ -26,6 +26,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -91,6 +92,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private OpenRouteServiceAPI openRouteServiceAPI;
 
+    private String name;
     private LatLng destinationLatLng; // Vị trí đích được chọn
     public LatLng userLocation;  // Biến lưu trữ vị trí người dùng
     private Polyline currentRoute;  // Biến để lưu đối tượng đường dẫn
@@ -104,13 +106,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private boolean canShowPothole = false;
     private List<Marker> markersList = new ArrayList<>();
     float shakeThresholdBig    = 21;
-    float shakeThresholdNormal = 18;
-    float shakeThresholdSmall  = 15;
+    float shakeThresholdNormal = 20;
+    float shakeThresholdSmall  = 17;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+
+
+        // Retrieve the user's name from the Bundle
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            name = bundle.getString("name");
+        }
+        if (name == null) {
+            name = "User"; // Default value if name is null
+        }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
@@ -554,13 +567,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         }
                         //showLocationInfo(currentLocation); //hien thi thong tin vi tri cua nguoi dung khi lac
                         // Hiển thị hộp thoại xác nhận
-                        showConfirmationDialog(currentLocation, size);
+                        showConfirmationDialog(currentLocation, size, name);
                     } else {
                         Toast.makeText(requireContext(), "Unable to get location!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-    private void showConfirmationDialog(LatLng location, double size) {
+
+    private void showConfirmationDialog(LatLng location, double size, String userName) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
         View mView = getLayoutInflater().inflate(R.layout.confirm_pothole_dialog, null);
         alert.setView(mView);
@@ -588,15 +602,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Tự động điền giá trị "1234" vào các trường EditText
         editDepth.setText("0");
         editDiameter.setText("0");
-        editLabel.setText("unknow");
+        editLabel.setText("unknown");
 
-        // Lấy giá trị từ các trường EditText
-
-        String depthStr = editDepth.getText().toString(); // Lấy giá trị độ sâu (chuỗi)
-        String diameterStr = editDiameter.getText().toString(); // Lấy giá trị đường kính (chuỗi)
-        double tempDepth = Double.parseDouble(depthStr); // Chuyển thành số thực
-        double tempDiameter = Double.parseDouble(diameterStr); // Chuyển thành số thực
-        String tempLabel = editLabel.getText().toString(); // Lấy giá trị nhãn (chuỗi)
         // Xử lý sự kiện khi nhấn nút Cancel
         mView.findViewById(R.id.cancel_cf_pothole).setOnClickListener(v -> {
             removeMarker();
@@ -606,7 +613,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Xử lý sự kiện khi nhấn nút Confirm
         mView.findViewById(R.id.confirm_cf_pothole).setOnClickListener(v -> {
             removeMarker();
-            savePothole(location, tempLabel, size, tempDepth, tempDiameter );
+            savePothole(location, editLabel.getText().toString(), size, Double.parseDouble(editDepth.getText().toString()), Double.parseDouble(editDiameter.getText().toString()), userName);
             alertDialog.dismiss();
         });
 
@@ -615,10 +622,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         alertDialog.show();
     }
 
-    private void savePothole(LatLng location, String label, double size, double depth, double diameter ) {
+    private void savePothole(LatLng location, String label, double size, double depth, double diameter, String userName) {
         // Tạo dữ liệu ổ gà
         Pothole pothole = new Pothole(
-                "username", // điền tên người dùng ở đây
+                getUsername(), // Include the user's name here
                 size, // kích thước giả định
                 depth, // độ sâu giả định
                 diameter, // đường kính giả định
@@ -649,8 +656,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 //them o ga lac dt
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -691,9 +696,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottom_sheet_dialog);
 
-        LinearLayout btn_direct = dialog.findViewById(R.id.button_direct);
-        LinearLayout btn_cancel = dialog.findViewById(R.id.button_cancel);
-        LinearLayout btn_add_hole = dialog.findViewById(R.id.button_add_pothole);
+        ImageButton btn_direct = dialog.findViewById(R.id.button_direct);
+        ImageButton btn_cancel = dialog.findViewById(R.id.button_cancel);
+        ImageButton btn_add_hole = dialog.findViewById(R.id.button_add_pothole);
 
         btn_direct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -722,7 +727,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 dialog.dismiss();
                 //Toast.makeText(MainActivity.this,"Upload is Clicked",Toast.LENGTH_SHORT).show();
-                addPotHole();
+                addPotHole(name);
 
             }
         });
@@ -910,8 +915,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 //them pot hole bang tay
-    private void addPotHole() {
-        showPotHoleDialog(selectedLocation);
+    private void addPotHole(String name) {
+        showPotHoleDialog(selectedLocation, name);
 
             //googleMap.clear(); // Xóa tất cả các marker hiện tại
             // Đảm bảo không xóa các marker pothole đã được lưu
@@ -919,7 +924,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //                potholeMarker.setVisible(true); // Làm cho các marker pothole hiển thị lại
 //            }
     }
-    private void showPotHoleDialog(LatLng location) {
+    private void showPotHoleDialog(LatLng location, String name) {
         // Inflate layout tùy chỉnh
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View dialogView = inflater.inflate(R.layout.add_pothole_dialog, null);
@@ -965,7 +970,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 // Tạo dữ liệu ổ gà
                 Pothole pothole = new Pothole(
-                        "username", // Thay thế bằng tên người dùng thực
+                        name,
                         Double.parseDouble(size.equals("Big") ? "3.0" : size.equals("Normal") ? "2.0" : "1.0"), // Giá trị kích thước giả định
                         Double.parseDouble(depth),
                         Double.parseDouble(diameter),
@@ -1043,6 +1048,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             // Giả sử bạn có logic để chọn một marker cụ thể để xóa
             clearSelectedMarker(markersList.get(0));  // Xóa marker đầu tiên trong danh sách
         }
+    }
+
+    private String  getUsername()
+    {
+        return name;
     }
 }
 
