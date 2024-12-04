@@ -45,7 +45,6 @@ public class LoginFragment extends Fragment {
 
         Button loginBtn = view.findViewById(R.id.login_button);
         TextView forgotPasswordTextView = view.findViewById(R.id.forgot_password);
-        Button bypassLoginBtn = view.findViewById(R.id.bypass_login_button); // For testing purposes
         emailEdit = view.findViewById(R.id.login_email);
         passwordEdit = view.findViewById(R.id.login_password);
         rememberMeCheckBox = view.findViewById(R.id.remember_me_checkbox);
@@ -77,13 +76,6 @@ public class LoginFragment extends Fragment {
             }
 
             performLogin(email, password);
-        });
-
-        // For bypassing the login screen
-        bypassLoginBtn.setOnClickListener(view1 -> {
-            Intent intent = new Intent(getActivity(), CentralActivity.class);
-            startActivity(intent);
-            requireActivity().finish(); // Kill the login activity so the user can't go back unless they log out
         });
 
         // Forgot password text view
