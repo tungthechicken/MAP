@@ -1,5 +1,7 @@
 package com.example.map;
 
+import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
+
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
@@ -16,6 +18,7 @@ import android.location.Location;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,11 +131,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         String BASE_URL = getString(R.string.retrofit_url);
-        apiService = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(PotholeApiService.class);
+        apiService = RetrofitClient.getClient(BASE_URL).create(PotholeApiService.class);
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
@@ -304,11 +303,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void getPotholeDetailsFromApi(double latitude, double longitude) {
         // Tạo Retrofit instance
         String BASE_URL = getString(R.string.retrofit_url);
-        apiService = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(PotholeApiService.class);
+        PotholeApiService apiService = RetrofitClient.getClient(BASE_URL).create(PotholeApiService.class);
+
 
         // Gọi API để lấy thông tin pothole dựa trên tọa độ
         Call<List<Pothole>> call = apiService.getPotholeByLocation(latitude, longitude);
@@ -319,7 +315,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Pothole> potholes = response.body();
                     // Xử lý và hiển thị thông tin pothole tại đây
-                    showPotholeDetailsDialog2(potholes); // Ví dụ hiển thị tất cả pothole
+                    showPotholeDetailsDialog2(potholes,latitude,longitude); // Ví dụ hiển thị tất cả pothole
                 } else {
                     // Xử lý khi có lỗi trong phản hồi từ server
                     int statusCode = response.code(); // Lấy mã trạng thái HTTP
@@ -352,7 +348,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
-    public void showPotholeDetailsDialog2(List<Pothole> potholes) {
+    public void showPotholeDetailsDialog2(List<Pothole> potholes,double latitude, double longitude) {
         // Nạp layout tùy chỉnh
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View dialogView = inflater.inflate(R.layout.show_pothole_dialog, null);
@@ -365,6 +361,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         CheckBox cbNormal = dialogView.findViewById(R.id.cbNormal);
         CheckBox cbSmall = dialogView.findViewById(R.id.cbSmall);
         Button buttonok = dialogView.findViewById(R.id.confirm_cf_add_pothole);
+        Button deletePothole = dialogView.findViewById(R.id.delete_pothole);
 
         // Điền dữ liệu vào các trường trong hộp thoại cho mỗi pothole
         if (!potholes.isEmpty()) {
@@ -405,7 +402,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             // Đóng hộp thoại sau khi nhấn OK
             dialog.dismiss(); // Đóng hộp thoại
         });
+
+        deletePothole.setOnClickListener(v -> {
+            // Thay thế bằng thông tin thực tế từ người dùng
+            //String username = getUsername();
+            dialog.dismiss(); // Đóng hộp thoại
+            deletePothole(getUsername(),latitude, longitude );
+
+        });
     }
+
+    private void deletePothole(String username, double latitude, double longitude) {
+        String latitudeStr = String.valueOf(latitude);
+        String longitudeStr = String.valueOf(longitude);
+
+        apiService.deletePothole(username, latitudeStr, longitudeStr)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.d("DELETE_POTHOLE", "Request URL: " + call.request().url());
+                        if (response.isSuccessful()) {
+                            Toast.makeText(requireContext(), "Pothole deleted successfully!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(requireContext(), "Failed to delete pothole: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e("DELETE_POTHOLE", "Error: " + t.getMessage());
+                        Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
     // Hàm clear chỉ xóa marker đã chọn
     public void clearSelectedMarker(Marker selectedMarker) {
@@ -437,12 +467,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void callPotholes() {
         // Khởi tạo Retrofit
         String BASE_URL = getString(R.string.retrofit_url);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)  // URL của server
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        PotholeApiService apiService = RetrofitClient.getClient(BASE_URL).create(PotholeApiService.class);
+
         // Tạo đối tượng apiService
-        PotholeApiService apiService = retrofit.create(PotholeApiService.class);
         Call<List<Pothole>> call = apiService.getPotholes();
         // Gọi API để lấy danh sách ổ gà
         call.enqueue(new Callback<List<Pothole>>() {
@@ -503,7 +530,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void searchLocation(String query) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://nominatim.openstreetmap.org/")
+                .baseUrl(getString(R.string.openstreetmap_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -539,8 +566,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-
-
 //them o ga lac dt
     private void getLocationForShake(double size) {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -567,14 +592,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         }
                         //showLocationInfo(currentLocation); //hien thi thong tin vi tri cua nguoi dung khi lac
                         // Hiển thị hộp thoại xác nhận
-                        showConfirmationDialog(currentLocation, size, name);
+                        showConfirmationDialog(currentLocation, size);
                     } else {
                         Toast.makeText(requireContext(), "Unable to get location!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void showConfirmationDialog(LatLng location, double size, String userName) {
+    private void showConfirmationDialog(LatLng location, double size) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(requireContext());
         View mView = getLayoutInflater().inflate(R.layout.confirm_pothole_dialog, null);
         alert.setView(mView);
@@ -613,7 +638,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Xử lý sự kiện khi nhấn nút Confirm
         mView.findViewById(R.id.confirm_cf_pothole).setOnClickListener(v -> {
             removeMarker();
-            savePothole(location, editLabel.getText().toString(), size, Double.parseDouble(editDepth.getText().toString()), Double.parseDouble(editDiameter.getText().toString()), userName);
+            savePothole(location, editLabel.getText().toString(), size, Double.parseDouble(editDepth.getText().toString()), Double.parseDouble(editDiameter.getText().toString()));
             alertDialog.dismiss();
         });
 
@@ -622,7 +647,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         alertDialog.show();
     }
 
-    private void savePothole(LatLng location, String label, double size, double depth, double diameter, String userName) {
+    private void savePothole(LatLng location, String label, double size, double depth, double diameter) {
         // Tạo dữ liệu ổ gà
         Pothole pothole = new Pothole(
                 getUsername(), // Include the user's name here
@@ -727,7 +752,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 dialog.dismiss();
                 //Toast.makeText(MainActivity.this,"Upload is Clicked",Toast.LENGTH_SHORT).show();
-                addPotHole(name);
+                addPotHole();
 
             }
         });
@@ -776,15 +801,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         String start = startLatLng.longitude + "," + startLatLng.latitude;
         String end = endLatLng.longitude + "," + endLatLng.latitude;
-        String apiKey = "5b3ce3597851110001cf624891cefefa39a74c41a58e409f95fe4da9";
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.openrouteservice.org/")
+                .baseUrl(getString(R.string.openrouteservice_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         OpenRouteServiceAPI api = retrofit.create(OpenRouteServiceAPI.class);
-        Call<RouteResponse> call = api.getRoute(apiKey, start, end);
+        Call<RouteResponse> call = api.getRoute(getString(R.string.openrouteservice_key), start, end);
 
         call.enqueue(new Callback<RouteResponse>() {
             @Override
@@ -793,19 +817,38 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     RouteResponse routeResponse = response.body();
                     if (routeResponse != null && routeResponse.getFeatures() != null) {
                         List<LatLng> route = new ArrayList<>();
+                        List<LatLng> waypoints = new ArrayList<>();
+
+                        // Trích xuất các waypoint
                         for (double[] coord : routeResponse.getFeatures()[0].getGeometry().getCoordinates()) {
-                            route.add(new LatLng(coord[1], coord[0]));
+                            LatLng point = new LatLng(coord[1], coord[0]);
+                            route.add(point);
+                            waypoints.add(point);
                         }
 
-                        // Tự động bắt đầu dẫn đường
+                        // Vẽ đường trên bản đồ
                         if (googleMap != null) {
-                            // Vẽ Polyline lên bản đồ
                             PolylineOptions polylineOptions = new PolylineOptions()
                                     .addAll(route)
                                     .color(Color.BLUE)
-                                    .width(8);
+                                    .width(15);
                             currentRoute = googleMap.addPolyline(polylineOptions);
                         }
+
+                        // Lấy danh sách pothole từ server
+                        getPotholesFromServer(new PotholeDataCallback() {
+                            @Override
+                            public void onPotholesRetrieved(List<LatLng> potholeLocations) {
+                                // Kiểm tra pothole trên đường
+                                detectPotholesOnRoute(waypoints, potholeLocations);
+                            }
+
+                            @Override
+                            public void onError(String errorMessage) {
+                                // Xử lý lỗi khi không lấy được dữ liệu pothole
+                                Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
                         // Bắt đầu theo dõi vị trí
                         startNavigation(endLatLng);
@@ -821,6 +864,126 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
+    private void getPotholesFromServer(final PotholeDataCallback callback) {
+        // Khởi tạo Retrofit
+        String BASE_URL = getString(R.string.retrofit_url);
+        PotholeApiService apiService = RetrofitClient.getClient(BASE_URL).create(PotholeApiService.class);
+
+        // Gọi API để lấy danh sách ổ gà
+        Call<List<Pothole>> call = apiService.getPotholes();
+        call.enqueue(new Callback<List<Pothole>>() {
+            @Override
+            public void onResponse(Call<List<Pothole>> call, Response<List<Pothole>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Pothole> potholes = response.body();
+                    List<LatLng> potholeLocations = new ArrayList<>();
+
+                    // Chuyển đổi thông tin từ Pothole thành LatLng
+                    for (Pothole pothole : potholes) {
+                        double latitude = Double.parseDouble(pothole.getLocation().getLatitude());
+                        double longitude = Double.parseDouble(pothole.getLocation().getLongitude());
+                        potholeLocations.add(new LatLng(latitude, longitude));
+                    }
+
+                    // Gọi callback để trả về kết quả
+                    callback.onPotholesRetrieved(potholeLocations);
+                } else {
+                    // Gọi callback nếu không thành công
+                    callback.onError("Failed to fetch potholes.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Pothole>> call, Throwable t) {
+                // Gọi callback khi có lỗi kết nối
+                callback.onError("Error: " + t.getMessage());
+            }
+        });
+    }
+
+    private boolean isPotholeNearLine(LatLng pointA, LatLng pointB, LatLng pothole) {
+        // Công thức Haversine để tính khoảng cách giữa 2 điểm trên mặt đất
+        double distanceThreshold = 5.0; // Ngưỡng khoảng cách tính bằng mét, ví dụ 50m
+
+        // Khoảng cách giữa 2 điểm waypoint A và B
+        double segmentDistance = haversine(pointA, pointB);
+
+        // Tính khoảng cách từ Pothole đến đoạn thẳng AB
+        double potholeDistance = distanceToLineSegment(pointA, pointB, pothole);
+
+        return potholeDistance <= distanceThreshold;
+    }
+
+    // Hàm Haversine để tính khoảng cách giữa 2 điểm trên bề mặt Trái Đất
+    private double haversine(LatLng point1, LatLng point2) {
+        final double R = 6371000; // Bán kính Trái Đất (đơn vị: mét)
+
+        double lat1 = Math.toRadians(point1.latitude);
+        double lon1 = Math.toRadians(point1.longitude);
+        double lat2 = Math.toRadians(point2.latitude);
+        double lon2 = Math.toRadians(point2.longitude);
+
+        double dlat = lat2 - lat1;
+        double dlon = lon2 - lon1;
+
+        double a = Math.sin(dlat / 2) * Math.sin(dlat / 2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                        Math.sin(dlon / 2) * Math.sin(dlon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c; // Khoảng cách trong mét
+    }
+    // Hàm tính khoảng cách từ điểm đến đoạn thẳng
+    private double distanceToLineSegment(LatLng pointA, LatLng pointB, LatLng point) {
+        double x1 = pointA.longitude, y1 = pointA.latitude;
+        double x2 = pointB.longitude, y2 = pointB.latitude;
+        double x0 = point.longitude, y0 = point.latitude;
+
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        double dot = (x0 - x1) * dx + (y0 - y1) * dy;
+        double len_sq = dx * dx + dy * dy;
+        double param = -1.0;
+
+        if (len_sq != 0.0) { // Tránh chia cho 0
+            param = dot / len_sq;
+        }
+
+        double xx, yy;
+
+        if (param < 0) {
+            xx = x1;
+            yy = y1;
+        } else if (param > 1) {
+            xx = x2;
+            yy = y2;
+        } else {
+            xx = x1 + param * dx;
+            yy = y1 + param * dy;
+        }
+
+        // Tính khoảng cách từ điểm P đến đoạn thẳng
+        return haversine(new LatLng(y0, x0), new LatLng(yy, xx));
+    }
+    private void detectPotholesOnRoute(List<LatLng> waypoints, List<LatLng> potholes) {
+
+
+        for (int i = 0; i < waypoints.size() - 1; i++) {
+            LatLng pointA = waypoints.get(i);
+            LatLng pointB = waypoints.get(i + 1);
+
+            for (LatLng pothole : potholes) {
+                if (isPotholeNearLine(pointA, pointB, pothole)) {
+                    // Hiển thị pothole trên bản đồ với màu khác (ví dụ: đỏ)
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(pothole)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.warningbig))
+                            .title("Pothole detected!"));
+                }
+            }
+        }
+    }
+
     private void startNavigation(LatLng destination) {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -915,8 +1078,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 //them pot hole bang tay
-    private void addPotHole(String name) {
-        showPotHoleDialog(selectedLocation, name);
+    private void addPotHole() {
+        showPotHoleDialog(selectedLocation);
 
             //googleMap.clear(); // Xóa tất cả các marker hiện tại
             // Đảm bảo không xóa các marker pothole đã được lưu
@@ -924,7 +1087,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //                potholeMarker.setVisible(true); // Làm cho các marker pothole hiển thị lại
 //            }
     }
-    private void showPotHoleDialog(LatLng location, String name) {
+    private void showPotHoleDialog(LatLng location) {
         // Inflate layout tùy chỉnh
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View dialogView = inflater.inflate(R.layout.add_pothole_dialog, null);
@@ -970,7 +1133,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 // Tạo dữ liệu ổ gà
                 Pothole pothole = new Pothole(
-                        name,
+                        getUsername(),
                         Double.parseDouble(size.equals("Big") ? "3.0" : size.equals("Normal") ? "2.0" : "1.0"), // Giá trị kích thước giả định
                         Double.parseDouble(depth),
                         Double.parseDouble(diameter),
@@ -1049,9 +1212,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             clearSelectedMarker(markersList.get(0));  // Xóa marker đầu tiên trong danh sách
         }
     }
-
-    private String  getUsername()
-    {
+    private String  getUsername() {
         return name;
     }
 }

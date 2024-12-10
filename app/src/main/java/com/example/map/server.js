@@ -7,8 +7,8 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Use environment variable or default to 3000
-const url = "mongodb+srv://pothole:pothole123@pothole-login.okpwh.mongodb.net/?retryWrites=true&w=majority&appName=Pothole-Login";
-//const url = "mongodb://localhost:27017";
+//const url = "mongodb+srv://pothole:pothole123@pothole-login.okpwh.mongodb.net/?retryWrites=true&w=majority&appName=Pothole-Login";
+const url = "mongodb://localhost:27017";
 const dbName = "myDb";
 
 // Middleware
@@ -119,6 +119,36 @@ app.get('/pothole/location', async (req, res) => {
     res.status(500).json({ message: "Lỗi khi truy vấn cơ sở dữ liệu" });
   }
 });
+
+// DELETE endpoint để xóa pothole theo username, latitude và longitude
+app.delete('/pothole/location', async (req, res) => {
+  const { username, latitude, longitude } = req.query; // Lấy thông tin từ query params
+  const collection = app.locals.potholeCollection;
+
+  if (!username || !latitude || !longitude) {
+    return res.status(400).json({ message: "Username, latitude và longitude là bắt buộc" });
+  }
+
+  try {
+    const result = await collection.deleteOne({
+      "username": username,
+      "location.latitude": parseFloat(latitude),
+      "location.longitude": parseFloat(longitude),
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "Không tìm thấy pothole để xóa" });
+    }
+
+    console.log(`Pothole của user ${username} tại (${latitude}, ${longitude}) đã bị xóa`);
+    res.json({ message: "Pothole đã được xóa thành công" });
+  } catch (error) {
+    console.error("Lỗi khi xóa pothole:", error);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+});
+
+
 
 // PUT endpoint to update a pothole by ID
 app.put('/pothole/:id', async (req, res) => {
