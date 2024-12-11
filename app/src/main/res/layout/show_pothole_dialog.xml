@@ -43,6 +43,7 @@
             android:layout_height="56dp"
             android:layout_marginLeft="30dp"
             android:hint="Label"
+            android:textColor="@color/black"
             android:gravity="center_vertical"
             android:textSize="30sp" />
 
@@ -114,9 +115,10 @@
             android:layout_width="198dp"
             android:layout_height="56dp"
             android:layout_marginLeft="30dp"
-            android:hint="Depth       (cm)"
+            android:hint="Depth"
             android:inputType="number"
             android:textSize="25sp"
+            android:textColor="@color/black"
             android:gravity="center_vertical"/>
 
         <TextView
@@ -124,6 +126,7 @@
             android:layout_width="30dp"
             android:layout_height="56dp"
             android:text="cm"
+            android:textColor="@color/black"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -145,9 +148,10 @@
             android:layout_width="200dp"
             android:layout_height="56dp"
             android:layout_marginLeft="30dp"
-            android:hint="Diameter (cm)"
+            android:hint="Diameter"
             android:inputType="number"
             android:textSize="25sp"
+            android:textColor="@color/black"
             android:gravity="center_vertical"/>
 
         <TextView
@@ -155,6 +159,7 @@
             android:layout_width="30dp"
             android:layout_height="56dp"
             android:text="cm"
+            android:textColor="@color/black"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -172,7 +177,7 @@
             android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:text="Delete"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/holo_red_dark"
             android:textSize="18sp" />
 
         <Button

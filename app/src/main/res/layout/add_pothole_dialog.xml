@@ -4,12 +4,12 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="15sp"
-    android:background="@color/white"
     android:layout_marginBottom="20dp"
     >
+
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="86dp"
+        android:layout_height="79dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/add_hole" />
 
@@ -27,7 +27,9 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="@color/white"
+        >
 
 
         <ImageView
@@ -41,8 +43,11 @@
             android:layout_height="56dp"
             android:layout_marginLeft="30dp"
             android:hint="Label"
+            android:textColor="@color/black"
             android:gravity="center_vertical"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:background="@color/white"
+            />
 
     </LinearLayout>
     <LinearLayout
@@ -50,7 +55,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="@color/white">
 
         <ImageView
             android:layout_width="54dp"
@@ -59,13 +65,13 @@
 
         <CheckBox
             android:id="@+id/cbBig"
-            android:layout_width="2dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:text="Big"
             android:textColor="@color/red"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <CheckBox
             android:id="@+id/cbNormal"
@@ -93,7 +99,9 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="@color/white"
+        >
 
 
         <ImageView
@@ -103,13 +111,24 @@
 
         <EditText
             android:id="@+id/editDepth"
-            android:layout_width="246dp"
+            android:layout_width="184dp"
             android:layout_height="56dp"
             android:layout_marginLeft="30dp"
-            android:hint="Depth       (cm)"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:hint="Depth"
+            android:textColor="@color/black"
             android:inputType="number"
-            android:textSize="18sp"
-            android:gravity="center_vertical"/>
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/unitDepth"
+            android:layout_width="30dp"
+            android:layout_height="56dp"
+            android:text="cm"
+            android:background="@color/white"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
     </LinearLayout>
     <LinearLayout
@@ -117,7 +136,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="8dp" android:background="@color/white">
 
 
     <ImageView
@@ -125,15 +144,25 @@
         android:layout_height="51dp"
         android:src="@drawable/icon_diameter" />
 
-    <EditText
-        android:id="@+id/editDiameter"
-        android:layout_width="246dp"
-        android:layout_height="56dp"
-        android:layout_marginLeft="30dp"
-        android:hint="Diameter (cm)"
-        android:inputType="number"
-        android:gravity="center_vertical"
-        android:textSize="18sp" />
+        <EditText
+            android:id="@+id/editDiameter"
+            android:layout_width="184dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="30dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:hint="Diameter"
+            android:textColor="@color/black"
+            android:inputType="number"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/unitDiameter"
+            android:layout_width="30dp"
+            android:layout_height="56dp"
+            android:text="cm"
+            android:background="@color/white"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
 </LinearLayout>
     <LinearLayout
@@ -149,7 +178,7 @@
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:text="Cancel"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/holo_red_dark"
             android:textSize="18sp"
             />
         <Button

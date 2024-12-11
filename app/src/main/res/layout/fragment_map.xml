@@ -41,18 +41,17 @@
 
     <ImageButton
         android:id="@+id/btn_show_location"
-        android:layout_width="41dp"
-        android:layout_height="44dp"
+        android:layout_width="53dp"
+        android:layout_height="53dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="616dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="605dp"
+        android:layout_marginEnd="13dp"
         android:background="@null"
         android:elevation="1dp"
         android:scaleType="fitCenter"
         android:src="@drawable/unlocated"
         app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
-
 
     <ImageButton
         android:id="@+id/btn_cancel_route"
@@ -60,21 +59,34 @@
         android:layout_height="42dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="560dp"
-        android:layout_marginEnd="11dp"
+        android:layout_marginTop="544dp"
+        android:layout_marginEnd="15dp"
         android:background="@null"
         android:elevation="1dp"
         android:scaleType="fitCenter"
         android:src="@drawable/cancel_direct" />
 
     <ImageButton
-        android:id="@+id/btn_add_pothole"
-        android:layout_width="45dp"
-        android:layout_height="42dp"
+        android:id="@+id/btn_tracking"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="617dp"
-        android:layout_marginEnd="348dp"
+        android:layout_marginTop="479dp"
+        android:layout_marginEnd="14dp"
+        android:background="@null"
+        android:elevation="1dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/tracking" />
+
+    <ImageButton
+        android:id="@+id/btn_add_pothole"
+        android:layout_width="wrap_content"
+        android:layout_height="53dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="607dp"
+        android:layout_marginEnd="309dp"
         android:background="@null"
         android:elevation="1dp"
         android:scaleType="fitCenter"
@@ -86,12 +98,26 @@
         android:layout_height="42dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="349dp"
         android:background="@null"
         android:elevation="1dp"
         android:scaleType="fitCenter"
         android:src="@drawable/pothole_enable" />
+
+
+    <ImageButton
+        android:id="@+id/btn_help"
+        android:layout_width="45dp"
+        android:layout_height="42dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="12dp"
+        android:background="@null"
+        android:elevation="1dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_help" />
 
     <ImageButton
         android:id="@+id/btn_enable_show"
@@ -114,12 +140,11 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="114dp"
-        android:layout_marginTop="616dp"
-        android:layout_marginEnd="209dp"
-        android:layout_marginBottom="67dp"
-        android:visibility="invisible"
-        />
+        android:layout_marginStart="167dp"
+        android:layout_marginTop="614dp"
+        android:layout_marginEnd="156dp"
+        android:layout_marginBottom="69dp"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

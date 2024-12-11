@@ -26,6 +26,7 @@ firebaseAuth = "23.1.0"
 navigationFragment = "2.8.1"
 navigationUi = "2.8.1"
 securityCryptoKtx = "1.1.0-alpha06"
+taptargetview = "1.13.0"
 
 [libraries]
 android-sdk = { module = "org.maplibre.gl:android-sdk", version.ref = "androidSdk" }
@@ -53,6 +54,7 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 security-crypto-ktx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityCryptoKtx" }
+taptargetview = { module = "com.getkeepsafe.taptargetview:taptargetview", version.ref = "taptargetview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
