@@ -21,14 +21,6 @@
         android:text="ADD A NEW POTHOLE"
         android:textColor="@android:color/black"
         android:textSize="30sp" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="20dp"
-        android:text="username"
-        android:textColor="@android:color/black"
-        android:textSize="20sp" />
 
     <LinearLayout
         android:id="@+id/icon_label"
@@ -67,13 +59,13 @@
 
         <CheckBox
             android:id="@+id/cbBig"
-            android:layout_width="0dp"
+            android:layout_width="2dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Big"
             android:textColor="@color/red"
-            android:textSize="20sp"
-            android:gravity="center"/>
+            android:textSize="20sp" />
 
         <CheckBox
             android:id="@+id/cbNormal"
