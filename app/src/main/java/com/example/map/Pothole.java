@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Pothole {
-    private String username;
+    public String username;
     private double size;
     private double depth;
     private double diameter;

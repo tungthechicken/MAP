@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -33,11 +36,18 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DashboardFragment extends Fragment {
     private PieChart pieChart;
     private LineChart lineChart;
     private BarChart stackBarChart;
+    private String name;
+    Button btn_debug_infor;
 
     @Nullable
     @Override
@@ -49,7 +59,6 @@ public class DashboardFragment extends Fragment {
 
         // Retrieve the user's name from the Bundle
         Bundle bundle = getArguments();
-        String name = null;
         if (bundle != null) {
             name = bundle.getString("name");
         }
@@ -62,6 +71,13 @@ public class DashboardFragment extends Fragment {
         setupPieChart();
         setupLineChart();
         setupStackBarChart();
+
+        //------------------------------
+        //DEBUG button
+        btn_debug_infor = view.findViewById(R.id.btn_debug);
+        btn_debug_infor.setOnClickListener(v -> getPotholesByUsername() );
+        //------------------------------
+
         return view;
     }
 
@@ -184,6 +200,67 @@ public class DashboardFragment extends Fragment {
     private float randomR() {
         return (float) (Math.random() * 30); // Trả về giá trị ngẫu nhiên từ 0 đến 30 cho "Risky"
     }
+//--------------------------------------------------------------
+    //ham lay username by KIEN
+    private String  getUsername() {
+        return name;
+    }
+    //lay 2 ham ben duoi de lay pothole ve lam dashboard
+    private void getPotholesByUsername() {
+        // Lấy username
+        String username = getUsername();
 
+        // Kiểm tra username hợp lệ
+        if (username == null || username.isEmpty()) {
+            Toast.makeText(getContext(), "Không tìm thấy username" , Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        // Tạo Retrofit instance
+        String BASE_URL = getString(R.string.retrofit_url);
+        PotholeApiService apiService = RetrofitClient.getClient(BASE_URL).create(PotholeApiService.class);
+
+        // Gọi API
+        Call<List<Pothole>> call = apiService.getPotholeByUsername(username);
+
+        call.enqueue(new Callback<List<Pothole>>() {
+            @Override
+            public void onResponse(Call<List<Pothole>> call, Response<List<Pothole>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Pothole> potholeList = response.body();
+                    showPotholeListDialog(potholeList);   //show ra cho xem trong username co cac pothole nao de tien trong viec lam dashboard
+                } else {
+                    Toast.makeText(getContext(), "Không tìm thấy ổ gà cho người dùng: " + username, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Pothole>> call, Throwable t) {
+                Toast.makeText(getContext(), "Lỗi khi tải dữ liệu: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void showPotholeListDialog(List<Pothole> potholeList) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Danh sách ổ gà");
+
+        // Tạo danh sách để hiển thị
+        StringBuilder message = new StringBuilder();
+        for (Pothole pothole : potholeList) {
+            message.append("Vị trí: ")
+                    .append("Lat: ").append(pothole.getLocation().getLatitude())
+                    .append(", Lng: ").append(pothole.getLocation().getLongitude())
+                    .append("\nKích thước: ").append(pothole.getSize())
+                    .append(", Độ sâu: ").append(pothole.getDepth())
+                    .append("\nNgày: ").append(pothole.getDate())
+                    .append("\n\n");
+        }
+
+        // Hiển thị danh sách trong Dialog
+        builder.setMessage(message.toString());
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+        builder.create().show();
+    }
+    //lam mau de check xem lay duoc pothole theo username de Thu lam Dashboard
+//--------------------------------------------------------------
 }

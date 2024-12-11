@@ -32,7 +32,8 @@ public interface PotholeApiService {
             @Query("latitude") String latitude,
             @Query("longitude") String longitude
     );
-
+    @GET("/pothole/user")
+    Call<List<Pothole>> getPotholeByUsername(@Query("username") String username);
 
 }
 

@@ -101,18 +101,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private Polyline currentRoute;  // Biến để lưu đối tượng đường dẫn
     private List<Marker> potholeMarkers = new ArrayList<>();
     private List<Marker> potholeMarkersRoute = new ArrayList<>();
-    private boolean canSelectLocation = false; // Biến này kiểm tra xem có thể chọn vị trí hay không
-    public boolean canDirection = false;
+    //private boolean canSelectLocation = false; // Biến này kiểm tra xem có thể chọn vị trí hay không
+    //public boolean canDirection = false;
     private boolean canDetectPothole=false;
     private SearchView searchView;
-    private boolean arePotholesVisible = true;
     private List<Pothole> potholes;
     private boolean canShowPothole = false;
     private List<Marker> markersList = new ArrayList<>();
     float shakeThresholdBig    = 21;
     float shakeThresholdNormal = 20;
     float shakeThresholdSmall  = 17;
-    int distancePotholeLimit = 20 ;
+    int distancePotholeLimit = 20 ; //20m
     ImageButton btnCancelRoute;
     ImageButton btnEnablePothole;
     ImageButton btnShowLocation;
@@ -122,8 +121,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-
-
 
         // Retrieve the user's name from the Bundle
         Bundle bundle = getArguments();
@@ -145,6 +142,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+
+        Button btnGetUserPotholes = view.findViewById(R.id.btn_get_user_potholes);
+        btnGetUserPotholes.setOnClickListener(v -> getPotholesByUsername());
 
         btnShowLocation = view.findViewById(R.id.btn_show_location);
         btnShowLocation.setOnClickListener(v -> getLocation());
@@ -319,7 +319,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Pothole> potholes = response.body();
                     // Xử lý và hiển thị thông tin pothole tại đây
-                    showPotholeDetailsDialog2(potholes,latitude,longitude); // Ví dụ hiển thị tất cả pothole
+                    showPotholeDetailsDialog(potholes,latitude,longitude); // Ví dụ hiển thị tất cả pothole
                 } else {
                     // Xử lý khi có lỗi trong phản hồi từ server
                     int statusCode = response.code(); // Lấy mã trạng thái HTTP
@@ -352,7 +352,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
-    public void showPotholeDetailsDialog2(List<Pothole> potholes,double latitude, double longitude) {
+    public void showPotholeDetailsDialog(List<Pothole> potholes,double latitude, double longitude) {
         // Nạp layout tùy chỉnh
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View dialogView = inflater.inflate(R.layout.show_pothole_dialog, null);
@@ -836,7 +836,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             PolylineOptions polylineOptions = new PolylineOptions()
                                     .addAll(route)
                                     .color(Color.BLUE)
-                                    .width(20);
+                                    .width(22);
                             currentRoute = googleMap.addPolyline(polylineOptions);
                         }
 
@@ -1283,5 +1283,69 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     {
         btnEnablePothole.setImageResource(R.drawable.pothole_enable); // Ẩn hoàn toàn nút và không chiếm không gian
     }
+
+    //lam mau de check xem lay duoc pothole theo username de Thu lam Dashboard
+    //nho tung tao ham get username:
+//    private String  getUsername() {
+//        return name;
+//    }
+    //lay 2 ham ben duoi de lay pothole ve lam dashboard
+    private void getPotholesByUsername() {
+        // Lấy username
+        String username = getUsername();
+
+        // Kiểm tra username hợp lệ
+        if (username == null || username.isEmpty()) {
+            Toast.makeText(getContext(), "Không tìm thấy username" , Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Tạo Retrofit instance
+        String BASE_URL = getString(R.string.retrofit_url);
+        PotholeApiService apiService = RetrofitClient.getClient(BASE_URL).create(PotholeApiService.class);
+
+        // Gọi API
+        Call<List<Pothole>> call = apiService.getPotholeByUsername(username);
+
+        call.enqueue(new Callback<List<Pothole>>() {
+            @Override
+            public void onResponse(Call<List<Pothole>> call, Response<List<Pothole>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Pothole> potholeList = response.body();
+                    showPotholeListDialog(potholeList);
+                } else {
+                    Toast.makeText(getContext(), "Không tìm thấy ổ gà cho người dùng: " + username, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Pothole>> call, Throwable t) {
+                Toast.makeText(getContext(), "Lỗi khi tải dữ liệu: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void showPotholeListDialog(List<Pothole> potholeList) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Danh sách ổ gà");
+
+        // Tạo danh sách để hiển thị
+        StringBuilder message = new StringBuilder();
+        for (Pothole pothole : potholeList) {
+            message.append("Vị trí: ")
+                    .append("Lat: ").append(pothole.getLocation().getLatitude())
+                    .append(", Lng: ").append(pothole.getLocation().getLongitude())
+                    .append("\nKích thước: ").append(pothole.getSize())
+                    .append(", Độ sâu: ").append(pothole.getDepth())
+                    .append("\nNgày: ").append(pothole.getDate())
+                    .append("\n\n");
+        }
+
+        // Hiển thị danh sách trong Dialog
+        builder.setMessage(message.toString());
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+        builder.create().show();
+    }
+    //lam mau de check xem lay duoc pothole theo username de Thu lam Dashboard
+
 }
 
