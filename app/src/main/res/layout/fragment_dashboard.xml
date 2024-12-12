@@ -221,10 +221,17 @@
                         android:textStyle="bold"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"/>
+
+                    <Button
+                        android:id="@+id/btn_debug"
+                        android:layout_width="370dp"
+                        android:layout_height="wrap_content"
+                        android:text="button debug information pothole by username" />
+
                     <com.github.mikephil.charting.charts.BarChart
                         android:id="@+id/stackBarChart"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp" />
+                        android:layout_height="197dp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

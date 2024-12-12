@@ -1,10 +1,12 @@
 package com.example.map;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Pothole {
-    private String username;
+    public String username;
     private double size;
     private double depth;
     private double diameter;
@@ -22,6 +24,7 @@ public class Pothole {
         this.location = location;
         this.date = getCurrentDate();
     }
+
 
     // Lớp con LocationData
     public static class LocationData {
@@ -105,4 +108,5 @@ public class Pothole {
     public void setUsername(String username) {
         this.username = username;
     }
+
 }

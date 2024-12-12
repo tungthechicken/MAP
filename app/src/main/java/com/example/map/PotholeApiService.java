@@ -19,8 +19,6 @@ public interface PotholeApiService {
     @POST("/pothole")
     Call<Pothole> createPothole(@Body Pothole pothole);
 
-    @DELETE("/pothole/{id}")
-    Call<Void> deletePothole(@Path("id") String id);
 
     @POST("/pothole")
     Call<Void> savePothole(@Body Pothole pothole);
@@ -28,7 +26,14 @@ public interface PotholeApiService {
     @GET("/pothole/location")
     Call<List<Pothole>> getPotholeByLocation(@Query("latitude") double latitude, @Query("longitude") double longitude);
 
-
+    @DELETE("/pothole/location")
+    Call<Void> deletePothole(
+            @Query("username") String username,
+            @Query("latitude") String latitude,
+            @Query("longitude") String longitude
+    );
+    @GET("/pothole/user")
+    Call<List<Pothole>> getPotholeByUsername(@Query("username") String username);
 
 }
 
