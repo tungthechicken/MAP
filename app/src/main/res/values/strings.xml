@@ -2,7 +2,7 @@
     <string name="app_name">Pothole Master</string>
     <string name="google_maps_key">AIzaSyBOetZcAGse6OWgCdgNzbho2knIiCWL44s</string>
     <string name="client_id">148865329906-e0uq4mv2h8gflabngri1ddr1m89id31a.apps.googleusercontent.com</string>
-    <string name="retrofit_url2">"https://nodejspothole.as.r.appspot.com/"</string>
+    <string name="retrofit_url1">"https://nodejspothole.as.r.appspot.com/"</string>
     <string name="retrofit_url">"http://10.0.2.2:3000/"</string>
     <string name="openstreetmap_url">"https://nominatim.openstreetmap.org/"</string>
     <string name="openrouteservice_url">"https://api.openrouteservice.org/"</string>

@@ -50,6 +50,8 @@ public class ForgotPasswordEmailFragment extends Fragment {
     }
 
     private void sendResetPasswordOTPRequest(String email) {
+        resetPasswordButton.setEnabled(false); // Disable the button
+
         HashMap<String, String> map = new HashMap<>();
         map.put("email", email);
 
@@ -57,20 +59,18 @@ public class ForgotPasswordEmailFragment extends Fragment {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                resetPasswordButton.setEnabled(true); // Re-enable the button
                 if (response.isSuccessful()) {
                     Toast.makeText(getActivity(), "OTP sent to your email", Toast.LENGTH_SHORT).show();
                     ((ForgotPasswordActivity) getActivity()).showResetPasswordFragment(email);
                 } else {
-                    // Simulate delay for wrong email
-                    handler.postDelayed(() -> {
-                        Toast.makeText(getActivity(), "OTP sent to your email", Toast.LENGTH_SHORT).show();
-                        ((ForgotPasswordActivity) getActivity()).showResetPasswordFragment(email);
-                    }, 3000); // 3 seconds delay
+                    Toast.makeText(getActivity(), "Failed to send OTP", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                resetPasswordButton.setEnabled(true); // Re-enable the button
                 Toast.makeText(getActivity(), "Error contacting server!", Toast.LENGTH_SHORT).show();
             }
         });

@@ -26,7 +26,7 @@ import retrofit2.Response;
 public class ResetPasswordFragment extends Fragment {
 
     private EditText otpEditText1, otpEditText2, otpEditText3, otpEditText4, otpEditText5, otpEditText6;
-    private EditText newPasswordEditText;
+    private EditText newPasswordEditText, confirmPasswordEditText;
     private TextView otpDialog, newPasswordDialog, resendOtpTextView;
     private Button verifyOtpButton, resetPasswordButton;
     private RetrofitInterface retrofitInterface;
@@ -52,6 +52,7 @@ public class ResetPasswordFragment extends Fragment {
         otpDialog = view.findViewById(R.id.otpDialog);
         newPasswordDialog = view.findViewById(R.id.newPasswordDialog);
         newPasswordEditText = view.findViewById(R.id.newPasswordEditText);
+        confirmPasswordEditText = view.findViewById(R.id.newPasswordEditTextConfirm);
         verifyOtpButton = view.findViewById(R.id.verifyOtpButton);
         resetPasswordButton = view.findViewById(R.id.resetPasswordButton);
         resendOtpTextView = view.findViewById(R.id.resendOtpTextView);
@@ -83,11 +84,16 @@ public class ResetPasswordFragment extends Fragment {
 
         resetPasswordButton.setOnClickListener(v -> {
             String newPassword = newPasswordEditText.getText().toString().trim();
-            if (!newPassword.isEmpty()) {
-                resetPassword(userEmail, newPassword);
-            } else {
-                Toast.makeText(getActivity(), "Please enter new password", Toast.LENGTH_SHORT).show();
+            String confirmPassword = confirmPasswordEditText.getText().toString().trim();
+            if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
+                Toast.makeText(getActivity(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+                return;
             }
+            if (!newPassword.equals(confirmPassword)) {
+                Toast.makeText(getActivity(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            resetPassword(userEmail, newPassword);
         });
 
         return view;
@@ -171,6 +177,7 @@ public class ResetPasswordFragment extends Fragment {
         otpDialog.setVisibility(View.GONE);
         resendOtpTextView.setVisibility(View.GONE);
         newPasswordDialog.setVisibility(View.VISIBLE);
+        confirmPasswordEditText.setVisibility(View.VISIBLE);
         resetPasswordButton.setVisibility(View.VISIBLE);
     }
 
