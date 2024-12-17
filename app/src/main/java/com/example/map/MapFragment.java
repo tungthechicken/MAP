@@ -108,9 +108,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private List<Pothole> potholes;
     private boolean canShowPothole = false;
     private List<Marker> markersList = new ArrayList<>();
-    float shakeThresholdBig    = 25;
-    float shakeThresholdNormal = 23;
-    float shakeThresholdSmall  = 19;
+    float shakeThresholdBig    = 40;
+    float shakeThresholdNormal = 35;
+    float shakeThresholdSmall  = 30;
     int distancePotholeLimit = 20 ; //20m
     ImageButton btnCancelRoute;
     ImageButton btnEnablePothole;
@@ -147,8 +147,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mapFragment.getMapAsync(this);
         }
 
-        Button btnGetUserPotholes = view.findViewById(R.id.btn_get_user_potholes);
-        btnGetUserPotholes.setOnClickListener(v -> getPotholesByUsername());
+        //Button btnGetUserPotholes = view.findViewById(R.id.btn_get_user_potholes);
+        //btnGetUserPotholes.setOnClickListener(v -> getPotholesByUsername());
 
         btnHelp = view.findViewById(R.id.btn_help);
         btnHelp.setOnClickListener(v -> showHelpDialog());
@@ -200,7 +200,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     {
                         return;
                     }
-
                     float x = event.values[0];
                     float y = event.values[1];
                     float z = event.values[2];
@@ -1111,7 +1110,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             removeMarker();
             removePotholeMarkers();
             disableTrackingButton();
-            isTrackingUser=false;
+            if (isTrackingUser=true)
+            {
+                btnTracking.setImageResource(R.drawable.tracking);
+                isTrackingUser=false;
+            }
+            else
+                isTrackingUser=false;
+
             //potholes.clear();
             //googleMap.setOnMapClickListener(null);
             Toast.makeText(requireContext(), "Route canceled", Toast.LENGTH_SHORT).show();
@@ -1315,7 +1321,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     {
         btnCancelRoute.setVisibility(View.GONE); // Ẩn hoàn toàn nút và không chiếm không gian
     }
-
     private void enableTrackingButton()
     {
         btnTracking.setVisibility(View.VISIBLE); // Hiển thị lại nút

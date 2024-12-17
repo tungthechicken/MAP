@@ -81,7 +81,7 @@
             android:gravity="center"
             android:text="Normal"
             android:textColor="@color/orange"
-            android:textSize="15sp" />
+            android:textSize="12sp" />
 
         <CheckBox
             android:id="@+id/cbSmall"
@@ -111,22 +111,22 @@
 
         <EditText
             android:id="@+id/editDepth"
-            android:layout_width="184dp"
+            android:layout_width="138dp"
             android:layout_height="56dp"
             android:layout_marginLeft="30dp"
             android:background="@color/white"
             android:gravity="center_vertical"
             android:hint="Depth"
-            android:textColor="@color/black"
             android:inputType="number"
+            android:textColor="@color/black"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/unitDepth"
             android:layout_width="30dp"
             android:layout_height="56dp"
-            android:text="cm"
             android:background="@color/white"
+            android:text="cm"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -146,25 +146,26 @@
 
         <EditText
             android:id="@+id/editDiameter"
-            android:layout_width="184dp"
+            android:layout_width="140dp"
             android:layout_height="56dp"
             android:layout_marginLeft="30dp"
             android:background="@color/white"
             android:gravity="center_vertical"
             android:hint="Diameter"
-            android:textColor="@color/black"
             android:inputType="number"
+            android:textColor="@color/black"
             android:textSize="18sp" />
+
         <TextView
             android:id="@+id/unitDiameter"
             android:layout_width="30dp"
             android:layout_height="56dp"
-            android:text="cm"
             android:background="@color/white"
+            android:text="cm"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
-</LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
