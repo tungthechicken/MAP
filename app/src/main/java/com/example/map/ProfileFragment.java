@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class ProfileFragment extends Fragment {
 
-    TextView usertext;
+    TextView usernameTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -22,11 +22,20 @@ public class ProfileFragment extends Fragment {
 
         ImageButton backButton = view.findViewById(R.id.back_button);
         Button btEdit = view.findViewById(R.id.btEdit);
+        usernameTextView = view.findViewById(R.id.usernameTextView); // Assuming you have a TextView with id usertext
+
+        // Retrieve the username from the arguments
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String name = bundle.getString("name");
+            usernameTextView.setText(name); // Display the username
+        }
+
         // Set sự kiện cho nút back để quay lại ProfileFragment
-            backButton.setOnClickListener(v -> {
-                // Quay lại trang ProfileFragment
-                getParentFragmentManager().popBackStack(); // Quay lại fragment trước đó trong back stack
-            });
+        backButton.setOnClickListener(v -> {
+            // Quay lại trang ProfileFragment
+            getParentFragmentManager().popBackStack(); // Quay lại fragment trước đó trong back stack
+        });
         btEdit.setOnClickListener(v -> {
             // Tạo đối tượng EditProfileFragment
             EditProfileFragment editProfileFragment = new EditProfileFragment();

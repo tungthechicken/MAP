@@ -93,10 +93,13 @@ public class SettingsFragment extends Fragment {
     }
 
     private void openProfile() {
+        ProfileFragment profileFragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("name", name); // Pass the username
+        profileFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new ProfileFragment());
-
+        transaction.replace(R.id.fragment_container, profileFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
