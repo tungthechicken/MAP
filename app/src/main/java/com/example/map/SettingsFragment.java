@@ -31,11 +31,19 @@ public class SettingsFragment extends Fragment {
     private LinearLayout aboutEdit;
     private LinearLayout qaaEdit;
     private View overlay;
-
+    private String name;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            name = bundle.getString("name");
+        }
+        if (name == null) {
+            name = "User"; // Default value if name is null
+        }
 
         // Initialize GoogleSignInClient
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -85,8 +93,10 @@ public class SettingsFragment extends Fragment {
     }
 
     private void openProfile() {
+
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new ProfileFragment());
+
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -150,5 +160,8 @@ public class SettingsFragment extends Fragment {
             overlay.setVisibility(View.GONE);  // Ẩn overlay
         });
 
+    }
+    private String  getUsername() {
+        return name;
     }
 }

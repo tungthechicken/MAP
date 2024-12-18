@@ -240,6 +240,30 @@ public class DashboardFragment extends Fragment {
             }
         });
     }
+    private void callPotholes() {
+        // Khởi tạo Retrofit
+        String BASE_URL = getString(R.string.retrofit_url);
+        PotholeApiService apiService = RetrofitClient.getClient(BASE_URL).create(PotholeApiService.class);
+
+        // Tạo đối tượng apiService
+        Call<List<Pothole>> call = apiService.getPotholes();
+        // Gọi API để lấy danh sách ổ gà
+        call.enqueue(new Callback<List<Pothole>>() {
+            @Override
+            public void onResponse(Call<List<Pothole>> call, Response<List<Pothole>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Pothole> potholes = response.body();
+                    // Gọi hàm để hiển thị các pothole trên bản đồ
+                    showPotholeListDialog(potholes);
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Pothole>> call, Throwable t) {
+                // Xử lý lỗi nếu có
+                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void showPotholeListDialog(List<Pothole> potholeList) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Danh sách ổ gà");
