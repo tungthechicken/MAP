@@ -46,7 +46,7 @@ public class DashboardFragment extends Fragment {
     private PieChart pieChart;
     private LineChart lineChart;
     private BarChart stackBarChart;
-    private String name;
+    private String name, userCreateDate;
     Button btn_debug_infor;
 
     @Nullable
@@ -61,12 +61,21 @@ public class DashboardFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             name = bundle.getString("name");
+            userCreateDate = bundle.getString("userCreatedDate");
         }
         if (name == null) {
             name = "User"; // Default value if name is null
         }
+
+        if (userCreateDate == null) {
+            userCreateDate = "Unknown Date"; // Default value if userCreateDate is null
+        }
+
         TextView usernameTextView = view.findViewById(R.id.usernameTextView);
         usernameTextView.setText("Welcome, " + name);
+
+        TextView userCreateDateTextView = view.findViewById(R.id.userCreateDateTextView);
+        userCreateDateTextView.setText("User created on: " + userCreateDate);
 
         setupPieChart();
         setupLineChart();

@@ -4,6 +4,7 @@ public class UserData {
     private String email;
     private String name;
     private String password;
+    private String userCreatedDate;
 
     // Getters and setters
     public String getEmail() {
@@ -18,6 +19,10 @@ public class UserData {
         return name;
     }
 
+    public String getUserCreatedDate() {
+        return userCreatedDate;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -29,4 +34,6 @@ public class UserData {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 }
