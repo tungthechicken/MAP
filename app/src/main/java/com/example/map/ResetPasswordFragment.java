@@ -3,7 +3,6 @@ package com.example.map;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import retrofit2.Response;
 
 public class ResetPasswordFragment extends Fragment {
 
-    private EditText otpEditText1, otpEditText2, otpEditText3, otpEditText4, otpEditText5, otpEditText6;
+    private EditText otpEditText;
     private EditText newPasswordEditText, confirmPasswordEditText;
     private TextView otpDialog, newPasswordDialog, resendOtpTextView;
     private Button verifyOtpButton, resetPasswordButton;
@@ -43,12 +42,7 @@ public class ResetPasswordFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reset_password, container, false);
 
-        otpEditText1 = view.findViewById(R.id.otpEditText1);
-        otpEditText2 = view.findViewById(R.id.otpEditText2);
-        otpEditText3 = view.findViewById(R.id.otpEditText3);
-        otpEditText4 = view.findViewById(R.id.otpEditText4);
-        otpEditText5 = view.findViewById(R.id.otpEditText5);
-        otpEditText6 = view.findViewById(R.id.otpEditText6);
+        otpEditText = view.findViewById(R.id.otpEditText);
         otpDialog = view.findViewById(R.id.otpDialog);
         newPasswordDialog = view.findViewById(R.id.newPasswordDialog);
         newPasswordEditText = view.findViewById(R.id.newPasswordEditText);
@@ -57,15 +51,8 @@ public class ResetPasswordFragment extends Fragment {
         resetPasswordButton = view.findViewById(R.id.resetPasswordButton);
         resendOtpTextView = view.findViewById(R.id.resendOtpTextView);
 
-        setupOtpInputs();
-
         verifyOtpButton.setOnClickListener(v -> {
-            String otp = otpEditText1.getText().toString().trim() +
-                    otpEditText2.getText().toString().trim() +
-                    otpEditText3.getText().toString().trim() +
-                    otpEditText4.getText().toString().trim() +
-                    otpEditText5.getText().toString().trim() +
-                    otpEditText6.getText().toString().trim();
+            String otp = otpEditText.getText().toString().trim();
             if (!otp.isEmpty()) {
                 verifyOtp(userEmail, otp);
             } else {
@@ -133,15 +120,6 @@ public class ResetPasswordFragment extends Fragment {
         });
     }
 
-    private void setupOtpInputs() {
-        otpEditText1.addTextChangedListener(new GenericTextWatcher(otpEditText1, otpEditText2, null));
-        otpEditText2.addTextChangedListener(new GenericTextWatcher(otpEditText2, otpEditText3, otpEditText1));
-        otpEditText3.addTextChangedListener(new GenericTextWatcher(otpEditText3, otpEditText4, otpEditText2));
-        otpEditText4.addTextChangedListener(new GenericTextWatcher(otpEditText4, otpEditText5, otpEditText3));
-        otpEditText5.addTextChangedListener(new GenericTextWatcher(otpEditText5, otpEditText6, otpEditText4));
-        otpEditText6.addTextChangedListener(new GenericTextWatcher(otpEditText6, null, otpEditText5));
-    }
-
     private void verifyOtp(String email, String otp) {
         HashMap<String, String> map = new HashMap<>();
         map.put("email", email);
@@ -166,12 +144,7 @@ public class ResetPasswordFragment extends Fragment {
     }
 
     private void showResetPasswordPrompt() {
-        otpEditText1.setVisibility(View.GONE);
-        otpEditText2.setVisibility(View.GONE);
-        otpEditText3.setVisibility(View.GONE);
-        otpEditText4.setVisibility(View.GONE);
-        otpEditText5.setVisibility(View.GONE);
-        otpEditText6.setVisibility(View.GONE);
+        otpEditText.setVisibility(View.GONE);
         newPasswordEditText.setVisibility(View.VISIBLE);
         verifyOtpButton.setVisibility(View.GONE);
         otpDialog.setVisibility(View.GONE);
@@ -209,43 +182,5 @@ public class ResetPasswordFragment extends Fragment {
                 Toast.makeText(getActivity(), "Error resetting password", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public static class GenericTextWatcher implements TextWatcher, View.OnKeyListener {
-
-        private final EditText currentView;
-        private final EditText nextView;
-        private final EditText previousView;
-
-        public GenericTextWatcher(EditText currentView, EditText nextView, EditText previousView) {
-            this.currentView = currentView;
-            this.nextView = nextView;
-            this.previousView = previousView;
-            this.currentView.setOnKeyListener(this);
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.length() == 1 && nextView != null) {
-                nextView.requestFocus();
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {}
-
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                if (currentView.getText().toString().isEmpty() && previousView != null) {
-                    previousView.requestFocus();
-                    previousView.setText("");
-                }
-            }
-            return false;
-        }
     }
 }
