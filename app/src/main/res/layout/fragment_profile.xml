@@ -66,11 +66,14 @@
 
         <TextView
             android:id="@+id/usernameTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="324dp"
             android:layout_height="wrap_content"
             android:text="Username"
-            android:textSize="20dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="7sp"
+            android:autoSizeMaxTextSize="12sp"
             android:textColor="@color/white"
+            android:textSize="20dp"
             android:textStyle="bold" />
     </LinearLayout>
 
