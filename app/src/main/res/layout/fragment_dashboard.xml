@@ -80,20 +80,21 @@
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/custom_edittext">
+
                         <TextView
-                            android:id="@+id/km"
+                            android:id="@+id/potholesServer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:text="0"
-                            android:textSize="30sp"
-                            android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:layout_gravity="center_horizontal"/>
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
                         <TextView
                             android:id="@+id/label1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Kilometers"
+                            android:text="Server"
                             android:padding="5dp"
                             android:layout_gravity="center_horizontal"
                             android:textColor="@color/gray"/>
@@ -122,7 +123,7 @@
                             android:id="@+id/label2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Potholes"
+                            android:text="Client"
                             android:padding="5dp"
                             android:layout_gravity="center_horizontal"
                             android:textColor="@color/gray"/>
@@ -168,43 +169,42 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="1"
                         android:orientation="vertical">
                         <TextView
-                            android:id="@+id/pieChartTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Classification"
+                            android:text="Server"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10dp"/>
 
                         <com.github.mikephil.charting.charts.PieChart
-                            android:id="@+id/pieChart"
+                            android:id="@+id/pieChartServer"
                             android:layout_width="match_parent"
                             android:layout_height="200dp" />
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="4"
+                        android:layout_weight="1"
                         android:orientation="vertical">
                         <TextView
-                            android:id="@+id/lineChartTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Overview"
+                            android:text="Client"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10dp"/>
-                        <com.github.mikephil.charting.charts.LineChart
-                            android:id="@+id/lineChart"
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/pieChartClient"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp"/>
+                            android:layout_height="200dp" />
                     </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -221,17 +221,10 @@
                         android:textStyle="bold"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"/>
-
-                    <Button
-                        android:id="@+id/btn_debug"
-                        android:layout_width="370dp"
-                        android:layout_height="wrap_content"
-                        android:text="button debug information pothole by username" />
-
                     <com.github.mikephil.charting.charts.BarChart
                         android:id="@+id/stackBarChart"
                         android:layout_width="match_parent"
-                        android:layout_height="197dp" />
+                        android:layout_height="210dp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

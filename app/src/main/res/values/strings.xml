@@ -49,7 +49,7 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <string name="back">Return</string>
+    <string name="back">Back</string>
     <string name="chi_tiet">Detail</string>
     <string-array name="date_options">
         <item>Day</item>
@@ -70,5 +70,80 @@
     <string name="hd7">Cancel navigation button.</string>
     <string name="hd8">Tracking Button. It will always track the user while moving.</string>
     <string name="hd9">Enter pothole diagnosis mode on the journey. It will show a dialog box when there is any pothole.</string>
+    //thu
+    <string name="orcontinuewith">or continue with</string>
+    <string name="enter_pwd">Enter Password\n</string>
+    <string name="set_pwd">Set Password</string>
+    <string name="pls_set_pwd">Before you can continue, please set a password for your account.</string>
+    <string name="add_a_new_pothole">ADD A NEW POTHOLE</string>
+    <string name="label">Label</string>
+    <string name="big">Big</string>
+    <string name="normal">Normal</string>
+    <string name="small">Small</string>
+    <string name="depth">Depth</string>
+    <string name="diameter">Diameter</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="marked_a_location">Marked a location</string>
+    <string name="is_this_a_pothole">IS THIS A POTHOLE?</string>
+    <string name="app_overview">Potholes Master App Overview.</string>
+    <string name="about_app"> Potholes Master is a mobile application designed for Android devices that allows users to manually or automatically detect and mark potholes based on the phone\'s vibration sensor. The app uses the phone\'s accelerometer to detect irregular movements caused by potholes, providing a solution for identifying and reporting road damage in real-time. Users can also manually mark potholes by tapping on the map within the app.
+            This application was developed by a team of students from the NT118.P11 Mobile Application Development class, focusing on enhancing road safety and improving the accuracy of road maintenance data collection. With Potholes Master, users can contribute to better infrastructure management by identifying and documenting potholes, helping local authorities prioritize repairs and improve road conditions.</string>
+    <string name="kilomiters">Kilometers</string>
+    <string name="potholes">Potholes</string>
+    <string name="day">Days</string>
+    <string name="classification">Classification</string>
+    <string name="overview">Overview</string>
+    <string name="pothole_report">Pothole Report</string>
+    <string name="language">Languages</string>
+    <string name="english">English</string>
+    <string name="vietnamese">Vietnamese</string>
+    <string name="notification">Notification</string>
+    <string name="actionbase_notification">Action-base Notifications</string>
+    <string name="mode">Mode</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="vibration">Vibration</string>
+    <string name="silent">Silent</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="name">Name</string>
+    <string name="username">Username</string>
+    <string name="birthday">Birthday</string>
+    <string name="sex">Sex</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+    <string name="address">Address</string>
+    <string name="bio">Bio</string>
+    <string name="email">Email</string>
+    <string name="save">Save</string>
+    <string name="account_recovery_wizard">ACCOUNT RECOVERY WIZARD</string>
+    <string name="enter_your_email_an_opt_will_be_sent_to_your_email_if_it_is_registered">Enter your email. An OTP will be sent to your email if it is registered.</string>
+    <string name="reset_pwd">Reset Password</string>
+    <string name="skip">Skip</string>
+    <string name="profile">Profile</string>
+    <string name="question_and_answer">Questions and Answers</string>
+    <string name="question1">How does the app detect potholes on the road?</string>
+    <string name="answer1">The app uses the smartphone\'s accelerometer sensor to detect unusual movements while the user is driving. When the app detects irregular movements, similar to driving over a pothole, it records the location and notifies the user of the event.</string>
+    <string name="question2">In what road conditions can the app detect potholes?</string>
+    <string name="answer2">The app can detect potholes on most types of rough roads. However, the accuracy may be affected by factors such as driving speed, the shape of the pothole, and other obstacles on the road.</string>
+    <string name="question3">How does the app record the location of the pothole?</string>
+    <string name="answer3">" The app uses the phone's GPS to record the exact location of a pothole when it is detected. Every time a pothole is detected, the app automatically saves the coordinates and timestamp so users can review the data on a map."</string>
+    <string name="question4">Can I manually report a pothole?</string>
+    <string name="answer4">Yes, you can manually report a pothole by tapping on the map to mark its location. This helps the community of users contribute additional data and supports more accurate pothole detection.</string>
+    <string name="question5">Does the app store my data?</string>
+    <string name="answer5">The app will store data about detected potholes, including their location and time, on your phone. You can view this data anytime in the app’s history section. This data can be used for analysis and helps local authorities improve infrastructure.</string>
+    <string name="enter_otp">Enter a 6-digit OTP</string>
+    <string name="verify_otp">Verify OTP</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="log_out">Log Out</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="forgot_pwd">Forgot your Password?</string>
+    <string name="login">Login</string>
+    <string name="pothole">Pothole</string>
+    <string name="delete">Delete</string>
+    <string name="confirm_pwd">Confirm Password</string>
+    <string name="create_account">Create Account</string>
 
 </resources>

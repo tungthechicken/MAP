@@ -25,10 +25,10 @@ public class CentralActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String email = intent.getStringExtra("email");
 
-        fetchUserName(email, savedInstanceState);
+        fetchUserData(email, savedInstanceState);
     }
 
-    private void fetchUserName(String email, Bundle savedInstanceState) {
+    private void fetchUserData(String email, Bundle savedInstanceState) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getString(R.string.retrofit_url))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -42,20 +42,21 @@ public class CentralActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<UserData> call, @NonNull Response<UserData> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     String name = response.body().getName();
-                    setupBottomNavigationView(name, savedInstanceState);
+                    String userCreatedDate = response.body().getUserCreatedDate();
+                    setupBottomNavigationView(name, userCreatedDate, savedInstanceState);
                 } else {
-                    setupBottomNavigationView("User", savedInstanceState);
+                    setupBottomNavigationView("User", "", savedInstanceState);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<UserData> call, @NonNull Throwable t) {
-                setupBottomNavigationView("User", savedInstanceState);
+                setupBottomNavigationView("User", "", savedInstanceState);
             }
         });
     }
 
-    private void setupBottomNavigationView(String name, Bundle savedInstanceState) {
+    private void setupBottomNavigationView(String name, String userCreatedDate, Bundle savedInstanceState) {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_bar);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFragment = null;
@@ -64,6 +65,7 @@ public class CentralActivity extends AppCompatActivity {
                 selectedFragment = new DashboardFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("name", name);
+                bundle.putString("userCreatedDate", userCreatedDate);
                 selectedFragment.setArguments(bundle);
             } else if (itemId == R.id.nav_map) {
                 selectedFragment = new MapFragment();
