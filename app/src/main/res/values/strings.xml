@@ -2,8 +2,8 @@
     <string name="app_name">Pothole Master</string>
     <string name="google_maps_key">AIzaSyBOetZcAGse6OWgCdgNzbho2knIiCWL44s</string>
     <string name="client_id">148865329906-e0uq4mv2h8gflabngri1ddr1m89id31a.apps.googleusercontent.com</string>
-    <string name="retrofit_url1">"https://nodejspothole.as.r.appspot.com/"</string>
-    <string name="retrofit_url">"http://10.0.2.2:3000/"</string>
+    <string name="retrofit_url">"https://nodejspothole.as.r.appspot.com/"</string>
+    <string name="retrofit_url2">"http://10.0.2.2:3000/"</string>
     <string name="openstreetmap_url">"https://nominatim.openstreetmap.org/"</string>
     <string name="openrouteservice_url">"https://api.openrouteservice.org/"</string>
     <string name="openrouteservice_key">5b3ce3597851110001cf624891cefefa39a74c41a58e409f95fe4da9/"</string>
@@ -59,4 +59,16 @@
     <string name="setting">Setting</string>
     <string name="edit_photo">edit photo</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    //kien
+    <string name="hd1">Long tap on the map to mark a location.</string>
+    <string name="hd2">Choose function add pothole to add a new pothole on the map.</string>
+    <string name="hd3">Fill in all the information of the pothole including Label, Size, Depth, Diameter.</string>
+    <string name="hd4">Choose navigation function to get to the location on the map.</string>
+    <string name="hd5">If there are potholes along the way, they will appear on the map whether you choose to show potholes or not.</string>
+    <string name="hd6">For example.</string>
+    <string name="hd7">Cancel navigation button.</string>
+    <string name="hd8">Tracking Button. It will always track the user while moving.</string>
+    <string name="hd9">Enter pothole diagnosis mode on the journey. It will show a dialog box when there is any pothole.</string>
+
 </resources>

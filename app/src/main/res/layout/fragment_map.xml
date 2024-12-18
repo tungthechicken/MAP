@@ -1,150 +1,165 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <!-- Thanh tìm kiếm địa điểm -->
-
+    <!-- Bản đồ chiếm toàn bộ màn hình -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/id_map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="-2dp"
-        android:layout_marginBottom="-28dp" />
+        android:layout_height="match_parent" />
 
-    <SearchView
-        android:id="@+id/search_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="59dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="64dp"
-        android:background="@drawable/background_white_boder_purple"
-        android:iconifiedByDefault="false"
-        android:queryHint="" />
-
-    <ListView
-        android:id="@+id/suggestion_list"
+    <!-- Layout chứa thanh tìm kiếm và các nút -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />  <!-- Ẩn đi nếu không có gợi ý -->
+        android:orientation="vertical"
+        android:paddingStart="10dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="70dp"
+                android:layout_height="match_parent" />
+
+            <SearchView
+                android:id="@+id/search_location"
+                android:layout_width="220dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_white_boder_purple"
+                android:iconifiedByDefault="false"
+                android:queryHint="" />
+
+            <ImageButton
+                android:id="@+id/btn_help"
+                android:layout_width="52dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:background="@null"
+                android:contentDescription="Trợ giúp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_help" />
 
 
-    <ImageButton
-        android:id="@+id/btn_show_location"
-        android:layout_width="53dp"
-        android:layout_height="53dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="605dp"
-        android:layout_marginEnd="13dp"
-        android:background="@null"
-        android:elevation="1dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/unlocated"
-        app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
+        </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/btn_cancel_route"
-        android:layout_width="45dp"
-        android:layout_height="42dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="544dp"
-        android:layout_marginEnd="15dp"
-        android:background="@null"
-        android:elevation="1dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/cancel_direct" />
-
-    <ImageButton
-        android:id="@+id/btn_tracking"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="479dp"
-        android:layout_marginEnd="14dp"
-        android:background="@null"
-        android:elevation="1dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/tracking" />
-
-    <ImageButton
-        android:id="@+id/btn_add_pothole"
-        android:layout_width="wrap_content"
-        android:layout_height="53dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="607dp"
-        android:layout_marginEnd="309dp"
-        android:background="@null"
-        android:elevation="1dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/caution" />
-
-    <ImageButton
-        android:id="@+id/btn_enable_detectpothole"
-        android:layout_width="45dp"
-        android:layout_height="42dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="349dp"
-        android:background="@null"
-        android:elevation="1dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/pothole_enable" />
+        <!-- Thanh tìm kiếm -->
 
 
-    <ImageButton
-        android:id="@+id/btn_help"
-        android:layout_width="45dp"
-        android:layout_height="42dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="12dp"
-        android:background="@null"
-        android:elevation="1dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/icon_help" />
-
-    <ImageButton
-        android:id="@+id/btn_enable_show"
-        android:layout_width="45dp"
-        android:layout_height="42dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="11dp"
-        android:background="@null"
-        android:elevation="1dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/pothole_marker" />
-
-    <Button
-        android:id="@+id/btn_get_user_potholes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="167dp"
-        android:layout_marginTop="614dp"
-        android:layout_marginEnd="156dp"
-        android:layout_marginBottom="69dp"
-        android:visibility="invisible" />
+        <!-- Hàng nút chia theo chiều ngang -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
 
-</RelativeLayout>
+                <ImageButton
+                    android:id="@+id/btn_enable_detectpothole"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@null"
+                    android:elevation="1dp"
+                    android:contentDescription="Phát hiện ổ gà"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/pothole_enable" />
+
+            <View
+                android:layout_width="233dp"
+                android:layout_height="match_parent" />
+
+                <ImageButton
+                    android:id="@+id/btn_enable_show"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:elevation="1dp"
+                    android:background="@null"
+                    android:contentDescription="Hiển thị ổ gà"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/pothole_marker" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="392dp"
+            android:layout_height="433dp"
+            android:layout_marginTop="10dp"
+            android:gravity="right"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_tracking"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:elevation="1dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/tracking" />
+
+            <View
+                android:layout_width="233dp"
+                android:layout_height="match_parent" />
+
+            <ImageButton
+                android:id="@+id/btn_cancel_route"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:elevation="1dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/cancel_direct" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_add_pothole"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:elevation="1dp"
+                android:contentDescription="Thêm ổ gà"
+                android:scaleType="fitCenter"
+                android:src="@drawable/add_hole" />
+
+            <View
+                android:layout_width="233dp"
+                android:layout_height="match_parent" />
+            <ImageButton
+                android:id="@+id/btn_show_location"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:elevation="1dp"
+                android:src="@drawable/unlocated"
+                app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>
