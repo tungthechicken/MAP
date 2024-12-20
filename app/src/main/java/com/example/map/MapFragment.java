@@ -1086,8 +1086,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         }
 
                         // Kiểm tra các ổ gà gần đó
+
                         for (Marker potholeMarker : potholeMarkersRoute) {
                             if (isNearPotholeUser(userLatLng, potholeMarker, distancePotholeLimit)) {
+                                playSoundOrVibrate(R.raw.notification);
                                 Toast.makeText(requireContext(), "Warning: Pothole ahead!", Toast.LENGTH_SHORT).show();
                             }
                         }
