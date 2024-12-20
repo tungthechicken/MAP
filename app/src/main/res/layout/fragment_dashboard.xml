@@ -22,7 +22,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Dashboard"
+                    android:text="@string/dashboard"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="25dp"
@@ -52,7 +52,7 @@
                     android:id="@+id/usernameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Username"
+                    android:text="@string/username"
                     android:textSize="20dp"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
@@ -64,6 +64,38 @@
                 android:background="@color/white"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+                    <RadioGroup
+                        android:id="@+id/radioGroupTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radio_allDays"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/allday"
+                            android:checked="true"/>
+
+                        <RadioButton
+                            android:id="@+id/radio_week"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="This week"/>
+
+                        <RadioButton
+                            android:id="@+id/radio_month"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="This month"/>
+                    </RadioGroup>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -94,7 +126,7 @@
                             android:id="@+id/label1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Server"
+                            android:text="@string/server"
                             android:padding="5dp"
                             android:layout_gravity="center_horizontal"
                             android:textColor="@color/gray"/>
@@ -123,7 +155,7 @@
                             android:id="@+id/label2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Client"
+                            android:text="@string/client"
                             android:padding="5dp"
                             android:layout_gravity="center_horizontal"
                             android:textColor="@color/gray"/>
@@ -151,7 +183,7 @@
                             android:id="@+id/label3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Day"
+                            android:text="@string/allday"
                             android:padding="5dp"
                             android:layout_gravity="center_horizontal"
                             android:textColor="@color/gray"/>
@@ -174,7 +206,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Server"
+                            android:text="@string/server"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_gravity="center_horizontal"
@@ -183,7 +215,7 @@
                         <com.github.mikephil.charting.charts.PieChart
                             android:id="@+id/pieChartServer"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp" />
+                            android:layout_height="170dp" />
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="0dp"
@@ -193,7 +225,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Client"
+                            android:text="@string/client"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_gravity="center_horizontal"
@@ -202,7 +234,7 @@
                         <com.github.mikephil.charting.charts.PieChart
                             android:id="@+id/pieChartClient"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp" />
+                            android:layout_height="170dp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -216,7 +248,7 @@
                         android:id="@+id/barChartTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Pothole Report"
+                        android:text="@string/pothole_report"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:layout_gravity="center_horizontal"

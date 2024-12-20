@@ -27,7 +27,7 @@
             android:background="@drawable/edittext_background"
             android:drawableLeft="@drawable/baseline_person_24"
             android:drawablePadding="8dp"
-            android:hint="Name"
+            android:hint="@string/name"
             android:inputType="textPersonName"
             android:padding="8dp" />
 
@@ -55,7 +55,7 @@
             android:background="@drawable/edittext_background"
             android:drawableLeft="@drawable/baseline_lock_24"
             android:drawablePadding="8dp"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:padding="8dp" />
 
@@ -69,7 +69,7 @@
             android:background="@drawable/edittext_background"
             android:drawableLeft="@drawable/baseline_lock_reset_24"
             android:drawablePadding="8dp"
-            android:hint="Confirm Password"
+            android:hint="@string/confirm"
             android:inputType="textPassword"
             android:padding="8dp" />
     </LinearLayout>
@@ -82,7 +82,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/login_button_background"
         android:padding="16dp"
-        android:text="Create Account"
+        android:text="@string/create_account"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
         app:cornerRadius="30dp"

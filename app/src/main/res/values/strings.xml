@@ -89,11 +89,8 @@
     <string name="app_overview">Potholes Master App Overview.</string>
     <string name="about_app"> Potholes Master is a mobile application designed for Android devices that allows users to manually or automatically detect and mark potholes based on the phone\'s vibration sensor. The app uses the phone\'s accelerometer to detect irregular movements caused by potholes, providing a solution for identifying and reporting road damage in real-time. Users can also manually mark potholes by tapping on the map within the app.
             This application was developed by a team of students from the NT118.P11 Mobile Application Development class, focusing on enhancing road safety and improving the accuracy of road maintenance data collection. With Potholes Master, users can contribute to better infrastructure management by identifying and documenting potholes, helping local authorities prioritize repairs and improve road conditions.</string>
-    <string name="kilomiters">Kilometers</string>
     <string name="potholes">Potholes</string>
     <string name="day">Days</string>
-    <string name="classification">Classification</string>
-    <string name="overview">Overview</string>
     <string name="pothole_report">Pothole Report</string>
     <string name="language">Languages</string>
     <string name="english">English</string>
@@ -141,9 +138,13 @@
     <string name="remember_me">Remember Me</string>
     <string name="forgot_pwd">Forgot your Password?</string>
     <string name="login">Login</string>
-    <string name="pothole">Pothole</string>
+    <string name="pothole">POTHOLE</string>
     <string name="delete">Delete</string>
     <string name="confirm_pwd">Confirm Password</string>
     <string name="create_account">Create Account</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="server">Server</string>
+    <string name="client">Client</string>
+    <string name="allday">All Days</string>
 
 </resources>

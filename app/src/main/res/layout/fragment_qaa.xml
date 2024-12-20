@@ -10,7 +10,7 @@
             android:id="@+id/qaatitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Question and Answer"
+            android:text="@string/question_and_answer"
             android:textSize="25dp"
             android:background="@color/purple"
             android:gravity="center"/>
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="How does the app detect potholes on the road?"
+                android:text="@string/question1"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:clickable="true"
@@ -50,7 +50,7 @@
                 android:id="@+id/answer_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="The app uses the smartphone's accelerometer sensor to detect unusual movements while the user is driving. When the app detects irregular movements, similar to driving over a pothole, it records the location and notifies the user of the event."
+                android:text="@string/answer1"
                 android:visibility="gone"
                 android:paddingTop="8dp" />
         </LinearLayout>
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="In what road conditions can the app detect potholes?"
+                android:text="@string/question2"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:clickable="true"
@@ -78,7 +78,7 @@
                 android:id="@+id/answer_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="The app can detect potholes on most types of rough roads. However, the accuracy may be affected by factors such as driving speed, the shape of the pothole, and other obstacles on the road."
+                android:text="@string/answer2"
                 android:visibility="gone"
                 android:paddingTop="8dp" />
         </LinearLayout>
@@ -97,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="How does the app record the location of the pothole?"
+                android:text="@string/question3"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:clickable="true"
@@ -107,7 +107,7 @@
                 android:id="@+id/answer_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=" The app uses the phone's GPS to record the exact location of a pothole when it is detected. Every time a pothole is detected, the app automatically saves the coordinates and timestamp so users can review the data on a map."
+                android:text="@string/answer3"
                 android:visibility="gone"
                 android:paddingTop="8dp" />
         </LinearLayout>
@@ -125,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="Can I manually report a pothole?"
+                android:text="@string/question4"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:clickable="true"
@@ -135,7 +135,7 @@
                 android:id="@+id/answer_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Yes, you can manually report a pothole by tapping on the map to mark its location. This helps the community of users contribute additional data and supports more accurate pothole detection."
+                android:text="@string/answer4"
                 android:visibility="gone"
                 android:paddingTop="8dp" />
         </LinearLayout>
@@ -153,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="Does the app store my data?"
+                android:text="@string/question5"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:clickable="true"
@@ -163,7 +163,7 @@
                 android:id="@+id/answer_5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="he app will store data about detected potholes, including their location and time, on your phone. You can view this data anytime in the app’s history section. This data can be used for analysis and helps local authorities improve infrastructure."
+                android:text="@string/answer5"
                 android:visibility="gone"
                 android:paddingTop="8dp" />
         </LinearLayout>
