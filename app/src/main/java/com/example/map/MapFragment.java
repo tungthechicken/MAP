@@ -64,7 +64,9 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -108,9 +110,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private List<Pothole> potholes;
     private boolean canShowPothole = false;
     private List<Marker> markersList = new ArrayList<>();
-    float shakeThresholdBig    = 40;
-    float shakeThresholdNormal = 35;
-    float shakeThresholdSmall  = 30;
+    float shakeThresholdBig    = 50;
+    float shakeThresholdNormal = 45;
+    float shakeThresholdSmall  = 40;
     int distancePotholeLimit = 20 ; //20m
     ImageButton btnCancelRoute;
     ImageButton btnEnablePothole;
@@ -119,7 +121,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private boolean isTrackingUser = false; // Biến flag để kiểm tra nếu đang theo dõi người dùng
     ImageButton btnTracking;
     ImageButton btnHelp;
-
+    private Set<Marker> notifiedPotholes = new HashSet<>();
 
     @Nullable
     @Override
@@ -437,10 +439,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         if (response.isSuccessful()) {
                             Toast.makeText(requireContext(), "Pothole deleted successfully!", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(requireContext(), "Failed to delete pothole: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), "It is not your pothole! " , Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(requireContext(), "It is not your pothole! " + response.code(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         Log.e("DELETE_POTHOLE", "Error: " + t.getMessage());
@@ -561,10 +563,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         double lon = Double.parseDouble(result.getLon());
                         LatLng location = new LatLng(lat, lon);
 
+                        //xoa marker cu
+                        removeMarker();
+
                         // Di chuyển bản đồ đến vị trí mới và thêm marker
-                        googleMap.clear();
-                        googleMap.addMarker(new MarkerOptions().position(location).title(result.getDisplay_name()));
+                        MarkerOptions markerOptions = new MarkerOptions()
+                                .position(location)
+                                .title(result.getDisplay_name());
+
+                        Marker newMarker = googleMap.addMarker(markerOptions);
+
+                        // Lưu marker vào danh sách
+                        markersList.add(newMarker);
+
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+                        selectedLocation = location;
+
+                        showChooseDialog();
                     } else {
                         Toast.makeText(requireContext(), "Không tìm thấy địa điểm", Toast.LENGTH_SHORT).show();
                     }
@@ -1079,7 +1094,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         // Kiểm tra các ổ gà gần đó
                         for (Marker potholeMarker : potholeMarkersRoute) {
                             if (isNearPotholeUser(userLatLng, potholeMarker, distancePotholeLimit)) {
-                                Toast.makeText(requireContext(), "Warning: Pothole ahead!", Toast.LENGTH_SHORT).show();
+                                if (!notifiedPotholes.contains(potholeMarker)) { // Chỉ thông báo nếu chưa được thông báo
+                                    notifiedPotholes.add(potholeMarker); // Đánh dấu đã thông báo
+                                    Toast.makeText(requireContext(), "Warning: Pothole ahead!", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     }
