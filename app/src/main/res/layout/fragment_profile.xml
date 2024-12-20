@@ -33,7 +33,7 @@
             android:id="@+id/settingtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile"
+            android:text="@string/profile"
             android:textColor="@android:color/white"
             android:textSize="25dp"
             android:textStyle="bold"
@@ -68,7 +68,7 @@
             android:id="@+id/usernameTextView"
             android:layout_width="324dp"
             android:layout_height="wrap_content"
-            android:text="Username"
+            android:text="@string/username"
             android:textColor="@color/white"
             android:textSize="20dp"
             android:textStyle="bold"
@@ -101,21 +101,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Name" />
+                android:text="@string/name" />
 
             <TextView
                 android:id="@+id/nameAPI"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Username"
+                android:text="@string/username"
                 android:gravity="end" />
 
 
         </LinearLayout>
 
         <View
-            android:id="@+id/view1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
@@ -135,14 +134,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Sex" />
+                android:text="@string/sex" />
 
             <TextView
                 android:id="@+id/SexAPI"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Female"
+                android:text="@string/female"
                 android:gravity="end"/>
 
 
@@ -168,7 +167,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Birthday" />
+                android:text="@string/birthday" />
 
             <TextView
                 android:id="@+id/birthdayAPI"
@@ -202,7 +201,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="Address" />
+            android:text="@string/address" />
 
         <TextView
             android:id="@+id/addressAPI"
@@ -234,7 +233,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Bio" />
+                android:text="@string/bio" />
 
             <TextView
                 android:id="@+id/bioAPI"
@@ -284,7 +283,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/login_button_background"
-            android:text="Edit Profile" />
+            android:text="@string/edit_profile" />
 
     </LinearLayout>
 

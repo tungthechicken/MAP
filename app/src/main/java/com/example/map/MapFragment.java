@@ -15,9 +15,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.media.AudioManager;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -606,6 +610,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         //showLocationInfo(currentLocation); //hien thi thong tin vi tri cua nguoi dung khi lac
                         // Hiển thị hộp thoại xác nhận
                         showConfirmationDialog(currentLocation, size);
+
+                        // Gọi phương thức để phát âm thanh hoặc rung tùy vào chế độ âm thanh
+                        playSoundOrVibrate(R.raw.notification);  // Phát âm thanh hoặc rung
                     } else {
                         Toast.makeText(requireContext(), "Unable to get location!", Toast.LENGTH_SHORT).show();
                     }
@@ -1032,6 +1039,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
     private int getIconForPotholeSize(double size) {
+        // Gọi phương thức để phát âm thanh hoặc rung tùy vào chế độ âm thanh
+        playSoundOrVibrate(R.raw.notification);  // Phát âm thanh hoặc rung
         if (size >= 3) {
             return R.drawable.warningbig; // Icon cho ổ gà lớn
         } else if (size == 2) {
@@ -1176,6 +1185,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //            for (Marker potholeMarker : potholeMarkers) {
 //                potholeMarker.setVisible(true); // Làm cho các marker pothole hiển thị lại
 //            }
+    }
+    private void playSoundOrVibrate(int soundResId) {
+        AudioManager audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        int ringerMode = audioManager.getRingerMode(); // Lấy chế độ âm thanh của hệ thống
+
+        if (ringerMode == AudioManager.RINGER_MODE_NORMAL) {
+            // Chế độ bình thường: Phát âm thanh
+            MediaPlayer mediaPlayer = MediaPlayer.create(requireContext(), soundResId);
+            if (mediaPlayer != null) {
+                mediaPlayer.start();  // Phát âm thanh
+            }
+        } else if (ringerMode == AudioManager.RINGER_MODE_VIBRATE) {
+            // Chế độ rung: Rung điện thoại
+            Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator != null) {
+                long[] vibrationPattern = {0, 500, 200, 500};  // Rung 500ms, dừng 200ms, rung lại 500ms
+                vibrator.vibrate(VibrationEffect.createWaveform(vibrationPattern, -1));  // Tạo hiệu ứng rung
+            }
+        }
     }
     private void showPotHoleDialog(LatLng location) {
         // Inflate layout tùy chỉnh
