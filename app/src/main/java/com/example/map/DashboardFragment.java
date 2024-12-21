@@ -56,6 +56,7 @@ public class DashboardFragment extends Fragment {
     private PieChart pieChartClient,pieChartServer;
     private BarChart stackBarChart;
     private String name, userCreateDate;
+
     private TextView totalDay, potholesUser, potholesServer;
     private RadioGroup radioGroup;
     private List<Pothole> potholes, potholeList;
@@ -149,6 +150,7 @@ public class DashboardFragment extends Fragment {
         // Đặt avatar vào ImageView
         ImageView avatarImageView = view.findViewById(R.id.avatarImageView);
         avatarImageView.setImageResource(avatarId);
+
         //------------------------------
         getPotholesByUsername();
         callPotholes();
