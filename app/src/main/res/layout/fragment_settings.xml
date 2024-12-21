@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="Profile"
+                    android:text="@string/profile"
                     android:layout_marginStart="5dp"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="12sp"
@@ -71,7 +71,6 @@
                     app:srcCompat="@drawable/chi_tiet" />
             </LinearLayout>
             <View
-                android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_marginStart="35dp"
                 android:layout_marginEnd="10dp"
@@ -102,7 +101,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="5dp"
                     android:gravity="center_vertical"
-                    android:text="Notification" />
+                    android:text="@string/notification" />
 
                 <ImageView
                     android:id="@+id/chitiet2"
@@ -114,7 +113,6 @@
                     app:srcCompat="@drawable/chi_tiet" />
             </LinearLayout>
             <View
-                android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_marginStart="35dp"
                 android:layout_marginEnd="10dp"
@@ -145,7 +143,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:layout_marginStart="5dp"
-                    android:text="Display" />
+                    android:text="@string/language" />
 
                 <ImageView
                     android:id="@+id/chitiet3"
@@ -160,7 +158,6 @@
 
 
             <View
-                android:id="@+id/view6"
                 android:layout_width="match_parent"
                 android:layout_marginStart="35dp"
                 android:layout_marginEnd="10dp"
@@ -190,7 +187,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:layout_marginStart="5dp"
-                    android:text="About"/>
+                    android:text="@string/about"/>
 
                 <ImageView
                     android:id="@+id/chitiet8"
@@ -202,7 +199,6 @@
                     app:srcCompat="@drawable/chi_tiet" />
             </LinearLayout>
             <View
-                android:id="@+id/view7"
                 android:layout_width="match_parent"
                 android:layout_marginStart="35dp"
                 android:layout_marginEnd="10dp"
@@ -232,7 +228,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:layout_marginStart="5dp"
-                    android:text="Question and Answer" />
+                    android:text="@string/question_and_answer" />
 
                 <ImageView
                     android:id="@+id/chitiet6"
@@ -244,7 +240,6 @@
                     app:srcCompat="@drawable/chi_tiet" />
             </LinearLayout>
             <View
-                android:id="@+id/view3"
                 android:layout_width="match_parent"
                 android:layout_marginStart="35dp"
                 android:layout_marginEnd="10dp"
@@ -276,7 +271,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:layout_marginStart="5dp"
-                    android:text="Log Out" />
+                    android:text="@string/log_out" />
 
                 <ImageView
                     android:id="@+id/logoutButton"
