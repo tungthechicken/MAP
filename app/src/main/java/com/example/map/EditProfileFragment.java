@@ -47,14 +47,16 @@ public class EditProfileFragment extends Fragment {
     private static final String PREFS_NAME = "prefs";
     private static final String PREF_AVATAR = "avatar";
     private static final String PREF_AVATAR_BITMAP = "avatar_bitmap";
-    private static final String PREF_USER_NAME = "username";
-
+    private static final String PREF_USER = "username";
+    private static final String PREF_EMAIL = "email";
 
     private int[] avatarIds = {
             R.drawable.avt1, R.drawable.avt2, R.drawable.avt3, R.drawable.avt4,
             R.drawable.avt5, R.drawable.avt6, R.drawable.avt7, R.drawable.avt8
     };
     private int selectedAvatarId = R.drawable.baseline_person_24;
+
+    private RetrofitInterface retrofitInterface;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,6 +83,7 @@ public class EditProfileFragment extends Fragment {
 
         Bundle bundle = getArguments();
         String name = bundle != null ? bundle.getString("name") : "";
+        String email = bundle != null ? bundle.getString("email") : "";
         usernametext = view.findViewById(R.id.editText);
         usernametext.setText(name);
 
@@ -88,10 +91,34 @@ public class EditProfileFragment extends Fragment {
         backButton = view.findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> getParentFragmentManager().popBackStack());
 
-        // Nút Save để lưu avatar
-        saveButton.setOnClickListener(v -> saveAvatarSelection());
+        // Nút Save để lưu avatar và username
+        saveButton.setOnClickListener(v -> {
+            saveAvatarSelection();  // Lưu avatar
+            saveUserName(email);    // Lưu username với email đã nhận
+        });
+
+        // Khởi tạo Retrofit
+        String baseUrl = requireContext().getString(R.string.retrofit_url);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        retrofitInterface = retrofit.create(RetrofitInterface.class);
 
         return view;
+    }
+
+    private void saveUserName(String email) {
+        // Lấy tên người dùng từ EditText
+        String newUsername = usernametext.getText().toString().trim();
+
+        if (newUsername.isEmpty()) {
+            Toast.makeText(requireContext(), "Username cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Gọi API để cập nhật tên
+        updateUserNameOnServer(newUsername, email);
     }
 
     private void showAvatarSelectionDialog() {
@@ -124,9 +151,6 @@ public class EditProfileFragment extends Fragment {
         editor.putInt(PREF_AVATAR, selectedAvatarId);
         editor.putString(PREF_AVATAR_BITMAP, base64Bitmap);
         editor.apply();
-
-        // Cập nhật avatar đã lưu (nếu cần thiết)
-        // Toast.makeText(requireContext(), "Avatar saved!", Toast.LENGTH_SHORT).show();
     }
 
     private void updatePhotoButton(Bitmap bitmap) {
@@ -165,46 +189,26 @@ public class EditProfileFragment extends Fragment {
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
-    private void updateUserNameOnServer(String newUsername) {
-        // Truy xuất URL từ strings.xml
-        String baseUrl = requireContext().getString(R.string.retrofit_url);
-
-        // Khởi tạo Retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        RetrofitInterface apiService = retrofit.create(RetrofitInterface.class);
-
-        // Tạo dữ liệu gửi đi
+    private void updateUserNameOnServer(String newUsername, String email) {
         UserData userData = new UserData();
-        userData.setEmail("user@example.com");
+        userData.setEmail(email);
         userData.setName(newUsername);
 
-        // Gửi yêu cầu cập nhật
-        Call<Void> call = apiService.updateUserData(userData);
+        // Sử dụng đối tượng retrofitInterface để gọi phương thức updateUserData
+        Call<Void> call = retrofitInterface.updateUserData(userData);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    SharedPreferences.Editor editor = requireActivity()
-                            .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
-                    editor.putString(PREF_USER_NAME, newUsername);
-                    editor.apply();
-
                     Toast.makeText(requireContext(), "Username updated successfully!", Toast.LENGTH_SHORT).show();
-
                 } else {
                     Toast.makeText(requireContext(), "Failed to update username. Please try again.", Toast.LENGTH_SHORT).show();
-
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Toast.makeText(requireContext(), "Error updating username: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-
             }
         });
     }
