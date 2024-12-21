@@ -39,13 +39,20 @@
 
         <TextView
             android:id="@+id/editLabel"
-            android:layout_width="246dp"
+            android:layout_width="184dp"
             android:layout_height="56dp"
             android:layout_marginLeft="30dp"
-            android:hint="Label"
-            android:textColor="@color/black"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:ellipsize="end"
             android:gravity="center_vertical"
-            android:textSize="30sp" />
+            android:hint="Label"
+            android:singleLine="false"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
 
     </LinearLayout>
     <LinearLayout
