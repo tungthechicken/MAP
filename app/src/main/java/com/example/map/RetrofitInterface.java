@@ -36,7 +36,4 @@ public interface RetrofitInterface {
 
     @POST("/update-user-data")
     Call<Void> updateUserData(@Body HashMap<String, String> map);
-
-    @POST("/update-user-data")
-    Call<Void> updateUserData(@Body UserData userData);
 }

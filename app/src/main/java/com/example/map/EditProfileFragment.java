@@ -12,6 +12,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,6 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EditProfileFragment extends Fragment {
 
+    private static final String TAG = "EditProfileFragment";
     private ImageButton backButton;
     private EditText usernametext;
     private ImageView photoButton;
@@ -47,8 +50,6 @@ public class EditProfileFragment extends Fragment {
     private static final String PREFS_NAME = "prefs";
     private static final String PREF_AVATAR = "avatar";
     private static final String PREF_AVATAR_BITMAP = "avatar_bitmap";
-    private static final String PREF_USER = "username";
-    private static final String PREF_EMAIL = "email";
 
     private int[] avatarIds = {
             R.drawable.avt1, R.drawable.avt2, R.drawable.avt3, R.drawable.avt4,
@@ -83,7 +84,6 @@ public class EditProfileFragment extends Fragment {
 
         Bundle bundle = getArguments();
         String name = bundle != null ? bundle.getString("name") : "";
-        String email = bundle != null ? bundle.getString("email") : "";
         usernametext = view.findViewById(R.id.editText);
         usernametext.setText(name);
 
@@ -94,7 +94,7 @@ public class EditProfileFragment extends Fragment {
         // Nút Save để lưu avatar và username
         saveButton.setOnClickListener(v -> {
             saveAvatarSelection();  // Lưu avatar
-            saveUserName(email);    // Lưu username với email đã nhận
+            saveUserName();    // Lưu username
         });
 
         // Khởi tạo Retrofit
@@ -108,12 +108,24 @@ public class EditProfileFragment extends Fragment {
         return view;
     }
 
-    private void saveUserName(String email) {
+    private void saveUserName() {
         // Lấy tên người dùng từ EditText
         String newUsername = usernametext.getText().toString().trim();
 
         if (newUsername.isEmpty()) {
             Toast.makeText(requireContext(), "Username cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Lấy email từ SharedPreferences
+        SharedPreferences prefs = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String email = prefs.getString("email", null);
+
+        // In ra giá trị của email để kiểm tra
+        Log.d(TAG, "Email: " + email);
+
+        if (email == null) {
+            Toast.makeText(requireContext(), "Email not found!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -190,9 +202,10 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void updateUserNameOnServer(String newUsername, String email) {
-        UserData userData = new UserData();
-        userData.setEmail(email);
-        userData.setName(newUsername);
+        // Tạo HashMap để chứa dữ liệu
+        HashMap<String, String> userData = new HashMap<>();
+        userData.put("email", email);
+        userData.put("name", newUsername);
 
         // Sử dụng đối tượng retrofitInterface để gọi phương thức updateUserData
         Call<Void> call = retrofitInterface.updateUserData(userData);
@@ -202,7 +215,9 @@ public class EditProfileFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Toast.makeText(requireContext(), "Username updated successfully!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(requireContext(), "Failed to update username. Please try again.", Toast.LENGTH_SHORT).show();
+                    // In ra mã phản hồi từ API
+                    int statusCode = response.code();
+                    Toast.makeText(requireContext(), "Failed to update username. Status code: " + statusCode, Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -16,13 +16,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProfileFragment extends Fragment {
 
     TextView usernameTextView, nameAPI,emailAPI;
-
+    private RetrofitInterface retrofitInterface;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,21 +42,33 @@ public class ProfileFragment extends Fragment {
         ImageView avatarImageView = view.findViewById(R.id.avatarImageView);
         avatarImageView.setImageResource(avatarId);
 
-        // Retrieve the username from the arguments
+        // Lấy dữ liệu từ Bundle và thiết lập vào các TextView
         Bundle bundle = getArguments();
         if (bundle != null) {
             String name = bundle.getString("name");
-            usernameTextView.setText(name);
-            nameAPI.setText(name);
-            // Display the username
+            String email = bundle.getString("email");
+
+            if (name != null) {
+                usernameTextView.setText(name);
+                nameAPI.setText(name);
+            }
+
+            if (email != null) {
+                emailAPI.setText(email);
+            }
         }
-        Bundle bundlee = getArguments();
-        if (bundlee != null) {
-            String email = bundlee.getString("email");
-            emailAPI.setText(email);}
 
+// Khởi tạo Retrofit
+        String baseUrl = requireContext().getString(R.string.retrofit_url);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        retrofitInterface = retrofit.create(RetrofitInterface.class);
 
-        // Set sự kiện cho nút back để quay lại ProfileFragment
+        // Gọi API để lấy thông tin người dùng
+        getUserData();
+        // Set sự kiện cho nút back để quay lại setting
         backButton.setOnClickListener(v -> {
             // Quay lại trang ProfileFragment
             getParentFragmentManager().popBackStack(); // Quay lại fragment trước đó trong back stack
@@ -70,5 +83,34 @@ public class ProfileFragment extends Fragment {
             transaction.commit();
         });
         return view;
+    }
+    private void getUserData() {
+        // Giả sử bạn có email của người dùng từ SharedPreferences hoặc Bundle
+        SharedPreferences prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        String email = prefs.getString("email", null);
+
+        if (email != null) {
+            Call<UserData> call = retrofitInterface.getUserByEmail(email);
+            call.enqueue(new Callback<UserData>() {
+                @Override
+                public void onResponse(Call<UserData> call, Response<UserData> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        UserData userData = response.body();
+                        usernameTextView.setText(userData.getName());
+                        nameAPI.setText(userData.getName());
+                        emailAPI.setText(userData.getEmail());
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to load user data", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserData> call, Throwable t) {
+                    Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(requireContext(), "Email not found", Toast.LENGTH_SHORT).show();
+        }
     }
 }

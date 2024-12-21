@@ -116,6 +116,11 @@ public class LoginFragment extends Fragment {
                     assert result != null;
                     Toast.makeText(getActivity(), "Welcome " + result.getName(), Toast.LENGTH_LONG).show();
                     savePreferences(email, password);
+                    // Lưu email vào SharedPreferences
+                    SharedPreferences prefs = requireActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("email", result.getEmail());
+                    editor.apply();
                     Intent intent = new Intent(getActivity(), CentralActivity.class);
                     // Pass the user's email and name to the CentralActivity
                     intent.putExtra("email", email);
