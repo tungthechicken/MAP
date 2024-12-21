@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="20dp"
-        android:text="ADD A NEW POTHOLE"
+        android:text="@string/add_a_new_pothole"
         android:textColor="@android:color/black"
         android:textSize="30sp" />
 
@@ -42,7 +42,7 @@
             android:layout_width="246dp"
             android:layout_height="56dp"
             android:layout_marginLeft="30dp"
-            android:hint="Label"
+            android:hint="@string/label"
             android:textColor="@color/black"
             android:gravity="center_vertical"
             android:textSize="18sp"
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Big"
+            android:text="@string/big"
             android:textColor="@color/red"
             android:textSize="18sp" />
 
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Normal"
+            android:text="@string/normal"
             android:textColor="@color/orange"
             android:textSize="12sp" />
 
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Small"
+            android:text="@string/small"
             android:textColor="@color/quantum_lightblue"
             android:textSize="14sp" />
 
@@ -116,7 +116,7 @@
             android:layout_marginLeft="30dp"
             android:background="@color/white"
             android:gravity="center_vertical"
-            android:hint="Depth"
+            android:hint="@string/depth"
             android:inputType="number"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -151,7 +151,7 @@
             android:layout_marginLeft="30dp"
             android:background="@color/white"
             android:gravity="center_vertical"
-            android:hint="Diameter"
+            android:hint="@string/diameter"
             android:inputType="number"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -178,7 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="@android:color/holo_red_dark"
             android:textSize="18sp"
             />
@@ -188,7 +188,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
-            android:text="Confirm"
+            android:text="@string/confirm"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             />

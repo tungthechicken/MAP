@@ -33,4 +33,10 @@ public interface RetrofitInterface {
 
     @GET("/get-user-data")
     Call<UserData> getUserByEmail(@Query("email") String email);
+
+    @POST("/update-user-data")
+    Call<Void> updateUserData(@Body HashMap<String, String> map);
+
+    @POST("/update-user-data")
+    Call<Void> updateUserData(@Body UserData userData);
 }

@@ -71,15 +71,17 @@
                     android:id="@+id/photo_button"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_gravity="center"
                     android:background="@drawable/vien_avt"
-                    android:padding="10dp"
                     android:scaleType="centerCrop"
+                    android:clipToOutline="true"
+                    android:padding="5dp"
                     android:src="@drawable/baseline_person_24" />
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/image_button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="bottom|end"
                     android:background="@drawable/vien_avt"
                     android:contentDescription="Camera button"
@@ -89,7 +91,6 @@
             </FrameLayout>
 
             <LinearLayout
-                android:id="@+id/nameandbirth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -109,7 +110,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="Name" />
+                        android:text="@string/name" />
 
                     <EditText
                         android:id="@+id/editText"
@@ -122,7 +123,7 @@
                         android:autoSizeTextType="uniform"
                         android:background="@null"
                         android:gravity="end"
-                        android:hint="Usename"
+                        android:hint="@string/username"
                         android:inputType="text"
                         android:padding="15dp" />
                 </LinearLayout>
@@ -148,7 +149,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="Birthday" />
+                        android:text="@string/birthday" />
 
                     <EditText
                         android:id="@+id/editBirthday"
@@ -162,7 +163,7 @@
                         android:background="@null"
                         android:ems="10"
                         android:gravity="end"
-                        android:hint="01/01/2004"
+                        android:hint="31/01/2004"
                         android:inputType="date"
                         android:padding="15dp" />
 
@@ -189,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:text="Sex" />
+                android:text="@string/sex" />
 
             <RadioGroup
                 android:id="@+id/gender_radio_group"
@@ -203,19 +204,19 @@
                     android:id="@+id/radio_male"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Male" />
+                    android:text="@string/male" />
 
                 <RadioButton
                     android:id="@+id/radio_female"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Female" />
+                    android:text="@string/female" />
 
                 <RadioButton
                     android:id="@+id/radio_other"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Other" />
+                    android:text="@string/other" />
             </RadioGroup>
 
         </LinearLayout>
@@ -240,7 +241,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Address" />
+                android:text="@string/address" />
 
             <EditText
                 android:id="@+id/editAddress"
@@ -279,7 +280,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Bio" />
+                android:text="@string/bio" />
 
             <EditText
                 android:id="@+id/editBio"
@@ -345,7 +346,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:background="@drawable/login_button_background"
-            android:text="Save" />
+            android:text="@string/save" />
 
     </LinearLayout>
 
