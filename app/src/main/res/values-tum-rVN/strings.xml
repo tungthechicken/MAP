@@ -146,4 +146,6 @@
     <string name="dashboard">Bảng điều khiển</string>
     <string name="server">Máy chủ</string>
     <string name="client">Cá nhân</string>
+    <string name="allday">Tất cả các ngày</string>
+    <string name="exit">Thoát</string>
 </resources>
