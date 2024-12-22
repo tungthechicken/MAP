@@ -146,5 +146,6 @@
     <string name="server">Server</string>
     <string name="client">Client</string>
     <string name="allday">All Days</string>
+    <string name="exit">Exit</string>
 
 </resources>

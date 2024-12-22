@@ -97,7 +97,6 @@ public class EditProfileFragment extends Fragment {
             saveUserName();    // Lưu username
         });
 
-        // Khởi tạo Retrofit
         String baseUrl = requireContext().getString(R.string.retrofit_url);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
@@ -201,13 +200,13 @@ public class EditProfileFragment extends Fragment {
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
-    private void updateUserNameOnServer(String newUsername, String email) {
-        // Tạo HashMap để chứa dữ liệu
+    private void updateUserNameOnServer(String newName, String email) {
+        // Create a HashMap to hold the data
         HashMap<String, String> userData = new HashMap<>();
         userData.put("email", email);
-        userData.put("name", newUsername);
+        userData.put("newName", newName);
 
-        // Sử dụng đối tượng retrofitInterface để gọi phương thức updateUserData
+        // Use the retrofitInterface object to call the updateUserData method
         Call<Void> call = retrofitInterface.updateUserData(userData);
         call.enqueue(new Callback<Void>() {
             @Override
@@ -215,14 +214,17 @@ public class EditProfileFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Toast.makeText(requireContext(), "Username updated successfully!", Toast.LENGTH_SHORT).show();
                 } else {
-                    // In ra mã phản hồi từ API
+                    // Log the response code and message from the API
                     int statusCode = response.code();
-                    Toast.makeText(requireContext(), "Failed to update username. Status code: " + statusCode, Toast.LENGTH_SHORT).show();
+                    String errorMessage = response.message();
+                    Log.e(TAG, "Failed to update username. Status code: " + statusCode + ", Message: " + errorMessage);
+                    Toast.makeText(requireContext(), "Failed to update username. Status code: " + statusCode + ", Message: " + errorMessage, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                Log.e(TAG, "Error updating username: " + t.getMessage(), t);
                 Toast.makeText(requireContext(), "Error updating username: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

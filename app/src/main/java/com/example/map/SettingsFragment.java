@@ -1,5 +1,6 @@
 package com.example.map;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -70,28 +71,6 @@ public class SettingsFragment extends Fragment {
 
         return view;
     }
-
-    // Method to handle logout
-    private void openlogOut() {
-        // Clear the SharedPreferences
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
-
-        // Sign out of Google
-        gsc.signOut().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                // Start the CentralLoginActivity
-                Intent intent = new Intent(getActivity(), CentralLoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                getActivity().finish();
-            }
-        });
-    }
-
     private void openProfile() {
         ProfileFragment profileFragment = new ProfileFragment();
         Bundle bundle = new Bundle();
@@ -167,4 +146,41 @@ public class SettingsFragment extends Fragment {
     private String  getUsername() {
         return name;
     }
+    private void openlogOut() {
+        // Tạo một AlertDialog để xác nhận đăng xuất
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Logout Confirmation")
+                .setMessage("Are you sure you want to log out?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // Người dùng xác nhận đăng xuất
+                    performLogout();
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    // Người dùng hủy đăng xuất
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
+    // Phương thức thực hiện đăng xuất
+    private void performLogout() {
+        // Clear the SharedPreferences
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+
+        // Sign out of Google
+        gsc.signOut().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                // Start the CentralLoginActivity
+                Intent intent = new Intent(getActivity(), CentralLoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+    }
+
 }
