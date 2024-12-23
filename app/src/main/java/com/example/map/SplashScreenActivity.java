@@ -1,6 +1,7 @@
 package com.example.map;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
@@ -9,11 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -40,10 +37,19 @@ public class SplashScreenActivity extends AppCompatActivity {
         appName.setAnimation(bottomAnim);
         appSlogan.setAnimation(bottomAnim);
 
-        // Delay for 3 seconds and then start the main activity
+        // Delay for 2 seconds and then start the main activity
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(SplashScreenActivity.this, CentralLoginActivity.class);
-            startActivity(intent);
+            SharedPreferences preferences = getSharedPreferences("app_preferences", MODE_PRIVATE);
+            boolean isFirstRun = preferences.getBoolean("isFirstRun", true);
+
+            // Check if the app is running for the first time
+            if (isFirstRun) {
+                // Show the app intro
+                startActivity(new Intent(SplashScreenActivity.this, AppIntroActivity.class));
+            } else {
+                // Start the main activity
+                startActivity(new Intent(SplashScreenActivity.this, CentralLoginActivity.class));
+            }
             finish();
         }, 2000);
     }
