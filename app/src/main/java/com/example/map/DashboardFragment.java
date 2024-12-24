@@ -3,64 +3,51 @@ package com.example.map;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.time.LocalDate;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DashboardFragment extends Fragment {
-    private PieChart pieChartClient,pieChartServer;
+    private PieChart pieChartClient, pieChartServer;
     private BarChart stackBarChart;
     private String name, userCreateDate;
 
     private TextView totalDay, potholesUser, potholesServer;
     private RadioGroup radioGroup;
     private List<Pothole> potholes, potholeList;
-    private static List<Pothole> currentMonthPotholes, currentMonthPotholeList, currentWeekPotholes, currentWeekPotholeList, alldayPotholeList,alldayPotholes;
+    private static List<Pothole> currentMonthPotholes, currentMonthPotholeList, currentWeekPotholes, currentWeekPotholeList, alldayPotholeList, alldayPotholes;
 
     @Nullable
     @Override
@@ -69,18 +56,13 @@ public class DashboardFragment extends Fragment {
         pieChartClient = view.findViewById(R.id.pieChartClient);
         pieChartServer = view.findViewById(R.id.pieChartServer);
         stackBarChart = view.findViewById(R.id.stackBarChart);
-        totalDay=view.findViewById(R.id.unitOfTime);
-        potholesUser=view.findViewById(R.id.potholes);
-        potholesServer= view.findViewById(R.id.potholesServer);
+        totalDay = view.findViewById(R.id.unitOfTime);
+        potholesUser = view.findViewById(R.id.potholes);
+        potholesServer = view.findViewById(R.id.potholesServer);
         radioGroup = view.findViewById(R.id.radioGroupTime);
+
         // Đặt giá trị mặc định cho RadioGroup
         radioGroup.check(R.id.radio_allDays);
-
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            updatePotholeDataBySelection(checkedId);
-        });
-
-
 
         // Retrieve the user's name from the Bundle
         Bundle bundle = getArguments();
@@ -147,7 +129,7 @@ public class DashboardFragment extends Fragment {
             colors.add(getResources().getColor(R.color.orange));
         }
         if (largeCount > 0) {
-            entries.add(new PieEntry(largeCount,  " " + largeCount));
+            entries.add(new PieEntry(largeCount, " " + largeCount));
             colors.add(getResources().getColor(R.color.red));
         }
 
@@ -165,7 +147,6 @@ public class DashboardFragment extends Fragment {
         });
 
 
-
         pieChartClient.setData(data);
         pieChartClient.getDescription().setEnabled(false);
         pieChartClient.setDrawEntryLabels(false);
@@ -174,6 +155,7 @@ public class DashboardFragment extends Fragment {
         dataSet.setValueTextSize(18f);
         pieChartClient.invalidate();
     }
+
     private void setupPieChartServer(List<Pothole> potholes) {
         // Khai báo các biến để lưu trữ tổng số ổ gà cho từng size
         int smallCount = 0;
@@ -232,6 +214,7 @@ public class DashboardFragment extends Fragment {
         dataSet.setValueTextSize(18f);
         pieChartServer.invalidate();
     }
+
     private void setupStackBarChart(List<Pothole> potholeList) {
         ArrayList<BarEntry> entries = new ArrayList<>();
         int[] dangerousCount = new int[7];
@@ -278,25 +261,25 @@ public class DashboardFragment extends Fragment {
         xAxis.setAxisMinimum(0);
         xAxis.setAxisMaximum(6);
     }
-//--------------------------------------------------------------
+  
 // Cập nhật dữ liệu khi lựa chọn thay đổi
-private void updatePotholeDataBySelection(int selectedRadioButtonId) {
-    if (potholeList != null && potholes != null) {
-        if (selectedRadioButtonId == R.id.radio_allDays) {  // Tất cả các ngày
-            alldayPotholeList = groupPotholesByAllDay(potholeList);
-            alldayPotholes = groupPotholesByAllDay(potholes);
-            updateUIWithData(alldayPotholeList, alldayPotholes);
-        } else if (selectedRadioButtonId == R.id.radio_week) {  // Tuần hiện tại
-            currentWeekPotholeList = groupPotholesByCurrentWeek(potholeList);
-            currentWeekPotholes = groupPotholesByCurrentWeek(potholes);
-            updateUIWithData(currentWeekPotholeList, currentWeekPotholes);
-        } else if (selectedRadioButtonId == R.id.radio_month) {  // Tháng hiện tại
-            currentMonthPotholeList = groupPotholesByCurrentMonth(potholeList);
-            currentMonthPotholes = groupPotholesByCurrentMonth(potholes);
-            updateUIWithData(currentMonthPotholeList, currentMonthPotholes);
+    private void updatePotholeDataBySelection(int selectedRadioButtonId) {
+        if (potholeList != null && potholes != null) {
+            if (selectedRadioButtonId == R.id.radio_allDays) {  // Tất cả các ngày
+                alldayPotholeList = groupPotholesByAllDay(potholeList);
+                alldayPotholes = groupPotholesByAllDay(potholes);
+                updateUIWithData(alldayPotholeList, alldayPotholes);
+            } else if (selectedRadioButtonId == R.id.radio_week) {  // Tuần hiện tại
+                currentWeekPotholeList = groupPotholesByCurrentWeek(potholeList);
+                currentWeekPotholes = groupPotholesByCurrentWeek(potholes);
+                updateUIWithData(currentWeekPotholeList, currentWeekPotholes);
+            } else if (selectedRadioButtonId == R.id.radio_month) {  // Tháng hiện tại
+                currentMonthPotholeList = groupPotholesByCurrentMonth(potholeList);
+                currentMonthPotholes = groupPotholesByCurrentMonth(potholes);
+                updateUIWithData(currentMonthPotholeList, currentMonthPotholes);
+            }
         }
     }
-}
 
     // Cập nhật UI với dữ liệu
     private void updateUIWithData(List<Pothole> userPotholes, List<Pothole> serverPotholes) {
@@ -317,19 +300,18 @@ private void updatePotholeDataBySelection(int selectedRadioButtonId) {
     }
 
     //ham lay username by KIEN
-    private String  getUsername() {
+    private String getUsername() {
         return name;
     }
+
     private void getPotholesByUsername() {
         // Lấy username
         String username = getUsername();
-
         // Kiểm tra username hợp lệ
         if (username == null || username.isEmpty()) {
-            Toast.makeText(getContext(), "Không tìm thấy username" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Không tìm thấy username", Toast.LENGTH_SHORT).show();
             return;
         }
-
         // Tạo Retrofit instance
         String BASE_URL = getString(R.string.retrofit_url);
         PotholeApiService apiService = RetrofitClient.getClient(BASE_URL).create(PotholeApiService.class);
@@ -354,11 +336,11 @@ private void updatePotholeDataBySelection(int selectedRadioButtonId) {
             }
         });
     }
+
     private void callPotholes() {
         // Khởi tạo Retrofit
         String BASE_URL = getString(R.string.retrofit_url);
         PotholeApiService apiService = RetrofitClient.getClient(BASE_URL).create(PotholeApiService.class);
-
         // Tạo đối tượng apiService
         Call<List<Pothole>> call = apiService.getPotholes();
         // Gọi API để lấy danh sách ổ gà
@@ -370,109 +352,67 @@ private void updatePotholeDataBySelection(int selectedRadioButtonId) {
                     updatePotholeDataBySelection(R.id.radio_allDays); // Cập nhật dữ liệu mặc định
                 }
             }
+
             @Override
             public void onFailure(Call<List<Pothole>> call, Throwable t) {
-                // Xử lý lỗi nếu có
                 Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     // all day
     private static List<Pothole> groupPotholesByAllDay(List<Pothole> potholes) {
-        // Trả về danh sách sao chép của tất cả các ổ gà
         return new ArrayList<>(potholes);
     }
-// Hàm để nhóm các ổ gà theo tuần
-private static List<Pothole> groupPotholesByCurrentWeek(List<Pothole> potholes) {
-     List<Pothole> currentWeek = new ArrayList<>();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    // Lấy ngày hiện tại và tuần trong tháng hiện tại
-    LocalDate currentDate = LocalDate.now();
-    int currentWeekOfMonth = (currentDate.getDayOfMonth() - 1) / 7 + 1;
-
-    for (Pothole pothole : potholes) {
-        // Lấy ngày của ổ gà và tính tuần trong tháng
-        LocalDate potholeDate = LocalDate.parse(pothole.getDate().split(" ")[0], formatter);
-        int potholeWeekOfMonth = (potholeDate.getDayOfMonth() - 1) / 7 + 1;
-
-        // Nếu ổ gà thuộc tuần hiện tại, thêm vào danh sách
-        if (potholeWeekOfMonth == currentWeekOfMonth) {
-            currentWeek.add(pothole);
+    // Hàm để nhóm các ổ gà theo tuần
+    private static List<Pothole> groupPotholesByCurrentWeek(List<Pothole> potholes) {
+        List<Pothole> currentWeek = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate currentDate = LocalDate.now();
+        LocalDate mondayOfCurrentWeek = currentDate.with(DayOfWeek.MONDAY);//xác định ngày thứ 2
+        long daysBetween = ChronoUnit.DAYS.between(mondayOfCurrentWeek, currentDate);
+        int currentWeekOfMonth = (int) (daysBetween / 7) + 1; //tính tuần hiện tại
+        // Duyệt ổ gà thuộc tuần
+        for (Pothole pothole : potholes) {
+            LocalDate potholeDate = LocalDate.parse(pothole.getDate().split(" ")[0], formatter);
+            LocalDate potholeMonday = potholeDate.with(DayOfWeek.MONDAY);
+            long potholeDaysBetween = ChronoUnit.DAYS.between(potholeMonday, currentDate);
+            int potholeWeekOfMonth = (int) (potholeDaysBetween / 7) + 1;
+            if (potholeWeekOfMonth == currentWeekOfMonth) {
+                currentWeek.add(pothole);
+            }
         }
+        return currentWeek;
     }
-    return currentWeek;
-}
+
     // Hàm lọc ổ gà theo tháng hiện tại
     private static List<Pothole> groupPotholesByCurrentMonth(List<Pothole> potholeList) {
         List<Pothole> currentMonth = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        // Lấy tháng hiện tại
         int Month = LocalDate.now().getMonthValue();
 
         for (Pothole pothole : potholeList) {
-            // Lấy ngày của ổ gà và tháng trong năm
             LocalDate potholeDate = LocalDate.parse(pothole.getDate().split(" ")[0], formatter);
             int potholeMonth = potholeDate.getMonthValue();
-
-            // Nếu ổ gà thuộc tháng hiện tại, thêm vào danh sách
             if (potholeMonth == Month) {
                 currentMonth.add(pothole);
             }
         }
         return currentMonth;
     }
-    private void showDaysSinceRegistration() {
-        String registrationDate = getRegistrationDate();
-        calculateDaysSinceRegistration(registrationDate);
-    }
+
     private String getRegistrationDate() {
         String dateTime = userCreateDate;
-        return dateTime.substring(0, 10);
-    }
-    private void calculateDaysSinceRegistration(String registrationDate) {
-        // Define the date format
+        return dateTime.substring(0, 10);}
+
+    private void showDaysSinceRegistration() {
+        String registrationDate = getRegistrationDate();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        // Parse the registration date
         LocalDate regDate = LocalDate.parse(registrationDate, formatter);
-
-        // Get the current date
         LocalDate currentDate = LocalDate.now();
-
-        // Calculate the number of days between the registration date and the current date
         long daysBetween = ChronoUnit.DAYS.between(regDate, currentDate);
-
-        // Display the result
         totalDay.setText(String.valueOf(daysBetween));
     }
-//    private void clearCharts() {
-//        // Xóa dữ liệu PieChartClient
-//        if (pieChartClient != null) {
-//            pieChartClient.clear();
-//            pieChartClient.invalidate();
-//        }
-//
-//        // Xóa dữ liệu PieChartServer
-//        if (pieChartServer != null) {
-//            pieChartServer.clear();
-//            pieChartServer.invalidate();
-//        }
-//
-//        // Xóa dữ liệu StackBarChart
-//        if (stackBarChart != null) {
-//            stackBarChart.clear();
-//            stackBarChart.invalidate();
-//        }
-//
-//        // Xóa dữ liệu TextView potholesServer và potholesClient
-//        if (potholesServer != null) {
-//            potholesServer.setText(""); // Làm trống TextView
-//        }
-//        if (potholesUser != null) {
-//            potholesUser.setText(""); // Làm trống TextView
-//        }
-//    }
 
 }
