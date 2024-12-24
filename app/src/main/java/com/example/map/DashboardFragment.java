@@ -73,59 +73,14 @@ public class DashboardFragment extends Fragment {
         potholesUser=view.findViewById(R.id.potholes);
         potholesServer= view.findViewById(R.id.potholesServer);
         radioGroup = view.findViewById(R.id.radioGroupTime);
-
+        // Đặt giá trị mặc định cho RadioGroup
+        radioGroup.check(R.id.radio_allDays);
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.radio_allDays) {  // Khi chọn tất cả các ngày
-                // Sử dụng toàn bộ dữ liệu
-                alldayPotholeList = groupPotholesByAllDay(potholeList);
-                alldayPotholes = groupPotholesByAllDay(potholes);
-                // Tính tổng số pothole
-                int totalPotholes = alldayPotholeList.size();
-                if (getActivity() != null && potholesUser != null) {
-                    getActivity().runOnUiThread(() -> potholesUser.setText(String.valueOf(totalPotholes)));
-                    // Tính tổng số pothole
-                    int totalPotholesServer = alldayPotholes.size();
-                    if (getActivity() != null && potholesServer != null) {
-                        getActivity().runOnUiThread(() -> potholesServer.setText(String.valueOf(totalPotholesServer)));
-                    }}
-                    setupPieChartClient(potholeList);
-                    setupPieChartServer(potholes);
-                    setupStackBarChart(potholes);
-
-
-            } else if (checkedId == R.id.radio_week) {  // Khi chọn tuần hiện tại
-                currentWeekPotholeList = groupPotholesByCurrentWeek(potholeList);
-                currentWeekPotholes = groupPotholesByCurrentWeek(potholes);
-                // Tính tổng số pothole
-                int totalPotholes = currentWeekPotholeList.size();
-                if (getActivity() != null && potholesUser != null) {
-                    getActivity().runOnUiThread(() -> potholesUser.setText(String.valueOf(totalPotholes)));
-                    // Tính tổng số pothole
-                    int totalPotholesServer = currentWeekPotholes.size();
-                    if (getActivity() != null && potholesServer != null) {
-                        getActivity().runOnUiThread(() -> potholesServer.setText(String.valueOf(totalPotholesServer)));
-                    }}
-                setupPieChartClient(currentWeekPotholeList);
-                setupPieChartServer(currentWeekPotholes);
-                setupStackBarChart(currentWeekPotholes);
-            } else if (checkedId == R.id.radio_month) {  // Khi chọn tháng hiện tại
-                currentMonthPotholeList = groupPotholesByCurrentMonth(potholeList);
-                currentMonthPotholes = groupPotholesByCurrentMonth(potholes);
-                // Tính tổng số pothole
-                int totalPotholes = currentMonthPotholeList.size();
-                if (getActivity() != null && potholesUser != null) {
-                    getActivity().runOnUiThread(() -> potholesUser.setText(String.valueOf(totalPotholes)));
-                    // Tính tổng số pothole
-                    int totalPotholesServer = currentMonthPotholes.size();
-                    if (getActivity() != null && potholesServer != null) {
-                        getActivity().runOnUiThread(() -> potholesServer.setText(String.valueOf(totalPotholesServer)));
-                    }}
-                setupPieChartClient(currentMonthPotholeList);
-                setupPieChartServer(currentMonthPotholes);
-                setupStackBarChart(currentMonthPotholes);
-            }
+            updatePotholeDataBySelection(checkedId);
         });
+
+
 
         // Retrieve the user's name from the Bundle
         Bundle bundle = getArguments();
@@ -324,6 +279,43 @@ public class DashboardFragment extends Fragment {
         xAxis.setAxisMaximum(6);
     }
 //--------------------------------------------------------------
+// Cập nhật dữ liệu khi lựa chọn thay đổi
+private void updatePotholeDataBySelection(int selectedRadioButtonId) {
+    if (potholeList != null && potholes != null) {
+        if (selectedRadioButtonId == R.id.radio_allDays) {  // Tất cả các ngày
+            alldayPotholeList = groupPotholesByAllDay(potholeList);
+            alldayPotholes = groupPotholesByAllDay(potholes);
+            updateUIWithData(alldayPotholeList, alldayPotholes);
+        } else if (selectedRadioButtonId == R.id.radio_week) {  // Tuần hiện tại
+            currentWeekPotholeList = groupPotholesByCurrentWeek(potholeList);
+            currentWeekPotholes = groupPotholesByCurrentWeek(potholes);
+            updateUIWithData(currentWeekPotholeList, currentWeekPotholes);
+        } else if (selectedRadioButtonId == R.id.radio_month) {  // Tháng hiện tại
+            currentMonthPotholeList = groupPotholesByCurrentMonth(potholeList);
+            currentMonthPotholes = groupPotholesByCurrentMonth(potholes);
+            updateUIWithData(currentMonthPotholeList, currentMonthPotholes);
+        }
+    }
+}
+
+    // Cập nhật UI với dữ liệu
+    private void updateUIWithData(List<Pothole> userPotholes, List<Pothole> serverPotholes) {
+        int totalPotholes = userPotholes.size();
+        if (getActivity() != null && potholesUser != null) {
+            getActivity().runOnUiThread(() -> potholesUser.setText(String.valueOf(totalPotholes)));
+        }
+
+        int totalPotholesServer = serverPotholes.size();
+        if (getActivity() != null && potholesServer != null) {
+            getActivity().runOnUiThread(() -> potholesServer.setText(String.valueOf(totalPotholesServer)));
+        }
+
+        // Cập nhật các biểu đồ
+        setupPieChartClient(userPotholes);
+        setupPieChartServer(serverPotholes);
+        setupStackBarChart(serverPotholes);
+    }
+
     //ham lay username by KIEN
     private String  getUsername() {
         return name;
@@ -350,6 +342,7 @@ public class DashboardFragment extends Fragment {
             public void onResponse(Call<List<Pothole>> call, Response<List<Pothole>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     potholeList = response.body();
+                    updatePotholeDataBySelection(R.id.radio_allDays); // Cập nhật dữ liệu mặc định
                 } else {
                     Toast.makeText(getContext(), "Không tìm thấy ổ gà cho người dùng: " + username, Toast.LENGTH_SHORT).show();
                 }
@@ -374,6 +367,7 @@ public class DashboardFragment extends Fragment {
             public void onResponse(Call<List<Pothole>> call, Response<List<Pothole>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     potholes = response.body();
+                    updatePotholeDataBySelection(R.id.radio_allDays); // Cập nhật dữ liệu mặc định
                 }
             }
             @Override
