@@ -19,9 +19,7 @@ public class UserData {
         return name;
     }
 
-    public String getUserCreatedDate() {
-        return userCreatedDate;
-    }
+    public String getUserCreatedDate() {        return userCreatedDate;    }
 
     public void setName(String name) {
         this.name = name;

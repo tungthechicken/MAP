@@ -28,7 +28,6 @@ public class SettingsFragment extends Fragment {
 
     private LinearLayout profile;
     private LinearLayout notiEdit;
-    private LinearLayout displayEdit;
     private LinearLayout aboutEdit;
     private LinearLayout qaaEdit;
     private View overlay;
@@ -56,7 +55,6 @@ public class SettingsFragment extends Fragment {
         profile = view.findViewById(R.id.Profile);
         notiEdit = view.findViewById(R.id.Noti);
         LinearLayout logOutLayout = view.findViewById(R.id.logOut);
-        displayEdit = view.findViewById(R.id.display);
         aboutEdit = view.findViewById(R.id.about);
         qaaEdit = view.findViewById(R.id.QaA);
         overlay = view.findViewById(R.id.overlay);
@@ -65,7 +63,6 @@ public class SettingsFragment extends Fragment {
         logOutLayout.setOnClickListener(v -> openlogOut());
         profile.setOnClickListener(v -> openProfile());
         notiEdit.setOnClickListener(v -> openNoti());
-        displayEdit.setOnClickListener(v -> openDisplay());
         aboutEdit.setOnClickListener(v -> openAbout());
         qaaEdit.setOnClickListener(v -> openQAA());
 
@@ -94,21 +91,6 @@ public class SettingsFragment extends Fragment {
         // Đóng BottomSheet khi nhấn vào overlay
         overlay.setOnClickListener(v -> {
             editNotiFragment.dismiss();  // Đóng BottomSheet
-            overlay.setVisibility(View.GONE);  // Ẩn overlay
-        });
-    }
-
-    private void openDisplay() {
-        // Hiển thị DisplayFragment dưới dạng BottomSheet
-        DisplayFragment displayFragment = new DisplayFragment();
-        displayFragment.show(getChildFragmentManager(), displayFragment.getTag());
-
-        // Hiển thị overlay khi BottomSheet mở
-        overlay.setVisibility(View.VISIBLE);
-
-        // Đóng BottomSheet khi nhấn vào overlay
-        overlay.setOnClickListener(v -> {
-            displayFragment.dismiss();  // Đóng BottomSheet
             overlay.setVisibility(View.GONE);  // Ẩn overlay
         });
     }

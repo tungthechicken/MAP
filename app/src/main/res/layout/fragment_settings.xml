@@ -119,51 +119,6 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/purple"/>
-
-            <LinearLayout
-                android:id="@+id/display"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageDisplay"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="10dp"
-                    android:background="?attr/selectableItemBackground"
-                    app:srcCompat="@drawable/display_setting" />
-
-                <TextView
-                    android:id="@+id/editDisplay"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:text="@string/language" />
-
-                <ImageView
-                    android:id="@+id/chitiet3"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:padding="15dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/chi_tiet" />
-            </LinearLayout>
-
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_marginStart="35dp"
-                android:layout_marginEnd="10dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/purple"/>
             <LinearLayout
                 android:id="@+id/about"
                 android:layout_width="match_parent"
@@ -190,7 +145,6 @@
                     android:text="@string/about"/>
 
                 <ImageView
-                    android:id="@+id/chitiet8"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="?attr/selectableItemBackground"
