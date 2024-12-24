@@ -1,7 +1,5 @@
 package com.example.map;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -32,6 +30,9 @@ import androidx.fragment.app.Fragment;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +40,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProfileFragment extends Fragment {
-
     private TextView usernameTextView, nameAPI, emailAPI;
     private EditText editname;
     private RetrofitInterface retrofitInterface;

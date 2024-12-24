@@ -61,10 +61,8 @@ public class DashboardFragment extends Fragment {
         potholesServer = view.findViewById(R.id.potholesServer);
         radioGroup = view.findViewById(R.id.radioGroupTime);
 
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            updatePotholeDataBySelection(checkedId);
-        });
-
+        // Đặt giá trị mặc định cho RadioGroup
+        radioGroup.check(R.id.radio_allDays);
 
         // Retrieve the user's name from the Bundle
         Bundle bundle = getArguments();
@@ -263,8 +261,7 @@ public class DashboardFragment extends Fragment {
         xAxis.setAxisMinimum(0);
         xAxis.setAxisMaximum(6);
     }
-
-    //--------------------------------------------------------------
+  
 // Cập nhật dữ liệu khi lựa chọn thay đổi
     private void updatePotholeDataBySelection(int selectedRadioButtonId) {
         if (potholeList != null && potholes != null) {
