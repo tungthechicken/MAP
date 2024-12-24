@@ -41,15 +41,14 @@
             android:exported="false" />
         <activity
             android:name=".CentralLoginActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:exported="true" />
         <activity
             android:name=".CentralActivity"
             android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBOetZcAGse6OWgCdgNzbho2knIiCWL44s" />
+            android:value="@string/google_maps_key" />
     </application>
 
 </manifest>

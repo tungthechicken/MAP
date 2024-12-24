@@ -40,6 +40,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProfileFragment extends Fragment {
+    private static final String TAG = "ProfileFragment";
     private TextView usernameTextView, nameAPI, emailAPI;
     private EditText editname;
     private RetrofitInterface retrofitInterface;
