@@ -52,16 +52,16 @@ public class AppIntroActivity extends AppIntro {
         // Show/hide status bar
         showStatusBar(true);
 
-        //Prevent the back button from exiting the slides
+        // Prevent the back button from exiting the slides
         setSystemBackButtonLocked(true);
 
-        //Enable immersive mode (no status and nav bar)
+        // Enable immersive mode (no status and nav bar)
         setImmersiveMode();
 
-        //Enable/disable page indicators
+        // Enable/disable page indicators
         setIndicatorEnabled(true);
 
-        //Show/hide ALL buttons
+        // Show/hide ALL buttons
         setButtonsEnabled(true);
     }
 

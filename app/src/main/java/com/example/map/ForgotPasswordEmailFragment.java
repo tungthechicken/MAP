@@ -71,7 +71,7 @@ public class ForgotPasswordEmailFragment extends Fragment {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 resetPasswordButton.setEnabled(true); // Re-enable the button
-                Toast.makeText(getActivity(), "Error contacting server!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Failed to send OTP", Toast.LENGTH_SHORT).show();
             }
         });
     }
