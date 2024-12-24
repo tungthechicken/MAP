@@ -2,6 +2,7 @@ package com.example.map;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,6 +31,11 @@ public class SetPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_set_password);
 
         email = getIntent().getStringExtra("email");
+        if (email == null || email.isEmpty()) {
+            Toast.makeText(this, "Email is missing", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         passwordEdit = findViewById(R.id.password);
         confirmPasswordEdit = findViewById(R.id.confirm_password);
@@ -71,23 +77,26 @@ public class SetPasswordActivity extends AppCompatActivity {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(SetPasswordActivity.this, "Password set successfully", Toast.LENGTH_LONG).show();
-                    navigateToCentralActivity();
-                } else {
-                    Toast.makeText(SetPasswordActivity.this, "Failed to set password", Toast.LENGTH_LONG).show();
-                }
+                runOnUiThread(() -> {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(SetPasswordActivity.this, "Password set successfully", Toast.LENGTH_LONG).show();
+                        navigateToCentralActivity();
+                    } else {
+                        Toast.makeText(SetPasswordActivity.this, "Failed to set password", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(SetPasswordActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                runOnUiThread(() -> Toast.makeText(SetPasswordActivity.this, t.getMessage(), Toast.LENGTH_LONG).show());
             }
         });
     }
 
     private void navigateToCentralActivity() {
         Intent intent = new Intent(this, CentralActivity.class);
+        intent.putExtra("email", email);
         startActivity(intent);
         finish();
     }

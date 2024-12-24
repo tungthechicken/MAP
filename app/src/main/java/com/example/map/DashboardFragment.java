@@ -403,16 +403,24 @@ public class DashboardFragment extends Fragment {
     }
 
     private String getRegistrationDate() {
-        String dateTime = userCreateDate;
-        return dateTime.substring(0, 10);}
+        if (userCreateDate != null && userCreateDate.length() >= 10) {
+            return userCreateDate.substring(0, 10);
+        } else {
+            return "Unknown Date"; // Default value if userCreateDate is invalid
+        }
+    }
 
     private void showDaysSinceRegistration() {
         String registrationDate = getRegistrationDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate regDate = LocalDate.parse(registrationDate, formatter);
-        LocalDate currentDate = LocalDate.now();
-        long daysBetween = ChronoUnit.DAYS.between(regDate, currentDate);
-        totalDay.setText(String.valueOf(daysBetween));
+        if (!"Unknown Date".equals(registrationDate)) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate regDate = LocalDate.parse(registrationDate, formatter);
+            LocalDate currentDate = LocalDate.now();
+            long daysBetween = ChronoUnit.DAYS.between(regDate, currentDate);
+            totalDay.setText(String.valueOf(daysBetween));
+        } else {
+            totalDay.setText("N/A"); // Default value if registrationDate is invalid
+        }
     }
 
 }
