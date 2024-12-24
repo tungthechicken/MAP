@@ -1,4 +1,5 @@
 package com.example.map;
+
 import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
@@ -17,17 +18,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
@@ -40,14 +40,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProfileFragment extends Fragment {
 
-    private TextView usernameTextView, nameAPI,emailAPI;
+    private TextView usernameTextView, nameAPI, emailAPI;
     private EditText editname;
     private RetrofitInterface retrofitInterface;
     private ImageView avatarImageView, imagebutton;
     private static final String PREFS_NAME = "prefs";
     private static final String PREF_AVATAR = "avatar";
     private static final String PREF_AVATAR_BITMAP = "avatar_bitmap";
-    private int[] avatarIds = {
+    private final int[] avatarIds = {
             R.drawable.avt1, R.drawable.avt2, R.drawable.avt3, R.drawable.avt4,
             R.drawable.avt5, R.drawable.avt6, R.drawable.avt7, R.drawable.avt8
     };
@@ -175,7 +175,7 @@ public class ProfileFragment extends Fragment {
 
         // Kiểm tra xem tên có thay đổi hay không
         if (newUsername.equals(currentUsername)) {
-            return;  // Nếu tên không thay đổi, không làm gì
+            return;
         }
 
         // Lấy email từ SharedPreferences
@@ -223,6 +223,7 @@ public class ProfileFragment extends Fragment {
         editor.putString(PREF_AVATAR_BITMAP, base64Bitmap);
         editor.apply();
     }
+
     private void updatePhotoButton(Bitmap bitmap) {
         Bitmap roundedBitmap = getRoundedCroppedBitmap(bitmap);
         avatarImageView.setImageBitmap(roundedBitmap);
@@ -289,6 +290,7 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(requireContext(), "Email not found", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void updateUserNameOnServer(String newName, String email) {
         // Create a HashMap to hold the data
         HashMap<String, String> userData = new HashMap<>();

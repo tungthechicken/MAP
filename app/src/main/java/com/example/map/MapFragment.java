@@ -416,7 +416,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             String depth = editDepth.getText().toString();
             String diameter = editDiameter.getText().toString();
 
-            // Cập nhật hoặc lưu lại thông tin pothole mới nếu cần
 
             // Đóng hộp thoại sau khi nhấn OK
             dialog.dismiss(); // Đóng hộp thoại

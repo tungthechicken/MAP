@@ -17,7 +17,7 @@ dependencyResolutionManagement {
         google()
         jcenter()
         maven{url 'https://jitpack.io'}
-        maven { url "https://api.mapbox.com/downloads/v2/releases/maven" } // Thêm dòng này
+        maven { url "https://api.mapbox.com/downloads/v2/releases/maven" }
     }
 
 }

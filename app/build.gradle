@@ -72,6 +72,8 @@ dependencies {
 
     //Tung
     implementation libs.security.crypto.ktx
+    implementation 'com.github.AppIntro:AppIntro:6.3.1'
+
     //Thu
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
